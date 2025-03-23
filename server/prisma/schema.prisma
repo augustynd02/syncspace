@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int     @id @default(autoincrement())
+  login       String  @unique
+  password    String
+  name        String
+  middle_name String?
+  last_name   String
+  bio         String?
+
+  posts       Post[]
+  liked_posts Like[]
+  comments    Comment[]
+  sent_friend_requests     Friendship[] @relation("sent_friend_requests")
+  received_friend_requests Friendship[] @relation("received_friend_requests")
+}
+
+model Friendship {
+  requester_id Int
+  requester    User @relation("sent_friend_requests", fields: [requester_id], references: [id], onDelete: Cascade)
+
+  receiver_id Int
+  receiver    User @relation("received_friend_requests", fields: [receiver_id], references: [id], onDelete: Cascade)
+
+  status    FriendshipStatus @default(pending)
+  createdAt DateTime         @default(now())
+
+  @@id([requester_id, receiver_id])
+}
+
+enum FriendshipStatus {
+  pending
+  accepted
+  declined
+}
+
+model Post {
+  id         Int      @id @default(autoincrement())
+  title      String
+  message    String?
+  created_at DateTime @default(now())
+  user_id    Int
+
+  likes Like[]
+  comments Comment[]
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id       Int      @id @default(autoincrement())
+  user_id  Int
+  post_id  Int?
+  comment_id Int?
+  liked_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  post Post? @relation(fields: [post_id], references: [id])
+  comment Comment? @relation(fields: [comment_id], references: [id])
+
+  @@map("like")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  content    String
+  created_at DateTime @default(now())
+  post_id    Int
+  user_id    Int
+
+  likes Like[]
+
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
