@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import type { Request, Response } from "express";
 
+import authRouter from "./routes/authRouter.js";
+
 dotenv.config();
 
 const app = express();
@@ -13,6 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req: Request, res: Response) => {
   res.send("test");
 });
+
+app.use('/api/auth', authRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
