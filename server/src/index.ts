@@ -4,6 +4,8 @@ import type { Request, Response } from "express";
 
 import authRouter from "./routes/authRouter.js";
 
+import errorMiddleware from './middleware/errorMiddleware.js';
+
 dotenv.config();
 
 const app = express();
@@ -17,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/api/auth', authRouter);
+
+app.use(errorMiddleware);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
