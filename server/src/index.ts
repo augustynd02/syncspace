@@ -6,6 +6,7 @@ import type { Request, Response } from "express";
 import authRouter from "./routes/authRouter.js";
 
 import errorMiddleware from './middleware/errorMiddleware.js';
+import authenticateToken from './middleware/authenticateToken.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const PORT: number = parseInt(process.env.PORT || "3000", 10);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(authenticateToken)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("test");
