@@ -64,11 +64,16 @@ const authController = {
     },
 
     logoutUser: async (req: Request, res: Response, next: NextFunction) => {
-        if (!req.cookies.token) {
-            return res.status(400).json({ message: "No active session found" });
+        try {
+            if (!req.cookies.token) {
+                res.status(400).json({ message: "No active session found" });
+                return;
+            }
+            res.clearCookie('token');
+            res.status(205).json({ message: 'Logout successful.' });
+        } catch (err) {
+            next(err);
         }
-        res.clearCookie('token');
-        res.status(205).json({ message: 'Logout successful.' })
     }
 }
 
