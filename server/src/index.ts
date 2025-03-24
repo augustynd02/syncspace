@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import type { Request, Response } from "express";
 
 import authRouter from "./routes/authRouter.js";
@@ -13,6 +14,7 @@ const PORT: number = parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("test");
