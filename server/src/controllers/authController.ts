@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
+import CustomError from "../utils/CustomError.js";
 
 const prisma = new PrismaClient();
 
@@ -19,20 +20,26 @@ const authController = {
                 }
             })
 
-            if (!user) {
-                return next(new Error("Could not register user."))
-            }
-
             res.status(201).json({
                 message: "User registered successfully"
             })
         } catch (err) {
+            if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+                next(new CustomError(409, 'This username is already taken.'));
+            }
             next(err);
         }
     },
 
     loginUser: async (req: Request, res: Response, next: NextFunction) => {
-        res.send('login');
+        const { username, password } = req.body;
+        try {
+            const user = await prisma.user.findUnique({
+                where: { username: username }
+            })
+        } catch (err) {
+            next(err)
+        }
     },
 
     logoutUser: async (req: Request, res: Response, next: NextFunction) => {
