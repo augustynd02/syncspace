@@ -49,7 +49,7 @@ const authController = {
                 throw new CustomError(401, 'Invalid password');
             }
 
-            const token = generateAccessToken(String(user.id), user.username);
+            const token = generateAccessToken(String(user.id));
 
             res.cookie('token', token, {
                 httpOnly: true,
@@ -57,14 +57,18 @@ const authController = {
                 sameSite: 'none',
                 secure: process.env.NODE_ENV === 'production'
             });
-            res.status(200).json({ message: 'Login successful', user: { id: user.id, username: user.username} })
+            res.status(200).json({ message: 'Login successful', user: { id: user.id }})
         } catch (err) {
             next(err)
         }
     },
 
     logoutUser: async (req: Request, res: Response, next: NextFunction) => {
-        res.send('logout');
+        if (!req.cookies.token) {
+            return res.status(400).json({ message: "No active session found" });
+        }
+        res.clearCookie('token');
+        res.status(205).json({ message: 'Logout successful.' })
     }
 }
 
