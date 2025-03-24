@@ -21,4 +21,4 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
     })
 }
 
-module.exports = authenticateToken;
+export default authenticateToken;
