@@ -9,16 +9,16 @@ datasource db {
 
 model User {
   id          Int     @id @default(autoincrement())
-  login       String  @unique
+  username    String  @unique
   password    String
   name        String
   middle_name String?
   last_name   String
   bio         String?
 
-  posts       Post[]
-  liked_posts Like[]
-  comments    Comment[]
+  posts                    Post[]
+  liked_posts              Like[]
+  comments                 Comment[]
   sent_friend_requests     Friendship[] @relation("sent_friend_requests")
   received_friend_requests Friendship[] @relation("received_friend_requests")
 }
@@ -49,21 +49,21 @@ model Post {
   created_at DateTime @default(now())
   user_id    Int
 
-  likes Like[]
+  likes    Like[]
   comments Comment[]
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Like {
-  id       Int      @id @default(autoincrement())
-  user_id  Int
-  post_id  Int?
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  post_id    Int?
   comment_id Int?
-  liked_at DateTime @default(now())
+  liked_at   DateTime @default(now())
 
-  user User @relation(fields: [user_id], references: [id])
-  post Post? @relation(fields: [post_id], references: [id])
+  user    User     @relation(fields: [user_id], references: [id])
+  post    Post?    @relation(fields: [post_id], references: [id])
   comment Comment? @relation(fields: [comment_id], references: [id])
 
   @@map("like")
