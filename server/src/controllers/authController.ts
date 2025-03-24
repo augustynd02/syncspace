@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import CustomError from "../utils/CustomError.js";
+import generateAccessToken from "../utils/generateAccessToken.js";
 
 const prisma = new PrismaClient();
 
@@ -32,11 +33,31 @@ const authController = {
     },
 
     loginUser: async (req: Request, res: Response, next: NextFunction) => {
-        const { username, password } = req.body;
         try {
+            const { username, password } = req.body;
+
             const user = await prisma.user.findUnique({
                 where: { username: username }
             })
+
+            if (!user) {
+                throw new CustomError(401, 'Invalid username');
+            }
+
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if(!isPasswordValid) {
+                throw new CustomError(401, 'Invalid password');
+            }
+
+            const token = generateAccessToken(String(user.id), user.username);
+
+            res.cookie('token', token, {
+                httpOnly: true,
+                maxAge: 86400000,
+                sameSite: 'none',
+                secure: process.env.NODE_ENV === 'production'
+            });
+            res.status(200).json({ message: 'Login successful', user: { id: user.id, username: user.username} })
         } catch (err) {
             next(err)
         }
