@@ -36,6 +36,21 @@ const usersController = {
             next(err);
         }
     },
+    getUserById: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = parseInt(req.params.id);
+
+            const user = prisma.user.findUnique({
+                where: {
+                    id: id
+                }
+            })
+
+            res.status(200).json({ user });
+        } catch (err) {
+            next(err);
+        }
+    }
 }
 
 export default usersController;
