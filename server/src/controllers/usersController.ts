@@ -44,7 +44,7 @@ const usersController = {
             let users;
 
             if (query) {
-                users = prisma.user.findMany({
+                users = await prisma.user.findMany({
                     where: {
                         OR: [
                             { name: { contains: query, mode: "insensitive" }},
@@ -66,7 +66,7 @@ const usersController = {
         try {
             const id = parseInt(req.params.id);
 
-            const user = prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: {
                     id: id
                 }
@@ -75,6 +75,39 @@ const usersController = {
             res.status(200).json({ user });
         } catch (err) {
             next(err);
+        }
+    },
+    editUser: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id, name, middle_name, last_name, bio } = req.body;
+
+            if (!req.user_id) {
+                return next(new CustomError(401, "Not authenticated"))
+            }
+
+            if (req.user_id !== id) {
+                return next(new CustomError(403, "Not authorized to perform this operation"));
+            }
+
+            if (!name || !last_name) {
+                return next(new CustomError(400, "Missing required fields"));
+            }
+
+            const user = await prisma.user.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    name: name,
+                    middle_name: middle_name,
+                    last_name: last_name,
+                    bio: bio,
+                }
+            })
+
+            res.status(200).json({ message: "User updated successfully", user: user});
+        } catch (err) {
+            next(err)
         }
     }
 }
