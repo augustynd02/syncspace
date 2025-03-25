@@ -57,7 +57,7 @@ const usersController = {
                 users = prisma.user.findMany();
             }
 
-            res.status(200).json({ users });
+            res.status(200).json({ users: users });
         } catch (err) {
             next(err);
         }
@@ -79,7 +79,8 @@ const usersController = {
     },
     editUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { id, name, middle_name, last_name, bio } = req.body;
+            const { name, middle_name, last_name, bio } = req.body;
+            const id = req.params.id;
 
             if (!req.user_id) {
                 return next(new CustomError(401, "Not authenticated"))
@@ -95,7 +96,7 @@ const usersController = {
 
             const user = await prisma.user.update({
                 where: {
-                    id: id
+                    id: parseInt(id)
                 },
                 data: {
                     name: name,
@@ -109,6 +110,24 @@ const usersController = {
         } catch (err) {
             next(err)
         }
+    },
+    deleteUser: async (req: Request, res: Response, next: NextFunction) => {
+        const id = req.params.id;
+        if (!req.user_id) {
+            return next(new CustomError(401, "Not authenticated"))
+        }
+
+        if (req.user_id !== id) {
+            return next(new CustomError(403, "Not authorized to perform this operation"))
+        }
+
+        const user = prisma.user.delete({
+            where: {
+                id: parseInt(id)
+            }
+        })
+
+        res.status(200).json({ message: "User deleted successfully "});
     }
 }
 
