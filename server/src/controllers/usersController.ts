@@ -51,6 +51,13 @@ const usersController = {
                             { middle_name: {contains: query, mode: "insensitive" }},
                             { last_name: {contains: query, mode: "insensitive" }}
                         ]
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        middle_name: true,
+                        last_name: true,
+                        bio: true,
                     }
                 })
             } else {
@@ -103,10 +110,10 @@ const usersController = {
                     middle_name: middle_name,
                     last_name: last_name,
                     bio: bio,
-                }
+                },
             })
 
-            res.status(200).json({ message: "User updated successfully", user: user});
+            res.status(200).json({ message: "User updated successfully" });
         } catch (err) {
             next(err)
         }
