@@ -3,7 +3,8 @@ import usersController from "../controllers/usersController.js";
 
 const usersRouter: Router = Router();
 
-// api/user
+// api/users
+usersRouter.post('/', usersController.createUser);
 usersRouter.get('/', usersController.getUsers);
 usersRouter.get('/:id', usersController.getUserById);
 
