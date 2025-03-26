@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.scss";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
