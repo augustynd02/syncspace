@@ -19,9 +19,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(authenticateToken)
 
+app.use((req, res, next) => {
+  console.log(`Request: ${req.method} ${req.path}`)
+  next();
+})
+
 app.get("/", (req: Request, res: Response) => {
   res.send("test");
 });
+
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
