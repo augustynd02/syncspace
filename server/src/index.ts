@@ -7,6 +7,7 @@ import authRouter from "./routes/authRouter.js";
 
 import errorMiddleware from './middleware/errorMiddleware.js';
 import authenticateToken from './middleware/authenticateToken.js';
+import usersRouter from './routes/usersRouter.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/users', usersRouter);
 
 app.use(errorMiddleware);
 
