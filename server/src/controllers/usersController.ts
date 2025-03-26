@@ -40,7 +40,6 @@ const usersController = {
     getUsers: async (req: RequestWithQuery, res: Response, next: NextFunction) => {
         try {
             const query = req.query.q;
-
             let users;
 
             if (query) {
@@ -61,7 +60,7 @@ const usersController = {
                     }
                 })
             } else {
-                users = prisma.user.findMany();
+                users = await prisma.user.findMany();
             }
 
             res.status(200).json({ users: users });
@@ -128,7 +127,7 @@ const usersController = {
             return next(new CustomError(403, "Not authorized to perform this operation"))
         }
 
-        const user = prisma.user.delete({
+        const user = await prisma.user.delete({
             where: {
                 id: parseInt(id)
             }
