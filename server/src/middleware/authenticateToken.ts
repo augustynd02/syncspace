@@ -7,6 +7,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
     if (!secret) {
         throw new Error("TOKEN_SECRET is not defined in .env file");
     }
+
     const token = req.cookies.token;
 
     if (token == null || token == undefined) {

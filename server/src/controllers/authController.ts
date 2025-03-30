@@ -10,9 +10,9 @@ const authController = {
     getAuthStatus: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.user_id) {
-                return res.status(200).json({ user_id: req.user_id });
+                res.status(200).json({ user_id: req.user_id });
             }
-            return res.status(401).json({ message: "Not authenticated" });
+            res.status(401).json({ message: "Not authenticated" });
         } catch (error) {
             next(error);
         }
@@ -39,8 +39,8 @@ const authController = {
             res.cookie('token', token, {
                 httpOnly: true,
                 maxAge: 86400000,
-                sameSite: 'none',
-                secure: process.env.NODE_ENV === 'production'
+                sameSite: 'lax',
+                secure: false,
             });
             res.status(200).json({ message: 'Login successful', user: { id: user.id }})
         } catch (err) {
