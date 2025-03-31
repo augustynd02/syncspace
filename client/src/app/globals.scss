@@ -1,5 +1,13 @@
 :root {
   --color-background: #f0f0f0;
+  --color-primary-100: rgb(175, 151, 197);
+  --color-primary-200: rgb(152, 125, 182);
+  --color-primary-300: rgb(130, 98, 166);
+  --color-primary-400: rgb(107, 70, 150);
+  --color-primary-500: rgb(91, 60, 128);
+  --color-primary-600: rgb(75, 49, 105);
+  --color-primary-700: rgb(59, 39, 83);
+  --color-border: #C0C0C0;
 
   --color-text-dark-primary: #222222;
   --color-text-dark-secondary: #333333;
@@ -17,6 +25,7 @@
     --font-secondary: Montserrat;
   */
 }
+
 html,
 body {
   min-height: 100vh;
