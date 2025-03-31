@@ -1,8 +1,15 @@
 :root {
   --color-background: #f0f0f0;
 
-  --color-text-primary: #222222;
-  --color-text-secondary: #333333;
+  --color-text-dark-primary: #222222;
+  --color-text-dark-secondary: #333333;
+
+  --color-text-white-primary: #f0f0f0;
+  --color-text-white-secondary: #dbdbdb;
+
+  --spacing-small: 0.5rem;
+  --spacing-medium: 1rem;
+  --spacing-large: 2rem;
 
   /*
     font variables from global layout.tsx
@@ -12,16 +19,20 @@
 }
 html,
 body {
+  min-height: 100vh;
   max-width: 100vw;
   overflow-x: hidden;
 }
 
 body {
-  color: var(--color-text-primary);
+  color: var(--color-text-dark-primary);
   background: var(--color-background);
   font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  display: flex;
+  flex-direction: column;
 }
 
 * {

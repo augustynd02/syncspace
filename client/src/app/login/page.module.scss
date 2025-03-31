@@ -1,0 +1,55 @@
+.loginPageContainer {
+    flex: 1;
+
+    display: flex;
+
+    --gradient-color1: #7137a3;
+    --gradient-color2: #8e4cb7;
+    --gradient-color3: #6b5ca7;
+    --gradient-color4: #632d8c;
+    background: linear-gradient(135deg, var(--gradient-color1), var(--gradient-color2), var(--gradient-color3), var(--gradient-color4));
+    background-size: 400% 400%;
+    animation: gradientAnimation 7s ease infinite;
+
+    .welcomeContainer {
+        flex: 1;
+        padding: var(--spacing-large);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        color: var(--color-text-white-primary);
+
+        h1 {
+            text-transform: uppercase;
+            font-style: italic;
+            font-weight: 300;
+            letter-spacing: 8px;
+            font-size: clamp(2rem, 5vw, 5rem);
+        }
+        p {
+            font-size: clamp(1rem, 5vw, 1.2rem);
+            width: 75%;
+        }
+    }
+
+    .loginContainer {
+        background-color: var(--color-background);
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
