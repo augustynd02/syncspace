@@ -39,13 +39,17 @@ export default function LoginForm() {
 
     return (
         <section className={styles.loginContainer}>
-            <h2>Login</h2>
+            <h2>Login to syncspace</h2>
             <form onSubmit={handleLogin}>
-                <label htmlFor="username">Username</label>
-                <input type="text" name="username" id="username" onChange={handleInputChange} />
+                <div className={styles.inputGroup}>
+                    <label htmlFor="username">Username</label>
+                    <input type="text" name="username" id="username" onChange={handleInputChange} placeholder=" " />
+                </div>
 
-                <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password" onChange={handleInputChange} />
+                <div className={styles.inputGroup}>
+                    <label htmlFor="password">Password</label>
+                    <input type="password" name="password" id="password" onChange={handleInputChange} placeholder=" " />
+                </div>
 
                 <button type="submit">Login</button>
             </form>
