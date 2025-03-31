@@ -1,49 +1,69 @@
 'use client'
 
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import styles from './LoginForm.module.scss';
 
-import { FaLock } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
+import { FaLock , FaUser, FaSpinner} from "react-icons/fa";
+import { useRouter } from 'next/navigation';
 
 type FormData = {
     username: string;
     password: string;
 }
 
+const handleLogin = async (credentials: FormData) => {
+    // TODO: remove artificial delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    try {
+        const response = await fetch("http://localhost:8000/api/auth/login", {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(credentials),
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error('Login failed');
+        }
+        return data;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
 export default function LoginForm() {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
+    const router = useRouter();
+
+    const mutation = useMutation({
+        mutationFn: handleLogin,
+        onSuccess: () => {
+            router.push('/');
+        },
+        onError: (err) => {
+            console.error('Login failed: ', err);
+        }
+    })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     }
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-        try {
-            e.preventDefault();
-
-            const response = await fetch("http://localhost:8000/api/auth/login", {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify(formData),
-            })
-
-            const data = await response.json();
-
-            if (response.ok) {
-                console.log('Logged with id: ', data.user.id);
-            }
-        } catch (err) {
-            console.error(err);
-        }
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        mutation.mutate(formData);
     }
 
     return (
         <section className={styles.loginContainer}>
             <h2>Login to syncspace</h2>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSubmit}>
                 <div className={styles.inputGroup}>
                     <label htmlFor="username">Username</label>
                     <input type="text" name="username" id="username" onChange={handleInputChange} placeholder=" " />
@@ -56,7 +76,12 @@ export default function LoginForm() {
                     <FaLock />
                 </div>
 
-                <button type="submit">Login</button>
+                <button type="submit" disabled={mutation.isPending}>
+                    { mutation.isPending ? <FaSpinner /> : null }
+                    Login
+                </button>
+
+                { mutation.isError ? 'error' : null}
             </form>
         </section>
     )

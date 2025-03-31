@@ -5,8 +5,6 @@
     justify-content: center;
     align-items: center;
 
-    h2 {}
-
    form {
         padding: var(--spacing-large);
         min-width: 500px;
@@ -70,18 +68,37 @@
         button {
             padding: 0.75rem;
 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-small);
+
             background-color: var(--color-primary-400);
             color: var(--color-text-white-primary);
             border: none;
             border-radius: 16px;
             transition: 0.2s;
             cursor: pointer;
+
             &:hover {
                 background-color: var(--color-primary-500);
+            }
+
+            svg {
+                animation: rotate 1s linear infinite;
             }
         }
 
 
     }
 
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
