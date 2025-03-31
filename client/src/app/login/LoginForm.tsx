@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import styles from './LoginForm.module.scss';
 
+import { FaLock } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+
 type FormData = {
     username: string;
     password: string;
@@ -44,11 +47,13 @@ export default function LoginForm() {
                 <div className={styles.inputGroup}>
                     <label htmlFor="username">Username</label>
                     <input type="text" name="username" id="username" onChange={handleInputChange} placeholder=" " />
+                    <FaUser />
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label htmlFor="password">Password</label>
                     <input type="password" name="password" id="password" onChange={handleInputChange} placeholder=" " />
+                    <FaLock />
                 </div>
 
                 <button type="submit">Login</button>
