@@ -20,9 +20,17 @@ type FormErrors = {
     confirmPassword?: string;
     name?: string;
     last_name?: string;
+    general?: string;
 }
 
 type FieldName = "username" | "password" | "confirmPassword" | "name" | "last_name";
+
+const defaultFormData: FormData = {
+    username: '',
+    password: '',
+    name: '',
+    last_name: '',
+}
 
 const handleRegister = async (credentials: FormData) => {
     // TODO: remove artificial delay
@@ -49,7 +57,7 @@ const handleRegister = async (credentials: FormData) => {
 }
 
 export default function RegisterForm({ handleFormToggle }: { handleFormToggle: () => void }) {
-    const [formData, setFormData] = useState<FormData>({ username: '', password: '', name: '', last_name: '' });
+    const [formData, setFormData] = useState<FormData>(defaultFormData);
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [formErrors, setFormErrors] = useState<FormErrors>({});
     const router = useRouter();
@@ -57,10 +65,10 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
     const mutation = useMutation({
         mutationFn: handleRegister,
         onSuccess: () => {
-            console.log('registered');
+            router.push('/');
         },
         onError: (err) => {
-            console.error('Login failed: ', err);
+            setFormErrors({ ...formErrors, general: 'An error occured during register process.'})
         }
     })
 
@@ -169,6 +177,8 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
                     {mutation.isPending && <FaSpinner />}
                     Register
                 </button>
+
+                { formErrors.general && <p>{formErrors.general}</p> }
 
                 {mutation.isError ? 'error' : null}
             </form>
