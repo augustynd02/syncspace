@@ -68,16 +68,20 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
             router.push('/');
         },
         onError: (err) => {
+            console.log(err);
             setFormErrors({ ...formErrors, general: 'An error occured during register process.'})
         }
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+
+        setFormErrors({ ...formErrors, [name]: undefined});
         setFormData({ ...formData, [name]: value });
     }
 
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormErrors({ ...formErrors, confirmPassword: undefined});
         setConfirmPassword(e.target.value);
     }
 
@@ -130,7 +134,6 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const name = e.target.name as FieldName;
         const error = validateField(name);
-        console.log(name, error)
 
         setFormErrors({ ...formErrors, [name]: error})
     }
