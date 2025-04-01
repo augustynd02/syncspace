@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
-import { FaLock , FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
+import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 
 type FormData = {
@@ -13,6 +13,16 @@ type FormData = {
     name: string;
     last_name: string;
 }
+
+type FormErrors = {
+    username?: string;
+    password?: string;
+    confirmPassword?: string;
+    name?: string;
+    last_name?: string;
+}
+
+type FieldName = "username" | "password" | "confirmPassword" | "name" | "last_name";
 
 const handleRegister = async (credentials: FormData) => {
     // TODO: remove artificial delay
@@ -41,6 +51,7 @@ const handleRegister = async (credentials: FormData) => {
 export default function RegisterForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '', name: '', last_name: '' });
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [formErrors, setFormErrors] = useState<FormErrors>({});
     const router = useRouter();
 
     const mutation = useMutation({
@@ -58,9 +69,62 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
         setFormData({ ...formData, [name]: value });
     }
 
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(e.target.value);
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         mutation.mutate(formData);
+    }
+
+    const validateField = (field: FieldName) => {
+        let error: string | null = null;
+
+        switch(field) {
+            case "username":
+                if (formData.username.trim().length === 0) {
+                    error = "Username is required."
+                    break;
+                }
+                if (formData.username.length < 3 || formData.username.length > 16) {
+                    error = "Username must be between 3 and 16 characters long."
+                }
+                break;
+            case "password":
+                if (formData.password.trim().length === 0) {
+                    error = "Password is required."
+                    break;
+                }
+                if (formData.password.length < 8) {
+                    error = "Password must be at least 8 characters long."
+                }
+                break;
+            case "confirmPassword":
+                if (formData.password != confirmPassword) {
+                    error = "Passwords must match."
+                }
+                break;
+            case "name":
+                if (formData.name.trim().length === 0) {
+                    error = "Name is required."
+                }
+                break;
+            case "last_name":
+                if (formData.name.trim().length === 0) {
+                    error = "Last name is required."
+                }
+                break;
+        }
+        return error;
+    }
+
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const name = e.target.name as FieldName;
+        const error = validateField(name);
+        console.log(name, error)
+
+        setFormErrors({ ...formErrors, [name]: error})
     }
 
     return (
@@ -69,39 +133,44 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
             <form onSubmit={handleSubmit}>
                 <div className={styles.inputGroup}>
                     <label htmlFor="register-username">Username</label>
-                    <input type="text" name="username" id="register-username" onChange={handleInputChange} placeholder=" " />
+                    <input type="text" name="username" id="register-username" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
                     <FaUser />
+                    { formErrors.username && <p className={styles.formError}>{formErrors.username}</p> }
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label htmlFor="register-password">Password</label>
-                    <input type="password" name="password" id="register-password" onChange={handleInputChange} placeholder=" " />
+                    <input type="password" name="password" id="register-password" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
                     <FaLock />
+                    { formErrors.password && <p className={styles.formError}>{formErrors.password}</p> }
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label htmlFor="register-confirm-password">Confirm password</label>
-                    <input type="password" name="confirm-password" id="register-confirm-password" onChange={handleInputChange} placeholder=" " />
+                    <input type="password" name="confirmPassword" id="register-confirm-password" onChange={handleConfirmPasswordChange} onBlur={handleBlur} placeholder=" " />
                     <FaLock />
+                    { formErrors.confirmPassword && <p className={styles.formError}>{formErrors.confirmPassword}</p> }
                 </div>
 
                 <div className={styles.inputRow}>
                     <div className={styles.inputGroup}>
                         <label htmlFor="register-name">First name</label>
-                        <input type="text" name="name" id="register-name" onChange={handleInputChange} placeholder=" " />
+                        <input type="text" name="name" id="register-name" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
+                        { formErrors.name && <p className={styles.formError}>{formErrors.name}</p> }
                     </div>
                     <div className={styles.inputGroup}>
                         <label htmlFor="register-name">Last name</label>
-                        <input type="text" name="last_name" id="register-last-name" onChange={handleInputChange} placeholder=" " />
+                        <input type="text" name="last_name" id="register-last-name" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
+                        { formErrors.last_name && <p className={styles.formError}>{formErrors.last_name}</p>  }
                     </div>
                 </div>
 
                 <button type="submit" disabled={mutation.isPending}>
-                    { mutation.isPending ? <FaSpinner /> : null }
+                    {mutation.isPending && <FaSpinner />}
                     Register
                 </button>
 
-                { mutation.isError ? 'error' : null}
+                {mutation.isError ? 'error' : null}
             </form>
             <p>Already have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Login <FaChevronRight /> </span></p>
         </section>

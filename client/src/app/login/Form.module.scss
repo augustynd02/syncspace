@@ -10,7 +10,7 @@
         min-width: 500px;
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-medium);
+        gap: 1.3rem;
 
         .inputRow {
             display: flex;
@@ -111,6 +111,14 @@
         margin-left: 4px;
         transition: 0.2s;
     }
+}
+
+.formError {
+    font-size: 11px;
+    position: absolute;
+    bottom: -14px;
+    left: 1rem;
+    color: var(--color-error);
 }
 
 @keyframes rotate {
