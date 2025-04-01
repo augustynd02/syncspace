@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import styles from './LoginForm.module.scss';
+import styles from './Form.module.scss';
 
-import { FaLock , FaUser, FaSpinner} from "react-icons/fa";
+import { FaLock , FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 
 type FormData = {
@@ -36,7 +36,7 @@ const handleLogin = async (credentials: FormData) => {
     }
 }
 
-export default function LoginForm() {
+export default function LoginForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
     const router = useRouter();
 
@@ -65,14 +65,14 @@ export default function LoginForm() {
             <h2>Login to syncspace</h2>
             <form onSubmit={handleSubmit}>
                 <div className={styles.inputGroup}>
-                    <label htmlFor="username">Username</label>
-                    <input type="text" name="username" id="username" onChange={handleInputChange} placeholder=" " />
+                    <label htmlFor="login-username">Username</label>
+                    <input type="text" name="username" id="login-username" onChange={handleInputChange} placeholder=" " />
                     <FaUser />
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label htmlFor="password">Password</label>
-                    <input type="password" name="password" id="password" onChange={handleInputChange} placeholder=" " />
+                    <label htmlFor="login-password">Password</label>
+                    <input type="password" name="password" id="login-password" onChange={handleInputChange} placeholder=" " />
                     <FaLock />
                 </div>
 
@@ -83,6 +83,7 @@ export default function LoginForm() {
 
                 { mutation.isError ? 'error' : null}
             </form>
+            <p>Don't have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Register <FaChevronRight /> </span></p>
         </section>
     )
 }

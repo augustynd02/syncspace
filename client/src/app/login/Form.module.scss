@@ -88,10 +88,24 @@
                 animation: rotate 1s linear infinite;
             }
         }
+    }
+}
 
-
+.formSwitch {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--color-primary-400);
+    display: inline-flex;
+    align-items: center;
+    &:hover svg {
+        transform: translateX(4px);
     }
 
+    svg {
+        width: 8px;
+        margin-left: 4px;
+        transition: 0.2s;
+    }
 }
 
 @keyframes rotate {

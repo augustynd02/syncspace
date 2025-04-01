@@ -1,4 +1,4 @@
-import LoginForm from "./LoginForm"
+import { AuthWrapper } from "./AuthWrapper";
 import styles from "./page.module.scss";
 
 export default function Login() {
@@ -9,7 +9,7 @@ export default function Login() {
                 <p>Synchronize with those who matter and connect in a shared digital space, designed to make collaboration, interaction, and sharing a breeze.</p>
             </div>
             <div className={styles.loginContainer}>
-                <LoginForm />
+                <AuthWrapper />
             </div>
         </main>
     )
