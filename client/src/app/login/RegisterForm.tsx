@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
 import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 type FormData = {
     username: string;

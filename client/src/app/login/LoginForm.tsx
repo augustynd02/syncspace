@@ -12,6 +12,12 @@ type FormData = {
     password: string;
 }
 
+type FormErrors = {
+    username?: string;
+    password?: string;
+    general?: string;
+}
+
 const handleLogin = async (credentials: FormData) => {
     // TODO: remove artificial delay
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -27,17 +33,17 @@ const handleLogin = async (credentials: FormData) => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error('Login failed');
+            throw new Error(data.message || "Login failed");
         }
         return data;
     } catch (err) {
-        console.error(err);
         throw err;
     }
 }
 
 export default function LoginForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
+    const [formError, setFormError] = useState<string | undefined>();
     const router = useRouter();
 
     const mutation = useMutation({
@@ -46,12 +52,13 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
             router.push('/');
         },
         onError: (err) => {
-            console.error('Login failed: ', err);
+            setFormError(err.message);
         }
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+        setFormError(undefined);
         setFormData({ ...formData, [name]: value });
     }
 
@@ -81,7 +88,7 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
                     Login
                 </button>
 
-                { mutation.isError ? 'error' : null}
+                { formError && <p className={styles.generalError} key={Date.now()}>{formError}</p> }
             </form>
             <p>Don't have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Register <FaChevronRight /> </span></p>
         </section>
