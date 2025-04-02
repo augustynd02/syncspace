@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
 import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 type FormData = {
     username: string;
@@ -47,11 +47,10 @@ const handleRegister = async (credentials: FormData) => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error('Login failed');
+            throw new Error(data.message || "Failed to register");
         }
         return data;
     } catch (err) {
-        console.error(err);
         throw err;
     }
 }
@@ -69,31 +68,36 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
         },
         onError: (err) => {
             console.log(err);
-            setFormErrors({ ...formErrors, general: 'An error occured during register process.'})
+            setFormErrors({ ...formErrors, general: err.message })
         }
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormErrors({ ...formErrors, [name]: undefined});
+        setFormErrors({ ...formErrors, [name]: undefined, general: undefined });
         setFormData({ ...formData, [name]: value });
     }
 
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormErrors({ ...formErrors, confirmPassword: undefined});
+        setFormErrors({ ...formErrors, confirmPassword: undefined });
         setConfirmPassword(e.target.value);
     }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (Object.values(formErrors).some(value => value)) {
+            setFormErrors({ ...formErrors, general: 'Cannot submit: some field are still not valid.'});
+            return;
+        }
+
         mutation.mutate(formData);
     }
 
     const validateField = (field: FieldName) => {
         let error: string | null = null;
 
-        switch(field) {
+        switch (field) {
             case "username":
                 if (formData.username.trim().length === 0) {
                     error = "Username is required."
@@ -135,7 +139,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
         const name = e.target.name as FieldName;
         const error = validateField(name);
 
-        setFormErrors({ ...formErrors, [name]: error})
+        setFormErrors({ ...formErrors, [name]: error })
     }
 
     return (
@@ -146,33 +150,33 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
                     <label htmlFor="register-username">Username</label>
                     <input type="text" name="username" id="register-username" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
                     <FaUser />
-                    { formErrors.username && <p className={styles.formError}>{formErrors.username}</p> }
+                    {formErrors.username && <p className={styles.formError}>{formErrors.username}</p>}
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label htmlFor="register-password">Password</label>
                     <input type="password" name="password" id="register-password" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
                     <FaLock />
-                    { formErrors.password && <p className={styles.formError}>{formErrors.password}</p> }
+                    {formErrors.password && <p className={styles.formError}>{formErrors.password}</p>}
                 </div>
 
                 <div className={styles.inputGroup}>
                     <label htmlFor="register-confirm-password">Confirm password</label>
                     <input type="password" name="confirmPassword" id="register-confirm-password" onChange={handleConfirmPasswordChange} onBlur={handleBlur} placeholder=" " />
                     <FaLock />
-                    { formErrors.confirmPassword && <p className={styles.formError}>{formErrors.confirmPassword}</p> }
+                    {formErrors.confirmPassword && <p className={styles.formError}>{formErrors.confirmPassword}</p>}
                 </div>
 
                 <div className={styles.inputRow}>
                     <div className={styles.inputGroup}>
                         <label htmlFor="register-name">First name</label>
                         <input type="text" name="name" id="register-name" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
-                        { formErrors.name && <p className={styles.formError}>{formErrors.name}</p> }
+                        {formErrors.name && <p className={styles.formError}>{formErrors.name}</p>}
                     </div>
                     <div className={styles.inputGroup}>
                         <label htmlFor="register-name">Last name</label>
                         <input type="text" name="last_name" id="register-last-name" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
-                        { formErrors.last_name && <p className={styles.formError}>{formErrors.last_name}</p>  }
+                        {formErrors.last_name && <p className={styles.formError}>{formErrors.last_name}</p>}
                     </div>
                 </div>
 
@@ -181,9 +185,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
                     Register
                 </button>
 
-                { formErrors.general && <p>{formErrors.general}</p> }
-
-                {mutation.isError ? 'error' : null}
+                {formErrors.general && <p key={Date.now()} className={styles.generalError}>{formErrors.general}</p>}
             </form>
             <p>Already have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Login <FaChevronRight /> </span></p>
         </section>

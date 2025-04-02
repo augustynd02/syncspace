@@ -85,7 +85,12 @@
             transition: 0.2s;
             cursor: pointer;
 
-            &:hover {
+            &:disabled {
+                cursor: wait;
+                background-color: var(--color-primary-200);
+            }
+
+            &:not(:disabled):hover {
                 background-color: var(--color-primary-500);
             }
 
@@ -119,7 +124,32 @@
     bottom: -14px;
     left: 1rem;
     color: var(--color-error);
+
 }
+
+.generalError {
+    animation: shake 0.4s;
+    color: var(--color-error);
+    text-align: center;
+}
+
+@keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px);
+    }
+    50% {
+      transform: translateX(2px);
+    }
+    75% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 
 @keyframes rotate {
     0% {
