@@ -55,6 +55,26 @@ const handleRegister = async (credentials: FormData) => {
     }
 }
 
+const handleLogin = async (credentials: { username: string; password: string;}) => {
+    try {
+        const response = await fetch("http://localhost:8000/api/auth/login", {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(credentials),
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Login failed");
+        }
+        return data;
+    } catch (err) {
+        throw err;
+    }
+}
+
 export default function RegisterForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>(defaultFormData);
     const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -63,8 +83,9 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
 
     const mutation = useMutation({
         mutationFn: handleRegister,
-        onSuccess: () => {
-            router.push('/');
+        onSuccess: async () => {
+            await handleLogin({ username: formData.username, password: formData.password})
+            router.push('/')
         },
         onError: (err) => {
             console.log(err);
