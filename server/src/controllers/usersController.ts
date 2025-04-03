@@ -46,9 +46,9 @@ const usersController = {
                 users = await prisma.user.findMany({
                     where: {
                         OR: [
-                            { name: { contains: query, mode: "insensitive" }},
-                            { middle_name: {contains: query, mode: "insensitive" }},
-                            { last_name: {contains: query, mode: "insensitive" }}
+                            { name: { contains: query, mode: "insensitive" } },
+                            { middle_name: { contains: query, mode: "insensitive" } },
+                            { last_name: { contains: query, mode: "insensitive" } }
                         ]
                     },
                     select: {
@@ -133,7 +133,37 @@ const usersController = {
             }
         })
 
-        res.status(200).json({ message: "User deleted successfully "});
+        res.status(200).json({ message: "User deleted successfully " });
+    },
+    getCurrentUser: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.user_id;
+
+            if (!id) {
+                return res.status(401).json({ message: "Not authenticated" });
+            }
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    id: parseInt(id)
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                    bio: true,
+                }
+            })
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            return res.status(200).json({ user: user });
+        } catch (err) {
+            next(err)
+        }
     }
 }
 

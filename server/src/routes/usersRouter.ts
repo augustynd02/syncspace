@@ -9,5 +9,6 @@ usersRouter.get('/', usersController.getUsers);
 usersRouter.get('/:id', usersController.getUserById);
 usersRouter.put('/:id', usersController.editUser);
 usersRouter.delete('/:id', usersController.deleteUser);
+usersRouter.get('/me', usersController.getCurrentUser);
 
 export default usersRouter;
