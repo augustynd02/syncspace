@@ -6,9 +6,9 @@ const usersRouter: Router = Router();
 // api/users
 usersRouter.post('/', usersController.createUser);
 usersRouter.get('/', usersController.getUsers);
+usersRouter.get('/me', usersController.getCurrentUser);
 usersRouter.get('/:id', usersController.getUserById);
 usersRouter.put('/:id', usersController.editUser);
 usersRouter.delete('/:id', usersController.deleteUser);
-usersRouter.get('/me', usersController.getCurrentUser);
 
 export default usersRouter;
