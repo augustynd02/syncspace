@@ -1,4 +1,4 @@
-@import '@/styles/mixins';
+@use '@/styles/mixins';
 
 .mainHeader {
     height: 45px;
@@ -69,7 +69,7 @@
                     aspect-ratio: 1/1;
                     list-style-type: none;
 
-                    @include flex-center;
+                    @include mixins.flex-center;
 
                     background-color: var(--color-background);
                     border-radius: 50%;
