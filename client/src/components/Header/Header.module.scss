@@ -1,0 +1,96 @@
+@import '@/styles/mixins';
+
+.mainHeader {
+    height: 45px;
+    background-color: white;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    padding: 0 1rem;
+
+    .logoContainer {
+
+    }
+
+    .searchContainer {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        label {
+            height: 35px;
+            width: 300px;
+
+            display: flex;
+            align-items: center;
+
+            background-color: var(--color-background);
+            border-radius: 16px;
+
+            transition: 0.2s;
+
+            &:focus-within {
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+            }
+
+            svg {
+                margin: 0px 8px;
+            }
+
+            input {
+                flex: 1;
+                height: 100%;
+                background-color: inherit;
+                border: none;
+                border-radius: 16px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    .actionsContainer {
+        nav {
+            height: 100%;
+
+            ul {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-small);
+
+                li {
+                    height: 80%;
+                    aspect-ratio: 1/1;
+                    list-style-type: none;
+
+                    @include flex-center;
+
+                    background-color: var(--color-background);
+                    border-radius: 50%;
+                    cursor: pointer;
+
+                    &:hover {
+                        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+                    }
+
+                    &:hover svg {
+                        color: var(--color-primary-400);
+                    }
+
+                    svg {
+                        color: var(--color-text-dark-secondary);
+                        width: 60%;
+                        height: 60%;
+                        transition: 0.2s;
+                    }
+                }
+            }
+        }
+    }
+}
