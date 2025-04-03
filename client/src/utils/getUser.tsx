@@ -17,7 +17,7 @@ export default async function getUser(): Promise<User | null> {
       return null;
     }
 
-    const response = await fetch('http://localhost:8000/api/auth', {
+    const response = await fetch('http://localhost:8000/api/users/me', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -30,7 +30,8 @@ export default async function getUser(): Promise<User | null> {
       return null;
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.user;
   } catch (error) {
     console.error('Error fetching user:', error);
     return null;
