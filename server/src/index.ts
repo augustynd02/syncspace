@@ -9,6 +9,7 @@ import authRouter from "./routes/authRouter.js";
 import errorMiddleware from './middleware/errorMiddleware.js';
 import authenticateToken from './middleware/authenticateToken.js';
 import usersRouter from './routes/usersRouter.js';
+import postsRouter from './routes/postsRouter.js';
 
 dotenv.config();
 
@@ -30,13 +31,9 @@ app.use((req, res, next) => {
 	next();
 })
 
-app.get("/", (req: Request, res: Response) => {
-	res.send("test");
-});
-
-
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/posts', postsRouter);
 
 app.use(errorMiddleware);
 
