@@ -1,8 +1,13 @@
+'use client'
+
 import { IoChatbubbleEllipses, IoNotifications, IoSearch } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import styles from './Header.module.scss'
+import UserContext from "@/contexts/UserContext";
+import { useContext } from "react";
 
 export default function Header() {
+    const { user } = useContext(UserContext);
     return (
         <header className={styles.mainHeader}>
             <div className={styles.logoContainer}>
@@ -13,7 +18,7 @@ export default function Header() {
             <div className={styles.searchContainer}>
                 <label htmlFor="search">
                     <IoSearch />
-                    <input type="text" name="search" id="search" />
+                    <input type="text" name="search" id="search" placeholder="Search syncspace..." />
                 </label>
             </div>
             <div className={styles.actionsContainer}>
