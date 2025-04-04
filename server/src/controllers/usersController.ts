@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
 import CustomError from "../utils/CustomError.js";
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
 interface RequestWithQuery extends Request {
     query: {
