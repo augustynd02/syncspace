@@ -50,6 +50,16 @@ const postsController = {
                 where: {
                     id: {
                         in: friendIds
+                    },
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            middle_name: true,
+                            last_name: true,
+                        }
                     }
                 }
             })
