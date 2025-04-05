@@ -40,12 +40,16 @@ body {
 body {
   color: var(--color-text-dark-primary);
   background: var(--color-background);
-  font-family: var(--font-primary);
+  font-family: var(--font-secondary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   display: flex;
   flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
 }
 
 * {

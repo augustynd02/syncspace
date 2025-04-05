@@ -1,0 +1,27 @@
+.post {
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    padding: var(--spacing-medium);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    border-radius: 8px;
+    .postHeader {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-small);
+
+        svg {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .postContent {
+        p {
+            white-space: pre-wrap;
+        }
+    }
+
+}
+
