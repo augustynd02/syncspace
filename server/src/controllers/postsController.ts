@@ -46,13 +46,20 @@ const postsController = {
                 return friendship.requester.id === parseInt(id) ? friendship.receiver.id : friendship.requester.id;
             })
 
+            console.log(`FRIEND IDS: ${friendIds}`);
+
             const feed = await prisma.post.findMany({
                 where: {
-                    id: {
+                    user_id: {
                         in: friendIds
                     },
                 },
-                include: {
+                select: {
+                    id: true,
+                    title: true,
+                    message: true,
+                    created_at: true,
+                    user_id: false,
                     user: {
                         select: {
                             id: true,
@@ -61,7 +68,7 @@ const postsController = {
                             last_name: true,
                         }
                     }
-                }
+                },
             })
             return res.status(200).json({ feed: feed });
         } catch (err) {
