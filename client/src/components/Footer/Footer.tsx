@@ -1,5 +1,9 @@
+import styles from './Footer.module.scss';
+
 export default function Footer() {
     return (
-        <p>footer</p>
+        <footer className={styles.footer}>
+            <p>made by Dominik Augustyn</p>
+        </footer>
     )
 }
