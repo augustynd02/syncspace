@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import type { Request, Response } from "express";
+import { S3Client } from '@aws-sdk/client-s3';
 
 import authRouter from "./routes/authRouter.js";
 
@@ -12,6 +12,19 @@ import usersRouter from './routes/usersRouter.js';
 import postsRouter from './routes/postsRouter.js';
 
 dotenv.config();
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const BUCKET_REGION = process.env.BUCKET_REGION;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+	credentials: {
+		accessKeyId: ACCESS_KEY!,
+		secretAccessKey: SECRET_ACCESS_KEY!
+	},
+	region: BUCKET_REGION!
+})
 
 
 const app = express();

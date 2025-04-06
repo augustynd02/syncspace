@@ -1,7 +1,37 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import crypto from 'crypto';
+
+type Post = {
+    id: number;
+    message: string;
+    imageName: string | null;
+    created_at: Date;
+    user: {
+      id: number;
+      name: string;
+      middle_name: string | null;
+      last_name: string;
+    };
+    imageUrl?: string;
+  };
 
 const prisma = new PrismaClient();
+
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const BUCKET_REGION = process.env.BUCKET_REGION;
+const ACCESS_KEY = process.env.ACCESS_KEY;
+const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
+
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: ACCESS_KEY!,
+        secretAccessKey: SECRET_ACCESS_KEY!
+    },
+    region: BUCKET_REGION!
+})
 
 const postsController = {
     getFeed: async (req: Request, res: Response, next: NextFunction) => {
@@ -46,8 +76,6 @@ const postsController = {
                 return friendship.requester.id === parseInt(id) ? friendship.receiver.id : friendship.requester.id;
             })
 
-            console.log(`FRIEND IDS: ${friendIds}`);
-
             const feed = await prisma.post.findMany({
                 where: {
                     user_id: {
@@ -56,8 +84,8 @@ const postsController = {
                 },
                 select: {
                     id: true,
-                    title: true,
                     message: true,
+                    imageName: true,
                     created_at: true,
                     user_id: false,
                     user: {
@@ -69,10 +97,66 @@ const postsController = {
                         }
                     }
                 },
-            })
+            }) as Post[];
+
+            for (const post of feed) {
+                if (post.imageName) {
+                    const params = {
+                        Bucket: BUCKET_NAME,
+                        Key: post.imageName,
+                    }
+                    const command = new GetObjectCommand(params);
+                    const imageUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
+                    post.imageUrl = imageUrl;
+                }
+            }
+
             return res.status(200).json({ feed: feed });
         } catch (err) {
             next(err);
+        }
+    },
+    createPost: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.user_id;
+
+            if (!id) {
+                return res.status(401).json({ message: "Not authenticated" });
+            }
+
+            const randomImageName = crypto.randomBytes(16).toString('hex');
+
+            if (req.file) {
+                const params = {
+                    Bucket: BUCKET_NAME,
+                    Key: randomImageName,
+                    Body: req.file.buffer,
+                    ContentType: req.file.mimetype
+                }
+
+                const command = new PutObjectCommand(params);
+
+                // isolate for clearer error when issue is with AWS
+                try {
+                    await s3.send(command)
+                } catch(err: any) {
+                    return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                }
+            }
+
+            const post = await prisma.post.create({
+                data: {
+                    message: req.body.postMessage,
+                    imageName: req.file ? randomImageName : null,
+                    user_id: parseInt(id)
+                }
+            })
+
+            res.status(201).json({
+                message: "Post created successfully"
+            })
+        } catch (err) {
+            next(err)
         }
     }
 }
