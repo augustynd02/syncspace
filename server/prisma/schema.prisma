@@ -44,8 +44,8 @@ enum FriendshipStatus {
 
 model Post {
   id         Int      @id @default(autoincrement())
-  title      String
   message    String?
+  imageName  String?
   created_at DateTime @default(now())
   user_id    Int
 
