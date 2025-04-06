@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { cookies } from 'next/headers';
 import getUser from "@/utils/getUser";
 import Feed from "@/components/Feed/Feed";
+import PostCreator from "@/components/PostCreator/PostCreator";
+import FriendSuggestions from "@/components/FriendSuggestions/FriendSuggestions";
+import styles from "./Root.module.scss"
 
 async function getFeed() {
 	const cookieStore = await cookies();
@@ -34,6 +37,10 @@ export default async function Home() {
 		redirect('/login');
 	}
 	return (
-		<Feed posts={feed} />
+		<main className={styles.mainContainer}>
+			<PostCreator />
+			<Feed posts={feed} />
+			<FriendSuggestions />
+		</main>
 	);
 }

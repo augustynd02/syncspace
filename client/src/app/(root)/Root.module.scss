@@ -1,4 +1,7 @@
 .mainContainer {
     flex: 1;
     margin: var(--spacing-large) 0;
+
+    display: flex;
+    justify-content: center;
 }
