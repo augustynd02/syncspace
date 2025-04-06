@@ -1,0 +1,66 @@
+.postCreator {
+    padding: var(--spacing-small);
+    height: max-content;
+
+    display: flex;
+    gap: var(--spacing-small);
+
+    background-color: white;
+
+    svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-small);
+
+        textarea {
+            border: none;
+            resize: none;
+            width: 300px;
+            overflow: hidden;
+            font-size: 16px;
+            background-color: var(--color-background);
+            padding: 8px;
+            border-radius: 16px;
+            &:focus {
+                outline: none;
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+            }
+        }
+
+        .actions {
+            height: 20px;
+            label {
+                height: 100%;
+
+                svg {
+                    height: 100%;
+                    aspect-ratio: 1/1;
+                    color: var(--color-text-dark-secondary);
+                    cursor: pointer;
+                }
+
+                input[type="file"] {
+                    display: none;
+                }
+            }
+        }
+
+        button[type="submit"] {
+            background-color: var(--color-primary-400);
+            border: none;
+            color: var(--color-text-white-primary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--color-primary-300);
+            }
+        }
+    }
+}

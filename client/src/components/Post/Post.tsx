@@ -17,6 +17,7 @@ export default function Post({ post }: { post: PostType }) {
 
             <section className={styles.postContent}>
                 <p>{post.message}</p>
+                <img src={post.imageUrl} />
             </section>
 
             <footer className={styles.postFooter}>

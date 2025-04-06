@@ -18,8 +18,14 @@
     }
 
     .postContent {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-small);
         p {
             white-space: pre-wrap;
+        }
+        img {
+            max-width: 100%;
         }
     }
 
