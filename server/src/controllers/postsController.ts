@@ -97,6 +97,9 @@ const postsController = {
                         }
                     }
                 },
+                orderBy: {
+                    created_at: 'desc'
+                }
             }) as Post[];
 
             for (const post of feed) {
