@@ -2,12 +2,27 @@ import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
 import CustomError from "../utils/CustomError.js";
 import { Request, Response, NextFunction } from "express";
+import { getImageUrl } from "../lib/s3.js";
 
 interface RequestWithQuery extends Request {
     query: {
         q?: string;
     }
 }
+
+type Post = {
+    id: number;
+    message: string;
+    imageName: string | null;
+    created_at: Date;
+    user: {
+      id: number;
+      name: string;
+      middle_name: string | null;
+      last_name: string;
+    };
+    imageUrl?: string;
+  };
 
 const prisma = new PrismaClient();
 
@@ -140,7 +155,8 @@ const usersController = {
             const id = req.user_id;
 
             if (!id) {
-                return res.status(401).json({ message: "Not authenticated" });
+                res.status(401).json({ message: "Not authenticated" });
+                return;
             }
 
             const user = await prisma.user.findUnique({
@@ -157,12 +173,40 @@ const usersController = {
             })
 
             if (!user) {
-                return res.status(404).json({ message: "User not found" });
+                res.status(404).json({ message: "User not found" });
+                return;
             }
 
-            return res.status(200).json({ user: user });
+            res.status(200).json({ user: user });
         } catch (err) {
             next(err)
+        }
+    },
+    getUserPosts: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = parseInt(req.params.id);
+
+            const posts = await prisma.post.findMany({
+                where: {
+                    user_id: id
+                },
+                orderBy: {
+                    created_at: 'desc'
+                },
+                include: {
+                    user: true
+                }
+            }) as Post[]
+
+            for (const post of posts) {
+                if (post.imageName) {
+                    post.imageUrl = await getImageUrl(post.imageName);
+                }
+            }
+
+            res.status(200).json({ posts: posts });
+        } catch (err) {
+            next(err);
         }
     }
 }
