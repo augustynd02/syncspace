@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import crypto from 'crypto';
+import { getImageUrl, postImage } from '../lib/s3.js';
 
 type Post = {
     id: number;
@@ -104,13 +104,7 @@ const postsController = {
 
             for (const post of feed) {
                 if (post.imageName) {
-                    const params = {
-                        Bucket: BUCKET_NAME,
-                        Key: post.imageName,
-                    }
-                    const command = new GetObjectCommand(params);
-                    const imageUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
-                    post.imageUrl = imageUrl;
+                    post.imageUrl = await getImageUrl(post.imageName);
                 }
             }
 
@@ -130,18 +124,8 @@ const postsController = {
             const randomImageName = crypto.randomBytes(16).toString('hex');
 
             if (req.file) {
-                const params = {
-                    Bucket: BUCKET_NAME,
-                    Key: randomImageName,
-                    Body: req.file.buffer,
-                    ContentType: req.file.mimetype
-                }
-
-                const command = new PutObjectCommand(params);
-
-                // isolate for clearer error when issue is with AWS
                 try {
-                    await s3.send(command)
+                    await postImage(randomImageName, req.file);
                 } catch(err: any) {
                     return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
                 }
