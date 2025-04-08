@@ -90,6 +90,12 @@ const usersController = {
             const user = await prisma.user.findUnique({
                 where: {
                     id: id
+                }, select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                    bio: true
                 }
             })
 
