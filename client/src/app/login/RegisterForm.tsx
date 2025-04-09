@@ -6,6 +6,8 @@ import styles from './Form.module.scss';
 
 import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import Spinner from '@/components/Spinner/Spinner';
+import Button from '@/components/Button/Button';
 
 type FormData = {
     username: string;
@@ -55,7 +57,7 @@ const handleRegister = async (credentials: FormData) => {
     }
 }
 
-const handleLogin = async (credentials: { username: string; password: string;}) => {
+const handleLogin = async (credentials: { username: string; password: string; }) => {
     try {
         const response = await fetch("http://localhost:8000/api/auth/login", {
             method: 'POST',
@@ -84,7 +86,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
     const mutation = useMutation({
         mutationFn: handleRegister,
         onSuccess: async () => {
-            await handleLogin({ username: formData.username, password: formData.password})
+            await handleLogin({ username: formData.username, password: formData.password })
             router.push('/')
         },
         onError: (err) => {
@@ -108,7 +110,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (Object.values(formErrors).some(value => value)) {
-            setFormErrors({ ...formErrors, general: 'Cannot submit: some field are still not valid.'});
+            setFormErrors({ ...formErrors, general: 'Cannot submit: some field are still not valid.' });
             return;
         }
 
@@ -201,10 +203,9 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
                     </div>
                 </div>
 
-                <button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending && <FaSpinner />}
+                <Button type="submit" disabled={mutation.isPending} isLoading={mutation.isPending} size="medium">
                     Register
-                </button>
+                </Button>
 
                 {formErrors.general && <p key={Date.now()} className={styles.generalError}>{formErrors.general}</p>}
             </form>

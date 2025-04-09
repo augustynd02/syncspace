@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
-import { FaLock , FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
+import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
+import Spinner from '@/components/Spinner/Spinner';
+import Button from '@/components/Button/Button';
 
 type FormData = {
     username: string;
@@ -83,12 +85,12 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
                     <FaLock />
                 </div>
 
-                <button type="submit" disabled={mutation.isPending}>
-                    { mutation.isPending ? <FaSpinner /> : null }
-                    Login
-                </button>
 
-                { formError && <p className={styles.generalError} key={Date.now()}>{formError}</p> }
+                <Button type="submit" disabled={mutation.isPending} isLoading={mutation.isPending} size="medium">
+                    Login
+                </Button>
+
+                {formError && <p className={styles.generalError} key={Date.now()}>{formError}</p>}
             </form>
             <p>Don't have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Register <FaChevronRight /> </span></p>
         </section>
