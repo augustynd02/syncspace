@@ -13,7 +13,7 @@ interface RequestWithQuery extends Request {
 type Post = {
     id: number;
     message: string;
-    imageName: string | null;
+    image_name: string | null;
     created_at: Date;
     user: {
       id: number;
@@ -205,8 +205,8 @@ const usersController = {
             }) as Post[]
 
             for (const post of posts) {
-                if (post.imageName) {
-                    post.imageUrl = await getImageUrl(post.imageName);
+                if (post.image_name) {
+                    post.imageUrl = await getImageUrl(post.image_name);
                 }
             }
 

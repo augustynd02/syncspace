@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-  id          Int     @id @default(autoincrement())
-  username    String  @unique
-  password    String
-  name        String
-  middle_name String?
-  last_name   String
-  bio         String?
+  id              Int     @id @default(autoincrement())
+  username        String  @unique
+  password        String
+  name            String
+  middle_name     String?
+  last_name       String
+  bio             String?
+  avatar_name     String?
+  background_name String?
 
   posts                    Post[]
   liked_posts              Like[]
@@ -45,7 +47,7 @@ enum FriendshipStatus {
 model Post {
   id         Int      @id @default(autoincrement())
   message    String?
-  imageName  String?
+  image_name  String?
   created_at DateTime @default(now())
   user_id    Int
 

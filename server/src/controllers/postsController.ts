@@ -7,7 +7,7 @@ import { getImageUrl, postImage } from '../lib/s3.js';
 type Post = {
     id: number;
     message: string;
-    imageName: string | null;
+    image_name: string | null;
     created_at: Date;
     user: {
       id: number;
@@ -85,7 +85,7 @@ const postsController = {
                 select: {
                     id: true,
                     message: true,
-                    imageName: true,
+                    image_name: true,
                     created_at: true,
                     user_id: false,
                     user: {
@@ -103,8 +103,8 @@ const postsController = {
             }) as Post[];
 
             for (const post of feed) {
-                if (post.imageName) {
-                    post.imageUrl = await getImageUrl(post.imageName);
+                if (post.image_name) {
+                    post.imageUrl = await getImageUrl(post.image_name);
                 }
             }
 
@@ -134,7 +134,7 @@ const postsController = {
             const post = await prisma.post.create({
                 data: {
                     message: req.body.postMessage,
-                    imageName: req.file ? randomImageName : null,
+                    image_name: req.file ? randomImageName : null,
                     user_id: parseInt(id)
                 }
             })
