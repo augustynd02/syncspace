@@ -4,9 +4,12 @@ import { IoChatbubbleEllipses, IoNotifications, IoSearch } from "react-icons/io5
 import { FaUser } from "react-icons/fa";
 import styles from './Header.module.scss'
 import UserContext from "@/contexts/UserContext";
+import { useRouter } from 'next/navigation'
 import { useContext } from "react";
 
 export default function Header() {
+    const router = useRouter();
+
     const { user } = useContext(UserContext);
     return (
         <header className={styles.mainHeader}>
@@ -26,7 +29,7 @@ export default function Header() {
                     <ul>
                         <li><IoChatbubbleEllipses /></li>
                         <li><IoNotifications /></li>
-                        <li><FaUser /></li>
+                        <li onClick={() => { router.push(`/users/${user?.id}`)}}><FaUser /></li>
                     </ul>
                 </nav>
             </div>
