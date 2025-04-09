@@ -15,8 +15,8 @@ model User {
   middle_name     String?
   last_name       String
   bio             String?
-  avatar_name     String?
-  background_name String?
+  avatar_name     String
+  background_name String
 
   posts                    Post[]
   liked_posts              Like[]

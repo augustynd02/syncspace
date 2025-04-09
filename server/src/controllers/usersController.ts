@@ -10,6 +10,20 @@ interface RequestWithQuery extends Request {
     }
 }
 
+type User = {
+    id: number;
+    username: string;
+    password: string;
+    name: string;
+    middle_name?: string;
+    last_name: string;
+    bio?: string;
+    avatar_name: string;
+    background_name: string;
+    avatar_url?: string;
+    background_url?: string;
+}
+
 type Post = {
     id: number;
     message: string;
@@ -37,7 +51,9 @@ const usersController = {
                     password: req.body.password,
                     name: req.body.name,
                     ...(req.body.middle_name && { middle_name: req.body.middle_name }),
-                    last_name: req.body.last_name
+                    last_name: req.body.last_name,
+                    avatar_name: 'avatar_placeholder',
+                    background_name: 'background_placehodler'
                 }
             })
 
@@ -95,9 +111,19 @@ const usersController = {
                     name: true,
                     middle_name: true,
                     last_name: true,
-                    bio: true
+                    bio: true,
+                    avatar_name: true,
+                    background_name: true,
                 }
-            })
+            }) as User;
+
+            if (!user) {
+                res.status(404).json({ message: 'User could not be found.'});
+                return;
+            }
+
+            user.avatar_url = await getImageUrl(user.avatar_name);
+            user.background_url = await getImageUrl(user.background_name);
 
             res.status(200).json({ user });
         } catch (err) {
