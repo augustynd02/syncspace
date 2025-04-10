@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
 import CustomError from "../utils/CustomError.js";
-import { Request, Response, NextFunction } from "express";
-import { getImageUrl } from "../lib/s3.js";
+import Express, { Request, Response, NextFunction } from "express";
+import { getImageUrl, postImage } from "../lib/s3.js";
+import crypto from "crypto";
 
 interface RequestWithQuery extends Request {
     query: {
@@ -30,13 +31,13 @@ type Post = {
     image_name: string | null;
     created_at: Date;
     user: {
-      id: number;
-      name: string;
-      middle_name: string | null;
-      last_name: string;
+        id: number;
+        name: string;
+        middle_name: string | null;
+        last_name: string;
     };
     imageUrl?: string;
-  };
+};
 
 const prisma = new PrismaClient();
 
@@ -118,7 +119,7 @@ const usersController = {
             }) as User;
 
             if (!user) {
-                res.status(404).json({ message: 'User could not be found.'});
+                res.status(404).json({ message: 'User could not be found.' });
                 return;
             }
 
@@ -132,7 +133,6 @@ const usersController = {
     },
     editUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { name, middle_name, last_name, bio } = req.body;
             const id = req.params.id;
 
             if (!req.user_id) {
@@ -143,20 +143,49 @@ const usersController = {
                 return next(new CustomError(403, "Not authorized to perform this operation"));
             }
 
-            if (!name || !last_name) {
-                return next(new CustomError(400, "Missing required fields"));
+            const randomImageName = crypto.randomBytes(16).toString('hex');
+
+            if (req.files && !Array.isArray(req.files)) {
+                if (req.files.avatar_file) {
+                  try {
+                    await postImage(randomImageName, req.files.avatar_file[0]);
+                    req.body.avatar_name = randomImageName;
+                  } catch (err: any) {
+                    return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                  }
+                } else if (req.files.background_file && req.files.background_file[0]) {
+                  try {
+                    await postImage(randomImageName, req.files.background_file[0]);
+                    req.body.background_name = randomImageName;
+                  } catch (err: any) {
+                    return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                  }
+                }
+              }
+
+            const allowedFields = [
+                'username',
+                'password',
+                'name',
+                'middle_name',
+                'last_name',
+                'bio',
+                'avatar_name',
+                'background_name'
+            ];
+
+            const updateData: Record<string, any> = {};
+            for (const field of allowedFields) {
+                if (req.body[field] !== undefined) {
+                    updateData[field] = req.body[field];
+                }
             }
 
-            const user = await prisma.user.update({
+            const updatedUser = await prisma.user.update({
                 where: {
                     id: parseInt(id)
                 },
-                data: {
-                    name: name,
-                    middle_name: middle_name,
-                    last_name: last_name,
-                    bio: bio,
-                },
+                data: updateData
             })
 
             res.status(200).json({ message: "User updated successfully" });
