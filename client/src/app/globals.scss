@@ -10,6 +10,7 @@
   --color-primary-700: rgb(59, 39, 83);
 
   --color-error: rgb(209, 13, 13);
+  --color-success: rgb(65, 160, 65);
 
   --color-border: #C0C0C0;
 
@@ -61,4 +62,16 @@ h1, h2, h3, h4, h5, h6 {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.Toastify__progress-bar-theme--light {
+  background: var(--color-primary-400);
+}
+
+.Toastify__progress-bar--success {
+  background: var(--color-success);
+}
+
+.Toastify__progress-bar--error {
+  background: var(--color-error);
 }

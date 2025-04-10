@@ -5,6 +5,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaImage } from "react-icons/fa6";
 import React, { useRef, useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 const createPost = async (postFormData: FormData) => {
     try {
@@ -17,7 +18,7 @@ const createPost = async (postFormData: FormData) => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || "Login failed");
+            throw new Error(data.message || "Could not create post.");
         }
         return data;
     } catch (err) {
@@ -40,10 +41,10 @@ export default function PostCreator() {
     const mutation = useMutation({
         mutationFn: createPost,
         onSuccess: () => {
-            console.log('post created');
+            toast.success('Post successfully created!');
         },
         onError: (err) => {
-            console.log('error creating post:', err)
+            toast.error(err.message || 'Could not create post.');
         }
     })
 

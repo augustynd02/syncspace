@@ -6,18 +6,12 @@ import styles from './Form.module.scss';
 
 import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import Spinner from '@/components/Spinner/Spinner';
 import Button from '@/components/Button/Button';
+import { toast } from 'react-toastify';
 
 type FormData = {
     username: string;
     password: string;
-}
-
-type FormErrors = {
-    username?: string;
-    password?: string;
-    general?: string;
 }
 
 const handleLogin = async (credentials: FormData) => {
@@ -45,22 +39,21 @@ const handleLogin = async (credentials: FormData) => {
 
 export default function LoginForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
-    const [formError, setFormError] = useState<string | undefined>();
     const router = useRouter();
 
     const mutation = useMutation({
         mutationFn: handleLogin,
         onSuccess: () => {
+            toast.success('Successfully logged in!');
             router.push('/');
         },
         onError: (err) => {
-            setFormError(err.message);
+            toast.error(err.message || 'Could not log you in.');
         }
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormError(undefined);
         setFormData({ ...formData, [name]: value });
     }
 
@@ -85,12 +78,9 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
                     <FaLock />
                 </div>
 
-
                 <Button type="submit" disabled={mutation.isPending} isLoading={mutation.isPending} size="medium">
                     Login
                 </Button>
-
-                {formError && <p className={styles.generalError} key={Date.now()}>{formError}</p>}
             </form>
             <p>Don't have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Register <FaChevronRight /> </span></p>
         </section>

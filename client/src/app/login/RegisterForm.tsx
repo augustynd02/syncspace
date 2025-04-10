@@ -6,8 +6,8 @@ import styles from './Form.module.scss';
 
 import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import Spinner from '@/components/Spinner/Spinner';
 import Button from '@/components/Button/Button';
+import { toast }from 'react-toastify';
 
 type FormData = {
     username: string;
@@ -22,7 +22,6 @@ type FormErrors = {
     confirmPassword?: string;
     name?: string;
     last_name?: string;
-    general?: string;
 }
 
 type FieldName = "username" | "password" | "confirmPassword" | "name" | "last_name";
@@ -90,15 +89,14 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
             router.push('/')
         },
         onError: (err) => {
-            console.log(err);
-            setFormErrors({ ...formErrors, general: err.message })
+            toast.error('Could not register.');
         }
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormErrors({ ...formErrors, [name]: undefined, general: undefined });
+        setFormErrors({ ...formErrors, [name]: undefined });
         setFormData({ ...formData, [name]: value });
     }
 
@@ -110,7 +108,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (Object.values(formErrors).some(value => value)) {
-            setFormErrors({ ...formErrors, general: 'Cannot submit: some field are still not valid.' });
+            toast.error('Some fields are still invalid.');
             return;
         }
 
@@ -206,8 +204,6 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
                 <Button type="submit" disabled={mutation.isPending} isLoading={mutation.isPending} size="medium">
                     Register
                 </Button>
-
-                {formErrors.general && <p key={Date.now()} className={styles.generalError}>{formErrors.general}</p>}
             </form>
             <p>Already have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Login <FaChevronRight /> </span></p>
         </section>

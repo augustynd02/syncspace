@@ -98,12 +98,6 @@
 
 }
 
-.generalError {
-    animation: shake 0.4s;
-    color: var(--color-error);
-    text-align: center;
-}
-
 @keyframes shake {
     0% {
       transform: translateX(0);
@@ -121,12 +115,3 @@
       transform: translateX(0);
     }
   }
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}

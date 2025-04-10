@@ -5,6 +5,7 @@ import UserContext from "@/contexts/UserContext";
 import Button from "../Button/Button";
 import styles from './UploadImageButton.module.scss';
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface UploadImageButtonProps {
     children: ReactNode;
@@ -30,7 +31,6 @@ export default function UploadImageButton({ children, type }: UploadImageButtonP
 
         const formData = new FormData();
         formData.append(type, file);
-        // TODO: construct form data, multer on backend to process new image upload
 
         try {
             const response = await fetch(`http://localhost:8000/api/users/${user.id}`, {
@@ -42,14 +42,14 @@ export default function UploadImageButton({ children, type }: UploadImageButtonP
             const data = await response.json();
 
             if (!response.ok) {
-                console.error(`Error updating file: `, data);
+                toast.error('Could not upload image.')
                 return;
             }
 
-            console.log('File updated');
+            toast.success('Image uploaded!');
             router.refresh();
         } catch(err) {
-            console.error('Error updating file:', err);
+            toast.error('Could not upload image.');
         }
     }
 

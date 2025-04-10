@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import { ReactNode } from "react";
 import ClientProvider from "@/utils/ClientProvider";
+import { ToastContainer } from "react-toastify";
 
 import { Raleway, Montserrat } from 'next/font/google';
 import UserContextProvider from "@/contexts/UserContextProvider";
@@ -34,6 +35,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 				<ClientProvider>
 					<UserContextProvider user={user}>
 						{children}
+						<ToastContainer
+							position="bottom-right"
+							autoClose={3000}
+							newestOnTop={true}
+						/>
 					</UserContextProvider>
 				</ClientProvider>
 			</body>
