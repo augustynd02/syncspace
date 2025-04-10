@@ -7,7 +7,7 @@ interface ButtonProps {
     onClick?: () => void;
     type?: 'button' | 'submit';
     variant?: 'primary' | 'secondary' | 'outline';
-    size?: 'small' | 'medium' | 'large';
+    size?: 'icon' | 'small' | 'medium' | 'large';
     disabled?: boolean;
     isLoading?: boolean;
     className?: string;

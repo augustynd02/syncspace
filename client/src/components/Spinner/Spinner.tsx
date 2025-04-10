@@ -2,7 +2,7 @@ import styles from './Spinner.module.scss';
 import { FaSpinner } from "react-icons/fa";
 
 interface SpinnerProps {
-    size?: 'small' | 'medium' | 'large';
+    size?: 'icon' | 'small' | 'medium' | 'large';
 }
 
 export default function Spinner({ size = 'medium'} : SpinnerProps) {
