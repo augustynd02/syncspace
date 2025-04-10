@@ -76,17 +76,31 @@
                     cursor: pointer;
 
                     &:hover {
-                        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+                        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
                     }
 
                     &:hover svg {
                         color: var(--color-primary-400);
                     }
 
+                    &:hover img {
+                        filter: brightness(1.2);
+                        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+                    }
+
                     svg {
                         color: var(--color-text-dark-secondary);
                         width: 60%;
                         height: 60%;
+                        transition: 0.2s;
+                    }
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: inherit;
+
                         transition: 0.2s;
                     }
                 }
