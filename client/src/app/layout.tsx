@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 		<html lang="en" className={`${raleway.variable} ${montserrat.variable}`}>
 			<body>
 				<ClientProvider>
-					<UserContextProvider user={user}>
+					<UserContextProvider initialUser={user}>
 						{children}
 						<ToastContainer
 							position="bottom-right"

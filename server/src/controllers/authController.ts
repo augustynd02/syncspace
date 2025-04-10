@@ -3,6 +3,21 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import CustomError from "../utils/CustomError.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
+import { getImageUrl } from "../lib/s3.js";
+
+type User = {
+    id: number;
+    username: string;
+    password: string;
+    name: string;
+    middle_name?: string;
+    last_name: string;
+    bio?: string;
+    avatar_name: string;
+    background_name: string;
+    avatar_url?: string;
+    background_url?: string;
+}
 
 const prisma = new PrismaClient();
 
@@ -22,8 +37,18 @@ const authController = {
             const { username, password } = req.body;
 
             const user = await prisma.user.findUnique({
-                where: { username: username }
-            })
+                where: { username: username },
+                select: {
+                    id: true,
+                    password: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                    bio: true,
+                    avatar_name: true,
+                    background_name: true,
+                }
+            }) as User;
 
             if (!user) {
                 throw new CustomError(401, 'Invalid username');
@@ -34,6 +59,12 @@ const authController = {
                 throw new CustomError(401, 'Invalid password');
             }
 
+
+            user.avatar_url = await getImageUrl(user.avatar_name);
+            user.background_url = await getImageUrl(user.background_name);
+
+            const { password: userPassword, ...userWithoutPassword } = user;
+
             const token = generateAccessToken(String(user.id));
 
             res.cookie('token', token, {
@@ -42,7 +73,7 @@ const authController = {
                 sameSite: 'lax',
                 secure: false,
             });
-            res.status(200).json({ message: 'Login successful', user: { id: user.id }})
+            res.status(200).json({ message: 'Login successful', user: userWithoutPassword})
         } catch (err) {
             next(err)
         }

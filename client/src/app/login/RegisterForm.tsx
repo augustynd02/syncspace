@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
+import UserContext from '@/contexts/UserContext';
 
 import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
@@ -70,7 +71,7 @@ const handleLogin = async (credentials: { username: string; password: string; })
         if (!response.ok) {
             throw new Error(data.message || "Login failed");
         }
-        return data;
+        return data.user;
     } catch (err) {
         throw err;
     }
@@ -81,11 +82,13 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [formErrors, setFormErrors] = useState<FormErrors>({});
     const router = useRouter();
+    const { setUser } = useContext(UserContext);
 
     const mutation = useMutation({
         mutationFn: handleRegister,
         onSuccess: async () => {
-            await handleLogin({ username: formData.username, password: formData.password })
+            const user = await handleLogin({ username: formData.username, password: formData.password })
+            setUser(user)
             router.push('/')
         },
         onError: (err) => {

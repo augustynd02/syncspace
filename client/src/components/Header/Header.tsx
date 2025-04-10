@@ -11,7 +11,6 @@ export default function Header() {
     const router = useRouter();
 
     const { user } = useContext(UserContext);
-    console.log(user);
 
     return (
         <header className={styles.mainHeader}>
@@ -32,7 +31,7 @@ export default function Header() {
                         <li><IoChatbubbleEllipses /></li>
                         <li><IoNotifications /></li>
                         <li onClick={() => { router.push(`/users/${user?.id}`)}}>
-                            <img src={user.avatar_url} />
+                            <img src={user ? user.avatar_url : <FaUser /> } />
                         </li>
                     </ul>
                 </nav>

@@ -181,6 +181,10 @@ const usersController = {
                 }
             }
 
+            if (Object.keys(updateData).length === 0) {
+                throw new CustomError(401, 'No fields to update');
+            }
+
             const updatedUser = await prisma.user.update({
                 where: {
                     id: parseInt(id)
@@ -230,13 +234,18 @@ const usersController = {
                     middle_name: true,
                     last_name: true,
                     bio: true,
+                    avatar_name: true,
+                    background_name: true,
                 }
-            })
+            }) as User;
 
             if (!user) {
                 res.status(404).json({ message: "User not found" });
                 return;
             }
+
+            user.avatar_url = await getImageUrl(user.avatar_name);
+            user.background_url = await getImageUrl(user.background_name);
 
             res.status(200).json({ user: user });
         } catch (err) {

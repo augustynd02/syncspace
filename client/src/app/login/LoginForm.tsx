@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import UserContext from '@/contexts/UserContext';
 import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
@@ -31,7 +32,7 @@ const handleLogin = async (credentials: FormData) => {
         if (!response.ok) {
             throw new Error(data.message || "Login failed");
         }
-        return data;
+        return data.user;
     } catch (err) {
         throw err;
     }
@@ -39,11 +40,13 @@ const handleLogin = async (credentials: FormData) => {
 
 export default function LoginForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
+    const { setUser } = useContext(UserContext);
     const router = useRouter();
 
     const mutation = useMutation({
         mutationFn: handleLogin,
-        onSuccess: () => {
+        onSuccess: (user) => {
+            setUser(user);
             toast.success('Successfully logged in!');
             router.push('/');
         },
