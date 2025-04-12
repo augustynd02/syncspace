@@ -13,6 +13,8 @@ type Post = {
       name: string;
       middle_name: string | null;
       last_name: string;
+      avatar_name: string;
+      avatar_url: string;
     };
     imageUrl?: string;
   };
@@ -80,6 +82,7 @@ const postsController = {
                             name: true,
                             middle_name: true,
                             last_name: true,
+                            avatar_name: true,
                         }
                     }
                 },
@@ -92,6 +95,7 @@ const postsController = {
                 if (post.image_name) {
                     post.imageUrl = await getImageUrl(post.image_name);
                 }
+                post.user.avatar_url = await getImageUrl(post.user.avatar_name);
             }
 
             return res.status(200).json({ feed: feed });

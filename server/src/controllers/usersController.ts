@@ -35,6 +35,8 @@ type Post = {
         name: string;
         middle_name: string | null;
         last_name: string;
+        avatar_name: string;
+        avatar_url: string;
     };
     imageUrl?: string;
 };
@@ -263,8 +265,20 @@ const usersController = {
                 orderBy: {
                     created_at: 'desc'
                 },
-                include: {
-                    user: true
+                select: {
+                    id: true,
+                    message: true,
+                    image_name: true,
+                    created_at: true,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            middle_name: true,
+                            last_name: true,
+                            avatar_name: true,
+                        }
+                    }
                 }
             }) as Post[]
 
@@ -272,6 +286,7 @@ const usersController = {
                 if (post.image_name) {
                     post.imageUrl = await getImageUrl(post.image_name);
                 }
+                post.user.avatar_url = await getImageUrl(post.user.avatar_name);
             }
 
             res.status(200).json({ posts: posts });

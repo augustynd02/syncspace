@@ -11,9 +11,10 @@
         align-items: center;
         gap: var(--spacing-small);
 
-        svg {
-            width: 32px;
-            height: 32px;
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
         }
     }
 
