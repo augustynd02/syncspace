@@ -3,7 +3,9 @@ import Post from "@/types/Post";
 import styles from "./UserPage.module.scss";
 import getUser from "@/utils/getUser";
 import UploadImageButton from "@/components/UploadImageButton/UploadImageButton";
+import EditProfileButton from "@/components/UpdateInfoButton/EditProfileButton";
 import { MdAddPhotoAlternate } from "react-icons/md";
+import User from "@/types/User";
 
 const getUserPosts = async (id: string): Promise<Post[] | null> => {
     const response = await fetch(`http://localhost:8000/api/users/${id}/posts`, {
@@ -43,8 +45,10 @@ interface Params {
 
 export default async function userPage({ params }: Params) {
     const posts = await getUserPosts(params.id);
-    const user = await getUserInfo(params.id);
+    const user: User = await getUserInfo(params.id);
     const currentUser = await getUser();
+
+    const isOwner = user.id === currentUser?.id;
 
     return (
         <main className={styles.userMain}>
@@ -52,16 +56,18 @@ export default async function userPage({ params }: Params) {
                 <section className={styles.profileImages}>
                     <div className={styles.backgroundContainer}>
                         <img src={user.background_url} className={styles.backgroundImage} />
-                        { user.id === currentUser?.id ? <UploadImageButton type="background_file"> <MdAddPhotoAlternate /> </UploadImageButton> : null }
+                        { isOwner && <UploadImageButton type="background_file"> <MdAddPhotoAlternate /> </UploadImageButton>}
                     </div>
                     <div className={styles.avatarContainer}>
                         <img src={user.avatar_url} className={styles.avatar} />
-                        { user.id === currentUser?.id ? <UploadImageButton type="avatar_file"> <MdAddPhotoAlternate /> </UploadImageButton> : null }
+                        { isOwner && <UploadImageButton type="avatar_file"> <MdAddPhotoAlternate /> </UploadImageButton>}
                     </div>
                 </section>
                 <section className={styles.profileInfo}>
                     <h2>{user.name} {user.middle_name} {user.last_name}</h2>
+                    <p>{user.bio} </p>
                 </section>
+                { isOwner && <EditProfileButton className={styles.editProfileButton} user={user}>Edit profile info</EditProfileButton> }
             </section>
             { posts && <Feed posts={posts} />}
         </main>

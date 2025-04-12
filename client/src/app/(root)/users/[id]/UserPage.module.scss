@@ -4,9 +4,13 @@
     align-items: center;
 
     .profileContainer {
+        position: relative;
         max-width: 1260px;
         width: 100%;
         margin-bottom: 1rem;
+        background-color: white;
+        border-radius: 0 0 8px;
+        padding-bottom: 1rem;
 
         .profileImages {
             margin-bottom: calc(192px / 2);
@@ -22,6 +26,7 @@
                     object-fit: cover;
                     width: 100%;
                     max-height: 100%;
+                    border-radius: 0 0 8px 8px;
                 }
             }
 
@@ -33,7 +38,7 @@
                 height: 192px;
 
                 border-radius: 100%;
-                border: 0.75rem solid var(--color-background);
+                border: 0.75rem solid white;
 
                 .avatar {
                     width: 100%;
@@ -46,6 +51,16 @@
 
         .profileInfo {
             text-align: center;
+
+            h2 {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .editProfileButton {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
         }
 
     }
