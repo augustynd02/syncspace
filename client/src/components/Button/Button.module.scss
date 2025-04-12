@@ -2,15 +2,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    font-weight: bold;
     cursor: pointer;
+    border-radius: 16px;
+    transition: 0.2s;
 }
 
 .primary {
     background-color: var(--color-primary-400);
     color: var(--color-text-white-primary);
     border: none;
-    border-radius: 16px;
-    transition: background-color 0.2s;
 
     &:disabled {
         cursor: not-allowed;
@@ -22,8 +24,14 @@
     }
 }
 
-.secondary {
-    background-color: var(--color)
+.outline {
+    background-color: inherit;
+    border: 2px solid var(--color-border);
+    color: var(--color-primary-400);
+
+    &:hover {
+        border-color: var(--color-primary-400);
+    }
 }
 
 .icon {
