@@ -1,0 +1,64 @@
+@use '@/styles/mixins';
+
+.friendListContainer {
+    position: sticky;
+    top: calc(45px + var(--spacing-medium));
+    height: max-content;
+    padding: var(--spacing-medium);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
+    h3 {
+        margin-bottom: var(--spacing-medium);
+    }
+
+    .friendList {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-small);
+    }
+}
+
+
+.userMiniature {
+    display: flex;
+    flex-direction: column;
+
+    width: 96px;
+
+    img {
+        width: 96px;
+        height: 96px;
+        border-radius: 8px;
+    }
+    span {
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+    }
+}
+
+.noFriends {
+    min-width: calc(4 * 96px + 4 * var(--spacing-small));
+    position: sticky;
+    top: calc(45px + var(--spacing-medium));
+    height: max-content;
+    padding: var(--spacing-medium);
+
+    @include mixins.flex-center;
+    flex-direction: column;
+
+    svg {
+        width: 64px;
+        height: 64px;
+        color: var(--color-text-dark-secondary);
+    }
+
+    background-color: white;
+    color: var(--color-text-dark-secondary);
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}

@@ -7,7 +7,6 @@
         position: relative;
         max-width: 1260px;
         width: 100%;
-        margin-bottom: 1rem;
         background-color: white;
         border-radius: 0 0 8px;
         padding-bottom: 1rem;
@@ -63,6 +62,15 @@
             right: 1rem;
         }
 
+    }
+
+    .profileContent {
+        margin: var(--spacing-medium) 0;
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-medium);
+        max-width: 1260px;
+        width: 100%;
     }
 
 }

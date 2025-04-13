@@ -56,7 +56,7 @@ const usersController = {
                     ...(req.body.middle_name && { middle_name: req.body.middle_name }),
                     last_name: req.body.last_name,
                     avatar_name: 'avatar_placeholder',
-                    background_name: 'background_placehodler'
+                    background_name: 'background_placeholder'
                 }
             })
 
@@ -290,6 +290,68 @@ const usersController = {
             }
 
             res.status(200).json({ posts: posts });
+        } catch (err) {
+            next(err);
+        }
+    },
+    getFriends: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = parseInt(req.params.id);
+
+            const friendships = await prisma.friendship.findMany({
+                where: {
+                    OR: [
+                        {
+                            requester_id: id
+                        },
+                        {
+                            receiver_id: id
+                        }
+                    ],
+                    AND: [
+                        {
+                            status: 'accepted'
+                        }
+                    ]
+                },
+                select: {
+                    requester: {
+                        select: {
+                            id: true,
+                        }
+                    },
+                    receiver: {
+                        select: {
+                            id: true,
+                        }
+                    }
+                }
+            })
+
+            const friendIds = friendships.map(friendship => {
+                return friendship.requester.id === id ? friendship.receiver.id : friendship.requester.id;
+            })
+
+            const friends = await prisma.user.findMany({
+                where: {
+                    id: {
+                        in: friendIds
+                    }
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                    avatar_name: true,
+                }
+            }) as User[]
+
+            for(const friend of friends) {
+                friend.avatar_url = await getImageUrl(friend.avatar_name);
+            }
+
+            res.status(200).json({ friends: friends });
         } catch (err) {
             next(err);
         }
