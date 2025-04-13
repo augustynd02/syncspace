@@ -8,8 +8,9 @@
         max-width: 1260px;
         width: 100%;
         background-color: white;
-        border-radius: 0 0 8px;
+        border-radius: 0 0 8px 8px;
         padding-bottom: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 
         .profileImages {
             margin-bottom: calc(192px / 2);
