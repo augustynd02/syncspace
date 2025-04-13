@@ -17,6 +17,7 @@
         &:has(input:not(:placeholder-shown)) label, &:has(textarea:not(:placeholder-shown)) label {
             transform: translateY(-50%) scale(0.8);
             top: 0;
+            font-weight: 700;
         }
 
         &:focus-within label, &:focus-within svg {
@@ -33,6 +34,7 @@
             background-color: white;
             font-size: 14px;
             color: var(--color-text-dark-secondary);
+            font-weight: 300;
 
             transition: 0.2s;
         }
