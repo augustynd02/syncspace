@@ -4,9 +4,11 @@ import styles from "./UserPage.module.scss";
 import getUser from "@/utils/getUser";
 import UploadImageButton from "@/components/UploadImageButton/UploadImageButton";
 import EditProfileButton from "@/components/EditProfileButton/EditProfileButton";
+import FriendshipButton from "@/components/FriendshipButton/FriendshipButton";
 import FriendList from "@/components/FriendList/FriendList";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import User from "@/types/User";
+import Friendship from "@/types/Friendship";
 
 const getUserPosts = async (id: string): Promise<Post[] | null> => {
     const response = await fetch(`http://localhost:8000/api/users/${id}/posts`, {
@@ -53,6 +55,20 @@ const getFriends = async (id: string) => {
     return data.friends;
 }
 
+const getFriendshipStatus = async (id1: string, id2: string) => {
+    const response = await fetch(`http://localhost:8000/api/friendships/status?user1=${id1}&user2=${id2}`, {
+        method: 'GET',
+        credentials: 'include'
+    })
+    const data = await response.json();
+    if (!response.ok) {
+        console.error('Error fetching user: ', data);
+        return null;
+    }
+    console.log(data)
+    return data.friendship
+}
+
 interface Params {
     params: {
         id: string;
@@ -64,8 +80,13 @@ export default async function UserPage({ params }: Params) {
     const user: User = await getUserInfo(params.id);
     const friends: User[] = await getFriends(params.id);
     const currentUser = await getUser();
+    let friendship: Friendship | undefined;
 
     const isOwner = user.id === currentUser?.id;
+
+    if (!isOwner && currentUser) {
+        friendship = await getFriendshipStatus(user.id, currentUser.id);
+    }
 
     return (
         <main className={styles.userMain}>
@@ -98,6 +119,7 @@ export default async function UserPage({ params }: Params) {
                     <h2>{user.name} {user.middle_name} {user.last_name}</h2>
                     <p>{user.bio}</p>
                 </section>
+                {!isOwner && currentUser && <FriendshipButton friendship={friendship} currentUserId={currentUser.id} />}
                 {isOwner && (
                     <EditProfileButton
                         className={styles.editProfileButton}
