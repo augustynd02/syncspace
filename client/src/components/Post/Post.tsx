@@ -3,7 +3,6 @@ import styles from './Post.module.scss';
 import formatDate from "@/utils/formatDate";
 
 export default function Post({ post }: { post: PostType }) {
-    console.log(post);
     const date = post.created_at.slice(0, 10);
     return (
         <article className={styles.post}>
