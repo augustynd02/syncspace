@@ -119,7 +119,7 @@ export default async function UserPage({ params }: Params) {
                     <h2>{user.name} {user.middle_name} {user.last_name}</h2>
                     <p>{user.bio}</p>
                 </section>
-                {!isOwner && currentUser && <FriendshipButton friendship={friendship} currentUserId={currentUser.id} />}
+                {!isOwner && currentUser && <FriendshipButton friendship={friendship} currentUserId={currentUser.id} userId={user.id} />}
                 {isOwner && (
                     <EditProfileButton
                         className={styles.editProfileButton}

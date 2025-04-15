@@ -10,6 +10,7 @@ import errorMiddleware from './middleware/errorMiddleware.js';
 import authenticateToken from './middleware/authenticateToken.js';
 import usersRouter from './routes/usersRouter.js';
 import postsRouter from './routes/postsRouter.js';
+import friendshipsRouter from './routes/friendshipsRouter.js';
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/friendships', friendshipsRouter);
 
 app.use(errorMiddleware);
 
