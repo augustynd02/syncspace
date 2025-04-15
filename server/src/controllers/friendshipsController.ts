@@ -48,7 +48,6 @@ const friendshipsController = {
 		try {
 			const { user1, user2 } = req.query;
 
-			console.log(user1, user2);
 			if (!req.user_id || req.user_id != user1 && req.user_id != user2) {
 				return next(new CustomError(401, "User not authorized to update this friendship"))
 			}
@@ -73,8 +72,6 @@ const friendshipsController = {
 					]
 				},
 			}) as Friendship;
-
-			console.log(friendship);
 
 			if (!friendship) {
 				const updatedFriendship = await prisma.friendship.create({
