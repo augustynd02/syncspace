@@ -32,11 +32,11 @@ const postsController = {
     getFeed: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.user_id) {
-                return res.status(401).json({ message: "Not authenticated" });
+                res.status(401).json({ message: "Not authenticated" });
+                return;
             }
 
             const id = parseInt(req.user_id);
-
 
             const friendships = await prisma.friendship.findMany({
                 where: {
@@ -108,7 +108,7 @@ const postsController = {
                 post.hasLiked = post.likes.some(like => like.user_id === id);
             }
 
-            return res.status(200).json({ feed: feed });
+            res.status(200).json({ feed: feed });
         } catch (err) {
             next(err);
         }
@@ -118,7 +118,8 @@ const postsController = {
             const id = req.user_id;
 
             if (!id) {
-                return res.status(401).json({ message: "Not authenticated" });
+                res.status(401).json({ message: "Not authenticated" });
+                return;
             }
 
             const randomImageName = crypto.randomBytes(16).toString('hex');
@@ -127,7 +128,8 @@ const postsController = {
                 try {
                     await postImage(randomImageName, req.file);
                 } catch(err: any) {
-                    return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                    res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                    return;
                 }
             }
 
@@ -156,8 +158,6 @@ const postsController = {
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
 
-            console.log(`Liking post ${post_id} by ${user_id}`);
-
             const like = await prisma.like.findFirst({
                 where: {
                     user_id: user_id,
@@ -177,7 +177,7 @@ const postsController = {
                 }
             })
 
-            return res.status(200).json({ like: newLike });
+            res.status(200).json({ like: newLike });
         } catch (err) {
             next(err)
         }
@@ -213,7 +213,7 @@ const postsController = {
                 }
             })
 
-            return res.status(200).json({ message: "Like removed" });
+            res.status(200).json({ message: "Like removed" });
         } catch (err) {
             next(err);
         }

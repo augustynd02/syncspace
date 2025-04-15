@@ -145,11 +145,13 @@ const usersController = {
             const id = req.params.id;
 
             if (!req.user_id) {
-                return next(new CustomError(401, "Not authenticated"))
+                next(new CustomError(401, "Not authenticated"));
+                return;
             }
 
             if (req.user_id !== id) {
-                return next(new CustomError(403, "Not authorized to perform this operation"));
+                next(new CustomError(403, "Not authorized to perform this operation"));
+                return;
             }
 
             const randomImageName = crypto.randomBytes(16).toString('hex');
@@ -160,14 +162,16 @@ const usersController = {
                     await postImage(randomImageName, req.files.avatar_file[0]);
                     req.body.avatar_name = randomImageName;
                   } catch (err: any) {
-                    return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                    res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                    return;
                   }
                 } else if (req.files.background_file && req.files.background_file[0]) {
                   try {
                     await postImage(randomImageName, req.files.background_file[0]);
                     req.body.background_name = randomImageName;
                   } catch (err: any) {
-                    return res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                    res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                    return;
                   }
                 }
               }
