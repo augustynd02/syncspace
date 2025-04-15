@@ -31,15 +31,22 @@ type Post = {
     image_name: string | null;
     created_at: Date;
     user: {
-        id: number;
-        name: string;
-        middle_name: string | null;
-        last_name: string;
-        avatar_name: string;
-        avatar_url: string;
+      id: number;
+      name: string;
+      middle_name: string | null;
+      last_name: string;
+      avatar_name: string;
+      avatar_url?: string;
     };
     imageUrl?: string;
-};
+    hasLiked?: boolean;
+    likes: {
+        id: number;
+        user_id: number;
+        post_id: number;
+        liked_at: Date;
+    }[];
+  };
 
 const prisma = new PrismaClient();
 
@@ -278,7 +285,8 @@ const usersController = {
                             last_name: true,
                             avatar_name: true,
                         }
-                    }
+                    },
+                    likes: true
                 }
             }) as Post[]
 
@@ -287,6 +295,7 @@ const usersController = {
                     post.imageUrl = await getImageUrl(post.image_name);
                 }
                 post.user.avatar_url = await getImageUrl(post.user.avatar_name);
+                post.hasLiked = post.likes.some(like => like.user_id === id);
             }
 
             res.status(200).json({ posts: posts });
