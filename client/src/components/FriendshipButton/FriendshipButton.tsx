@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Button from "../Button/Button";
 import Friendship from "@/types/Friendship";
+import styles from './FriendshipButton.module.scss'
 
 export default function FriendshipButton({ friendship, currentUserId, userId }: { friendship: Friendship | undefined, currentUserId: string; userId: string; }) {
     const [currentFriendship, setCurrentFriendship] = useState(friendship);
@@ -42,6 +43,7 @@ export default function FriendshipButton({ friendship, currentUserId, userId }: 
 
     return (
         <Button
+            className={styles.friendshipButton}
             onClick={handleClick}
         >
             {getButtonText()}
