@@ -65,7 +65,7 @@ const getFriendshipStatus = async (id1: string, id2: string) => {
         console.error('Error fetching user: ', data);
         return null;
     }
-    console.log(data)
+
     return data.friendship
 }
 
