@@ -2,6 +2,7 @@ import type PostType from "@/types/Post";
 import styles from './Post.module.scss';
 import formatDate from "@/utils/formatDate";
 import Likes from "../Likes/Likes";
+import Comments from "../Comments/Comments";
 
 export default function Post({ post }: { post: PostType }) {
     const date = post.created_at.slice(0, 10);
@@ -22,6 +23,7 @@ export default function Post({ post }: { post: PostType }) {
 
             <footer className={styles.postFooter}>
                 <Likes post_id={post.id} content_type="post" initialCount={post.likes.length} hasLiked={post.hasLiked} />
+                <Comments initialComments={post.comments} />
             </footer>
         </article>
     )

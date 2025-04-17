@@ -25,28 +25,48 @@ type User = {
     background_url?: string;
 }
 
+interface Like {
+    id: number;
+    user_id: number;
+    post_id: number;
+    liked_at: Date;
+}
+
+interface Comment {
+    id: number;
+    content: string;
+    user_id: number;
+    post_id: number;
+    created_at: Date;
+    likes: Like[]
+    user: {
+        id: number;
+        name: string;
+        middle_name: string | null;
+        last_name: string;
+        avatar_name: string;
+        avatar_url?: string;
+    };
+}
+
 type Post = {
     id: number;
     message: string;
     image_name: string | null;
     created_at: Date;
     user: {
-      id: number;
-      name: string;
-      middle_name: string | null;
-      last_name: string;
-      avatar_name: string;
-      avatar_url?: string;
+        id: number;
+        name: string;
+        middle_name: string | null;
+        last_name: string;
+        avatar_name: string;
+        avatar_url?: string;
     };
     imageUrl?: string;
     hasLiked?: boolean;
-    likes: {
-        id: number;
-        user_id: number;
-        post_id: number;
-        liked_at: Date;
-    }[];
-  };
+    likes: Like[];
+    comments: Comment[];
+};
 
 const prisma = new PrismaClient();
 
@@ -158,23 +178,23 @@ const usersController = {
 
             if (req.files && !Array.isArray(req.files)) {
                 if (req.files.avatar_file) {
-                  try {
-                    await postImage(randomImageName, req.files.avatar_file[0]);
-                    req.body.avatar_name = randomImageName;
-                  } catch (err: any) {
-                    res.status(500).json({ message: "Error uploading file to S3", error: err.message });
-                    return;
-                  }
+                    try {
+                        await postImage(randomImageName, req.files.avatar_file[0]);
+                        req.body.avatar_name = randomImageName;
+                    } catch (err: any) {
+                        res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                        return;
+                    }
                 } else if (req.files.background_file && req.files.background_file[0]) {
-                  try {
-                    await postImage(randomImageName, req.files.background_file[0]);
-                    req.body.background_name = randomImageName;
-                  } catch (err: any) {
-                    res.status(500).json({ message: "Error uploading file to S3", error: err.message });
-                    return;
-                  }
+                    try {
+                        await postImage(randomImageName, req.files.background_file[0]);
+                        req.body.background_name = randomImageName;
+                    } catch (err: any) {
+                        res.status(500).json({ message: "Error uploading file to S3", error: err.message });
+                        return;
+                    }
                 }
-              }
+            }
 
             const allowedFields = [
                 'username',
@@ -267,6 +287,10 @@ const usersController = {
     },
     getUserPosts: async (req: Request, res: Response, next: NextFunction) => {
         try {
+            if (!req.user_id) {
+                next(new CustomError(401, 'Not authenticated'));
+                return;
+            }
             const id = parseInt(req.params.id);
 
             const posts = await prisma.post.findMany({
@@ -290,7 +314,21 @@ const usersController = {
                             avatar_name: true,
                         }
                     },
-                    likes: true
+                    likes: true,
+                    comments: {
+                        include: {
+                            likes: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    middle_name: true,
+                                    last_name: true,
+                                    avatar_name: true,
+                                }
+                            }
+                        }
+                    }
                 }
             }) as Post[]
 
@@ -299,7 +337,10 @@ const usersController = {
                     post.imageUrl = await getImageUrl(post.image_name);
                 }
                 post.user.avatar_url = await getImageUrl(post.user.avatar_name);
-                post.hasLiked = post.likes.some(like => like.user_id === id);
+                post.hasLiked = post.likes.some(like => like.user_id === parseInt(req.user_id));
+                for (const comment of post.comments) {
+                    comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
+                }
             }
 
             res.status(200).json({ posts: posts });
@@ -360,7 +401,7 @@ const usersController = {
                 }
             }) as User[]
 
-            for(const friend of friends) {
+            for (const friend of friends) {
                 friend.avatar_url = await getImageUrl(friend.avatar_name);
             }
 

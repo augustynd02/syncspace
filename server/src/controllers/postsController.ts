@@ -3,6 +3,23 @@ import { Request, Response, NextFunction } from "express";
 import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
 
+
+interface Like {
+    id: number;
+    user_id: number;
+    post_id: number;
+    liked_at: Date;
+}
+
+interface Comment {
+    id: number;
+    content: string;
+    user_id: number;
+    post_id: number;
+    created_at: Date;
+    likes: Like[]
+}
+
 type Post = {
     id: number;
     message: string;
@@ -18,12 +35,8 @@ type Post = {
     };
     imageUrl?: string;
     hasLiked?: boolean;
-    likes: {
-        id: number;
-        user_id: number;
-        post_id: number;
-        liked_at: Date;
-    }[];
+    likes: Like[];
+    comments: Comment[];
   };
 
 const prisma = new PrismaClient();
@@ -93,7 +106,12 @@ const postsController = {
                             avatar_name: true,
                         }
                     },
-                    likes: true
+                    likes: true,
+                    comments: {
+                        include: {
+                            likes: true
+                        }
+                    }
                 },
                 orderBy: {
                     created_at: 'desc'
