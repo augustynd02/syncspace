@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import Feed from "@/components/Feed/Feed";
 import Post from "@/types/Post";
 import styles from "./UserPage.module.scss";
@@ -10,10 +11,20 @@ import { MdAddPhotoAlternate } from "react-icons/md";
 import User from "@/types/User";
 import Friendship from "@/types/Friendship";
 
+
 const getUserPosts = async (id: string): Promise<Post[] | null> => {
+    const cookieStore = await cookies();
+    const token = await cookieStore.get('token')?.value;
+	if (!token) {
+		return null;
+	}
+
     const response = await fetch(`http://localhost:8000/api/users/${id}/posts`, {
         method: 'GET',
         credentials: 'include',
+        headers: {
+			Cookie: `token=${token}`
+		}
     });
     const data = await response.json();
 
@@ -26,9 +37,18 @@ const getUserPosts = async (id: string): Promise<Post[] | null> => {
 }
 
 const getUserInfo = async (id: string) => {
+    const cookieStore = await cookies();
+    const token = await cookieStore.get('token')?.value;
+	if (!token) {
+		return null;
+	}
+
     const response = await fetch(`http://localhost:8000/api/users/${id}`, {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+			Cookie: `token=${token}`
+		}
     })
     const data = await response.json();
 
@@ -41,9 +61,18 @@ const getUserInfo = async (id: string) => {
 }
 
 const getFriends = async (id: string) => {
+    const cookieStore = await cookies();
+    const token = await cookieStore.get('token')?.value;
+	if (!token) {
+		return null;
+	}
+
     const response = await fetch(`http://localhost:8000/api/users/${id}/friends`, {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+			Cookie: `token=${token}`
+		}
     })
     const data = await response.json();
 
@@ -56,9 +85,18 @@ const getFriends = async (id: string) => {
 }
 
 const getFriendshipStatus = async (id1: string, id2: string) => {
+    const cookieStore = await cookies();
+    const token = await cookieStore.get('token')?.value;
+	if (!token) {
+		return null;
+	}
+
     const response = await fetch(`http://localhost:8000/api/friendships/status?user1=${id1}&user2=${id2}`, {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
+        headers: {
+			Cookie: `token=${token}`
+		}
     })
     const data = await response.json();
     if (!response.ok) {
@@ -76,9 +114,10 @@ interface Params {
 }
 
 export default async function UserPage({ params }: Params) {
-    const posts = await getUserPosts(params.id);
-    const user: User = await getUserInfo(params.id);
-    const friends: User[] = await getFriends(params.id);
+    const { id } = await params;
+    const posts = await getUserPosts(id);
+    const user: User = await getUserInfo(id);
+    const friends: User[] = await getFriends(id);
     const currentUser = await getUser();
     let friendship: Friendship | undefined;
 
