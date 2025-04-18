@@ -23,7 +23,7 @@ export default function Post({ post }: { post: PostType }) {
 
             <footer className={styles.postFooter}>
                 <Likes post_id={post.id} content_type="post" initialCount={post.likes.length} hasLiked={post.hasLiked} />
-                <Comments initialComments={post.comments} />
+                <Comments initialComments={post.comments} postId={post.id} />
             </footer>
         </article>
     )
