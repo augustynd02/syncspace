@@ -1,3 +1,5 @@
+@use '@/styles/mixins';
+
 .commentsButton {
     padding-left: var(--spacing-small);
 
@@ -59,6 +61,57 @@
             p {
                 white-space: pre-wrap;
                 font-size: 14px;
+            }
+        }
+    }
+    .inputContainer {
+        margin-top: 0.5rem;
+        width: 100%;
+
+        display: flex;
+
+        background-color: rgb(241, 241, 241);
+        border-radius: 16px;
+
+        transition: 0.2s;
+
+        &:focus-within {
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+        }
+        &:focus-within button svg {
+            color: var(--color-primary-400);
+        }
+
+        input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+
+            border: none;
+            border-radius: 16px 0 0 16px;
+            background-color: inherit;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        button {
+            width: 32px;
+            height: 32px;
+
+            @include mixins.flex-center;
+
+            border-radius: 0 16px 16px 0;
+            border: none;
+            background-color: inherit;
+
+
+            svg {
+                width: 50%;
+                height: 50%;
+
+                color: var(--color-text-dark-secondary);
+                transition: 0.2s;
             }
         }
     }
