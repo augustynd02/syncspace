@@ -235,6 +235,29 @@ const postsController = {
         } catch (err) {
             next(err);
         }
+    },
+    createComment: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!req.user_id) {
+                res.status(401).json({ message: "Not authorized" });
+                return;
+            }
+
+            const post_id = parseInt(req.params.post_id);
+            const user_id = parseInt(req.user_id);
+
+            const comment = await prisma.comment.create({
+                data: {
+                    content: req.body.commentMessage,
+                    post_id: post_id,
+                    user_id: user_id,
+                }
+            })
+
+            res.status(200).json({ message: "Comment added"});
+        } catch (err) {
+            next(err);
+        }
     }
 }
 
