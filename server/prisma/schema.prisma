@@ -92,18 +92,18 @@ model Notification {
   id             Int      @id @default(autoincrement())
   message        String
   type           NotificationType
-  isRead         Boolean  @default(false)
-  createdAt      DateTime @default(now())
+  is_read         Boolean  @default(false)
+  created_at      DateTime @default(now())
 
-  postId         Int?
-  post           Post?    @relation(fields: [postId],   references: [id])
-  commentId      Int?
-  comment        Comment? @relation(fields: [commentId],references: [id])
+  post_id         Int?
+  post           Post?    @relation(fields: [post_id],   references: [id])
+  comment_id      Int?
+  comment        Comment? @relation(fields: [comment_id],references: [id])
 
-  senderId        Int
-  sender          User     @relation("NotificationSender", fields: [senderId], references: [id])
-  recipientId    Int
-  recipient      User     @relation("NotificationRecipient", fields: [recipientId], references: [id])
+  sender_id        Int
+  sender          User     @relation("NotificationSender", fields: [sender_id], references: [id])
+  recipient_id    Int
+  recipient      User     @relation("NotificationRecipient", fields: [recipient_id], references: [id])
 }
 
 enum NotificationType {
