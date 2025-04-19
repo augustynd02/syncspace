@@ -99,18 +99,23 @@ export default function Comments({ initialComments, postId }: { initialComments:
                             </article>
                         )
                     })}
-                    <div className={styles.inputContainer}>
-                        <input
-                            type="text"
-                            name="comment"
-                            id="comment"
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder='Write a new comment'
-                        />
-                        <button
-                            onClick={handleSubmitComment}
-                        ><MdSend /></button>
+                    <div className={styles.commentCreator}>
+                        <div className={styles.avatarContainer}>
+                            <img src={user?.avatar_url} />
+                            </div>
+                        <div className={styles.inputContainer}>
+                            <input
+                                type="text"
+                                name="comment"
+                                id="comment"
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                placeholder='Write a new comment'
+                            />
+                            <button
+                                onClick={handleSubmitComment}
+                            ><MdSend /></button>
+                        </div>
                     </div>
                 </div>
             )}
