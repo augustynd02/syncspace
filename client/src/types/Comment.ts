@@ -8,9 +8,9 @@ export default interface Comment {
     created_at: string;
     likes: Like[];
     user: {
-        id: number;
+        id: string;
         name: string;
-        middle_name: string | null;
+        middle_name?: string | null;
         last_name: string;
         avatar_name: string;
         avatar_url?: string;
