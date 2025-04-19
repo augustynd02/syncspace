@@ -1,12 +1,13 @@
 'use client'
 
 import Comment from "@/types/Comment";
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import styles from './Comments.module.scss'
 import formatDate from "@/utils/formatDate";
 import { MdSend } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from 'react-toastify';
+import UserContext from "@/contexts/UserContext";
 
 const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
     try {
@@ -39,22 +40,37 @@ export default function Comments({ initialComments, postId }: { initialComments:
     const [newComment, setNewComment] = useState('');
     const [expanded, setExpanded] = useState(false);
 
+    const { user } = useContext(UserContext);
+
     const mutation = useMutation({
         mutationFn: createComment,
         onSuccess: () => {
-            toast.success('Post successfully created!');
+            toast.success('Comment successfully added!');
         },
         onError: (err) => {
-            toast.error(err.message || 'Could not create post.');
+            toast.error(err.message || 'Could not add the comment.');
         }
     })
 
     const handleSubmitComment = () => {
+        if (!user) return;
+
         mutation.mutate({
             commentMessage: newComment,
             contentType: 'post',
             contentId: postId
         })
+
+        // Optimistic UI, id is temporary - on refresh the comment will be replaced with it's DB record.
+        setComments([...comments, {
+            id: Date.now(),
+            content: newComment,
+            user_id: parseInt(user.id),
+            post_id: parseInt(postId),
+            created_at: new Date().toISOString(),
+            likes: [],
+            user: user
+        }])
     }
 
     return (
