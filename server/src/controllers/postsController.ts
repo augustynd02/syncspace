@@ -258,7 +258,7 @@ const postsController = {
                 }
             })
 
-            res.status(200).json({ message: "Comment added"});
+            res.status(200).json({ comment: comment});
         } catch (err) {
             next(err);
         }

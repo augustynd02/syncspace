@@ -32,7 +32,8 @@ const createComment = async ({ commentMessage, contentType, contentId }: { comme
         if (!response.ok) {
             throw new Error(data.message || "Could not create post.");
         }
-        return data;
+
+        return data.comment;
     } catch (err) {
         throw err;
     }
@@ -74,7 +75,7 @@ export default function Comments({ initialComments, postId }: { initialComments:
         }
     })
 
-    const mutation = useMutation({
+    const createCommentMutation = useMutation({
         mutationFn: createComment,
         onSuccess: () => {
             toast.success('Comment successfully added!');
@@ -87,6 +88,10 @@ export default function Comments({ initialComments, postId }: { initialComments:
     const handleCommentDeletion = (commentId: string) => {
         if (!user) return;
 
+        setComments(prev =>
+            prev.filter(comment => comment.id !== parseInt(commentId))
+        )
+
         deleteCommentMutation.mutate({
             post_id: postId,
             comment_id: commentId
@@ -96,15 +101,11 @@ export default function Comments({ initialComments, postId }: { initialComments:
     const handleSubmitComment = () => {
         if (!user) return;
 
-        mutation.mutate({
-            commentMessage: newComment,
-            contentType: 'post',
-            contentId: postId
-        })
+        const temporaryId = Date.now();
 
         // Optimistic UI, id is temporary - on refresh the comment will be replaced with it's DB record.
         setComments([...comments, {
-            id: Date.now(),
+            id: temporaryId,
             content: newComment,
             user_id: parseInt(user.id),
             post_id: parseInt(postId),
@@ -113,6 +114,23 @@ export default function Comments({ initialComments, postId }: { initialComments:
             user: user,
             hasLiked: false
         }])
+
+        createCommentMutation.mutate({
+            commentMessage: newComment,
+            contentType: 'post',
+            contentId: postId
+        }, {
+            onSuccess: (data) => {
+                setComments(prev =>
+                    prev.map(comment =>
+                        comment.id === temporaryId
+                            ? {...comment, id: data.id}
+                            : comment
+                    )
+                )
+            }
+        })
+
     }
 
     return (
@@ -127,7 +145,7 @@ export default function Comments({ initialComments, postId }: { initialComments:
                 <div className={`${styles.comments} ${expanded ? styles.open : ""}`} >
                     {comments.map(comment => {
                         return (
-                            <article className={styles.commentContainer}>
+                            <article className={styles.commentContainer} key={comment.id}>
                                 <section className={styles.comment}>
                                     <header className={styles.commentHeader}>
                                         <img src={comment.user.avatar_url} alt="" />
