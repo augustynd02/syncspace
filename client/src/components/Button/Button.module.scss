@@ -34,6 +34,18 @@
     }
 }
 
+.text {
+    background-color: inherit;
+    border: none;
+    padding: 0;
+    font-weight: 400;
+    color: var(--color-text-dark-secondary);
+
+    &:hover {
+        color: var(--color-text-dark-primary);
+    }
+}
+
 .icon {
     padding: 0.5rem;
     font-size: 1.2rem;

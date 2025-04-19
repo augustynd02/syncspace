@@ -263,6 +263,43 @@ const postsController = {
             next(err);
         }
     },
+    deleteComment: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!req.user_id) {
+                res.status(401).json({ message: "Not authenticated" });
+                return;
+            }
+
+            const user_id = parseInt(req.user_id);
+            const comment_id = parseInt(req.params.comment_id);
+
+            const comment = await prisma.comment.findFirst({
+                where: {
+                    id: comment_id,
+                }
+            })
+
+            if (!comment) {
+                res.status(404).json({ message: "Comment not found" });
+                return;
+            }
+
+            if (user_id !== comment.user_id) {
+                res.status(403).json({ message: "Not authorized"});
+                return;
+            }
+
+            await prisma.comment.delete({
+                where: {
+                    id: comment_id
+                }
+            })
+
+            res.status(200).json({ message: "Comment deleted" });
+        } catch(err) {
+            next(err);
+        }
+    },
     likeComment: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.user_id) {

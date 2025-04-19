@@ -15,6 +15,10 @@
     max-width: 100%;
     display: flex;
     flex-direction: column;
+
+    .commentActions {
+        display: flex;
+    }
 }
 
 .comments {
@@ -146,5 +150,19 @@
                 }
             }
         }
+    }
+}
+
+.modalMessage {
+    margin: var(--spacing-medium) 0;
+}
+
+.modalButtons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-small);
+
+    button {
+        width: 50%;
     }
 }
