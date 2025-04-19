@@ -23,6 +23,8 @@ model User {
   comments                 Comment[]
   sent_friend_requests     Friendship[] @relation("sent_friend_requests")
   received_friend_requests Friendship[] @relation("received_friend_requests")
+  sentNotifications Notification[]  @relation("NotificationSender")
+  receivedNotifications Notification[]  @relation("NotificationRecipient")
 }
 
 model Friendship {
@@ -47,7 +49,7 @@ enum FriendshipStatus {
 model Post {
   id         Int      @id @default(autoincrement())
   message    String?
-  image_name  String?
+  image_name String?
   created_at DateTime @default(now())
   user_id    Int
 
@@ -55,6 +57,7 @@ model Post {
   comments Comment[]
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  notifications  Notification[]
 }
 
 model Like {
@@ -82,4 +85,31 @@ model Comment {
 
   post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  notifications  Notification[]
+}
+
+model Notification {
+  id             Int      @id @default(autoincrement())
+  message        String
+  type           NotificationType
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  postId         Int?
+  post           Post?    @relation(fields: [postId],   references: [id])
+  commentId      Int?
+  comment        Comment? @relation(fields: [commentId],references: [id])
+
+  senderId        Int
+  sender          User     @relation("NotificationSender", fields: [senderId], references: [id])
+  recipientId    Int
+  recipient      User     @relation("NotificationRecipient", fields: [recipientId], references: [id])
+}
+
+enum NotificationType {
+  info
+  friend_request
+  like
+  comment
+  message
 }
