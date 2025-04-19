@@ -6,6 +6,7 @@ import styles from './Header.module.scss'
 import UserContext from "@/contexts/UserContext";
 import { useRouter } from 'next/navigation'
 import { useContext } from "react";
+import Notifications from "./Notifications";
 
 export default function Header() {
     const router = useRouter();
@@ -29,7 +30,9 @@ export default function Header() {
                 <nav>
                     <ul>
                         <li><IoChatbubbleEllipses /></li>
-                        <li><IoNotifications /></li>
+                        <li>
+                            <Notifications />
+                        </li>
                         <li onClick={() => { router.push(`/users/${user?.id}`)}}>
                             <img src={user ? user.avatar_url : <FaUser /> } />
                         </li>

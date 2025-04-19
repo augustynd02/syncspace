@@ -27,7 +27,7 @@ const notificationsController = {
 
             const user_id = parseInt(req.user_id);
 
-            const notifications = prisma.notification.findMany({
+            const notifications = await prisma.notification.findMany({
                 where: {
                     recipient_id: user_id
                 },

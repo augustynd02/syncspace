@@ -60,13 +60,14 @@
         nav {
             height: 100%;
 
-            ul {
+            & > ul {
                 height: 100%;
                 display: flex;
                 align-items: center;
                 gap: var(--spacing-small);
 
-                li {
+                & > li {
+                    position: relative;
                     height: 80%;
                     aspect-ratio: 1/1;
                     list-style-type: none;
@@ -79,15 +80,15 @@
 
                     &:hover {
                         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-                    }
 
-                    &:hover svg {
-                        color: var(--color-primary-400);
-                    }
+                        > svg {
+                            color: var(--color-primary-400);
+                        }
 
-                    &:hover img {
-                        filter: brightness(1.2);
-                        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+                        > img {
+                            filter: brightness(1.2);
+                            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+                        }
                     }
 
                     svg {
