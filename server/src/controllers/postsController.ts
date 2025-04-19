@@ -17,7 +17,15 @@ interface Comment {
     user_id: number;
     post_id: number;
     created_at: Date;
-    likes: Like[];
+    likes: Like[]
+    user: {
+        id: number;
+        name: string;
+        middle_name: string | null;
+        last_name: string;
+        avatar_name: string;
+        avatar_url?: string;
+    };
     hasLiked?: boolean;
 }
 
@@ -110,7 +118,16 @@ const postsController = {
                     likes: true,
                     comments: {
                         include: {
-                            likes: true
+                            likes: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    middle_name: true,
+                                    last_name: true,
+                                    avatar_name: true,
+                                }
+                            }
                         }
                     }
                 },
@@ -126,6 +143,7 @@ const postsController = {
                 post.user.avatar_url = await getImageUrl(post.user.avatar_name);
                 post.hasLiked = post.likes.some(like => like.user_id === id);
                 for (const comment of post.comments) {
+                    comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
                     comment.hasLiked = comment.likes.some(like => like.user_id === id);
                 }
             }

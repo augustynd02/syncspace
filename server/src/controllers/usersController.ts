@@ -288,6 +288,7 @@ const usersController = {
     },
     getUserPosts: async (req: Request, res: Response, next: NextFunction) => {
         try {
+
             if (!req.user_id) {
                 next(new CustomError(401, 'Not authenticated'));
                 return;
@@ -338,7 +339,7 @@ const usersController = {
                     post.imageUrl = await getImageUrl(post.image_name);
                 }
                 post.user.avatar_url = await getImageUrl(post.user.avatar_name);
-                post.hasLiked = post.likes.some(like => like.user_id === parseInt(req.user_id));
+                post.hasLiked = post.likes.some(like => like.user_id === parseInt(req.user_id as string));
                 for (const comment of post.comments) {
                     comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
                     comment.hasLiked = comment.likes.some(like => like.user_id === id);
