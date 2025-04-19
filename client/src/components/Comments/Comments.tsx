@@ -8,6 +8,7 @@ import { MdSend } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from 'react-toastify';
 import UserContext from "@/contexts/UserContext";
+import Likes from "../Likes/Likes";
 
 const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
     try {
@@ -69,7 +70,8 @@ export default function Comments({ initialComments, postId }: { initialComments:
             post_id: parseInt(postId),
             created_at: new Date().toISOString(),
             likes: [],
-            user: user
+            user: user,
+            hasLiked: false
         }])
     }
 
@@ -85,24 +87,33 @@ export default function Comments({ initialComments, postId }: { initialComments:
                 <div className={`${styles.comments} ${expanded ? styles.open : ""}`} >
                     {comments.map(comment => {
                         return (
-                            <article className={styles.comment}>
-                                <header className={styles.commentHeader}>
-                                    <img src={comment.user.avatar_url} alt="" />
-                                    <div className={styles.authorInfo}>
-                                        <h3>{`${comment.user.name} ${comment.user.middle_name ? comment.user.middle_name : ''} ${comment.user.last_name}`}</h3>
-                                        <time dateTime={comment.created_at.slice(0, 10)}>{formatDate(comment.created_at.slice(0, 10))}</time>
-                                    </div>
-                                </header>
-                                <section className={styles.commentContent}>
-                                    <p>{comment.content}</p>
-                                </section>
+                            <article className={styles.commentContainer}>
+                                <article className={styles.comment}>
+                                    <header className={styles.commentHeader}>
+                                        <img src={comment.user.avatar_url} alt="" />
+                                        <div className={styles.authorInfo}>
+                                            <h3>{`${comment.user.name} ${comment.user.middle_name ? comment.user.middle_name : ''} ${comment.user.last_name}`}</h3>
+                                            <time dateTime={comment.created_at.slice(0, 10)}>{formatDate(comment.created_at.slice(0, 10))}</time>
+                                        </div>
+                                    </header>
+                                    <section className={styles.commentContent}>
+                                        <p>{comment.content}</p>
+                                    </section>
+                                </article>
+                                <Likes
+                                    post_id={postId}
+                                    comment_id={comment.id.toString()}
+                                    content_type='comment'
+                                    initialCount={comment.likes.length}
+                                    hasLiked={comment.hasLiked}
+                                />
                             </article>
                         )
                     })}
                     <div className={styles.commentCreator}>
                         <div className={styles.avatarContainer}>
                             <img src={user?.avatar_url} />
-                            </div>
+                        </div>
                         <div className={styles.inputContainer}>
                             <input
                                 type="text"

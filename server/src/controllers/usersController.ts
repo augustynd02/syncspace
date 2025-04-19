@@ -47,6 +47,7 @@ interface Comment {
         avatar_name: string;
         avatar_url?: string;
     };
+    hasLiked?: boolean;
 }
 
 type Post = {
@@ -340,6 +341,7 @@ const usersController = {
                 post.hasLiked = post.likes.some(like => like.user_id === parseInt(req.user_id));
                 for (const comment of post.comments) {
                     comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
+                    comment.hasLiked = comment.likes.some(like => like.user_id === id);
                 }
             }
 

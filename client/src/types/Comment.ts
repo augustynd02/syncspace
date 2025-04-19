@@ -15,4 +15,5 @@ export default interface Comment {
         avatar_name: string;
         avatar_url?: string;
     };
+    hasLiked: boolean;
 }

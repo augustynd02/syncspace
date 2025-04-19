@@ -17,7 +17,8 @@ interface Comment {
     user_id: number;
     post_id: number;
     created_at: Date;
-    likes: Like[]
+    likes: Like[];
+    hasLiked?: boolean;
 }
 
 type Post = {
@@ -124,6 +125,9 @@ const postsController = {
                 }
                 post.user.avatar_url = await getImageUrl(post.user.avatar_name);
                 post.hasLiked = post.likes.some(like => like.user_id === id);
+                for (const comment of post.comments) {
+                    comment.hasLiked = comment.likes.some(like => like.user_id === id);
+                }
             }
 
             res.status(200).json({ feed: feed });
@@ -255,6 +259,76 @@ const postsController = {
             })
 
             res.status(200).json({ message: "Comment added"});
+        } catch (err) {
+            next(err);
+        }
+    },
+    likeComment: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!req.user_id) {
+                res.status(401).json({ message: "Not authorized" });
+                return;
+            }
+
+            const comment_id = parseInt(req.params.comment_id);
+            const user_id = parseInt(req.user_id);
+
+            const like = await prisma.like.findFirst({
+                where: {
+                    user_id: user_id,
+                    comment_id: comment_id
+                }
+            })
+
+            if (like) {
+                res.status(400).json({ message: "Post is already liked" });
+                return;
+            }
+
+            const newLike = await prisma.like.create({
+                data: {
+                    user_id: user_id,
+                    comment_id: comment_id
+                }
+            })
+
+            res.status(200).json({ like: newLike });
+        } catch (err) {
+            next(err)
+        }
+    },
+    dislikeComment: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!req.user_id) {
+                res.status(401).json({ message: "Not authorized" });
+                return;
+            }
+
+            const user_id = parseInt(req.user_id);
+            const comment_id = parseInt(req.params.comment_id);
+
+            const like = await prisma.like.findFirst({
+                where: {
+                    user_id: user_id,
+                    comment_id: comment_id
+                }
+            })
+
+            if (!like) {
+                res.status(400).json({ message: "Like does not exist" });
+                return;
+            }
+
+            await prisma.like.deleteMany({
+                where: {
+                    AND: [
+                        { user_id: user_id},
+                        { comment_id: comment_id },
+                    ]
+                }
+            })
+
+            res.status(200).json({ message: "Like removed" });
         } catch (err) {
             next(err);
         }

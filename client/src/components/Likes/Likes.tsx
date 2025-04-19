@@ -39,7 +39,7 @@ export default function Likes({ post_id, content_type, initialCount, comment_id,
     const [hasUserLiked, setHasUserLiked] = useState(hasLiked);
     const [count, setCount] = useState(initialCount);
     return (
-        <div className={styles.likesContainer}>
+        <div className={`${styles.likesContainer} ${content_type === 'comment' ? styles.commentLikes : ''}`}>
             <button onClick={() => {
                 if (hasUserLiked) {
                     setCount(count - 1);
@@ -50,6 +50,7 @@ export default function Likes({ post_id, content_type, initialCount, comment_id,
                 handleLike({
                     content_type: content_type,
                     post_id: post_id,
+                    comment_id: comment_id,
                     hasUserLiked: hasUserLiked
                 })
             }}>

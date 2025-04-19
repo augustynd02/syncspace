@@ -10,6 +10,13 @@
     cursor: pointer;
 }
 
+.commentContainer {
+    width: max-content;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .comments {
     width: 100%;
     overflow: hidden;

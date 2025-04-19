@@ -25,3 +25,14 @@
         }
     }
 }
+
+.commentLikes {
+    margin-left: 0.5rem;
+    font-size: 14px;
+    gap: 0.125rem;
+
+    button {
+        height: 18px;
+        width: 18px;
+    }
+}
