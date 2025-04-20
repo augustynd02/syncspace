@@ -82,6 +82,15 @@ const friendshipsController = {
 					}
 				})
 
+				const notification = await prisma.notification.create({
+					data: {
+						message: "New friend request",
+						type: "friend_request",
+						sender_id: requesterId,
+						recipient_id: receiverId
+					}
+				})
+
 				res.status(200).json({ friendship: updatedFriendship });
 				return;
 			}
@@ -163,6 +172,15 @@ const friendshipsController = {
 					  ],
 					},
 				  });
+
+				const notification = await prisma.notification.create({
+					data: {
+						message: `"Friend request accepted"`,
+						type: "friend_request",
+						sender_id: requesterId,
+						recipient_id: receiverId
+					}
+				})
 
 				res.status(200).json({ friendship: updatedFriendship });
 				return;

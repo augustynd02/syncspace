@@ -45,38 +45,94 @@ export default function Notifications() {
         });
     }
 
-    const getNotificationTitle = (type: 'info' | 'friend_request' | 'like' | 'comment' | 'message') => {
-        switch(type) {
-            case 'info':
-                return 'New notification';
-            case 'friend_request':
-                return 'New friend request';
-            case 'like':
-                return 'New like';
-            case 'comment':
-                return 'New comment';
-            case 'message':
-                return 'New message';
-            default:
-                return 'New notification';
+    const notificationMap = {
+        info: {
+            title: "New notification",
+            icon: <IoMdInformationCircle />,
+            getUrl: (notification: Notification) => undefined
+        },
+        friend_request: {
+            title: "New friend request",
+            icon: <FaUserFriends />,
+            getUrl: (notification: Notification) => `/users/${notification.sender_id}`
+        },
+        like: {
+            title: "New like",
+            icon: <IoMdHeart />,
+            getUrl: (notification: Notification) => `/posts/${notification.post_id}`
+        },
+        comment: {
+            title: "New comment",
+            icon: <FaCommentAlt />,
+            getUrl: (notification: Notification) => `/posts/${notification.post_id}`
+        },
+        message: {
+            title: "New message",
+            icon: <IoChatbubbleEllipses />,
+            getUrl: (notification: Notification) => `/chats/${notification.sender_id}`
         }
     }
 
-    const getNotificationIcon = (type: 'info' | 'friend_request' | 'like' | 'comment' | 'message') => {
-        switch(type) {
-            case 'info':
-                return <IoMdInformationCircle />
-            case 'friend_request':
-                return <FaUserFriends />
-            case 'like':
-                return <IoMdHeart />
-            case 'comment':
-                return <FaCommentAlt />
-            case 'message':
-                return <IoChatbubbleEllipses />
-            default:
-                return <IoMdInformationCircle />
-        }
+    // const getNotificationTitle = (type: 'info' | 'friend_request' | 'like' | 'comment' | 'message') => {
+    //     switch (type) {
+    //         case 'info':
+    //             return 'New notification';
+    //         case 'friend_request':
+    //             return 'New friend request';
+    //         case 'like':
+    //             return 'New like';
+    //         case 'comment':
+    //             return 'New comment';
+    //         case 'message':
+    //             return 'New message';
+    //         default:
+    //             return 'New notification';
+    //     }
+    // }
+
+    // const getNotificationIcon = (type: 'info' | 'friend_request' | 'like' | 'comment' | 'message') => {
+    //     switch (type) {
+    //         case 'info':
+    //             return <IoMdInformationCircle />
+    //         case 'friend_request':
+    //             return <FaUserFriends />
+    //         case 'like':
+    //             return <IoMdHeart />
+    //         case 'comment':
+    //             return <FaCommentAlt />
+    //         case 'message':
+    //             return <IoChatbubbleEllipses />
+    //         default:
+    //             return <IoMdInformationCircle />
+    //     }
+    // }
+
+
+    // const getNotificationUrl = (notification: Notification) => {
+    //     switch (notification.type) {
+    //         case 'info':
+    //             return undefined
+    //         case 'friend_request':
+    //             return `/users/${notification.sender_id}`
+    //         case 'like':
+    //         case 'comment':
+    //             return `/posts/${notification.post_id}`
+    //         case 'message':
+    //             return `/chats/${notification.sender_id}`
+    //         default:
+    //             return undefined
+    //     }
+    // }
+
+    const handleNotifClick = (id: string) => {
+        /*
+            Make a DELETE request to remove the notification after clicking on it and being redirected.
+            Do not await the fetch request in order to allow the user to instantly get redirected to the notification source without waiting for a response.
+        */
+        fetch(`http://localhost:8000/api/notifications/${id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
     }
 
     if (isLoading) return <p>Loading...</p>
@@ -89,24 +145,30 @@ export default function Notifications() {
                 <article className={styles.notificationsContainer}>
                     {data && (
                         <ul className={styles.notifications}>
-                            {data.map((notification) => (
-                                <li key={notification.id} className={styles.notification}>
-                                    <div className={styles.notificationIconContainer}>
-                                        {getNotificationIcon(notification.type)}
-                                    </div>
-                                    <div className={styles.notificationContent}>
-                                        <div className={styles.notificationHeader}>
-                                            <h3>{getNotificationTitle(notification.type)}</h3>
-                                            <time dateTime={notification.created_at}>
-                                                {formatDate(notification.created_at)}
-                                            </time>
-                                        </div>
-                                        <div className={styles.notificationMessage}>
-                                            {notification.message}
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
+                            {data.map((notification) => {
+                                const config = notificationMap[notification.type];
+                                return (
+                                    <li key={notification.id} className={styles.notification} onClick={() => handleNotifClick(notification.id.toString())}>
+                                        <a href={config.getUrl(notification)}>
+                                            <div className={styles.notificationIconContainer}>
+                                                {config.icon}
+                                            </div>
+                                            <div className={styles.notificationContent}>
+                                                <div className={styles.notificationHeader}>
+                                                    <h3>{config.title}</h3>
+                                                    <time dateTime={notification.created_at}>
+                                                        {formatDate(notification.created_at)}
+                                                    </time>
+                                                </div>
+                                                <div className={styles.notificationMessage}>
+                                                    {notification.message}
+                                                </div>
+                                            </div>
+
+                                        </a>
+                                    </li>
+                                )
+                            })}
                         </ul>
                     )}
                 </article>

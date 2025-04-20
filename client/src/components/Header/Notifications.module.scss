@@ -14,15 +14,15 @@
     .notifications {
         display: flex;
         flex-direction: column;
+        border-radius: 8px;
 
         .notification {
-            padding: var(--spacing-small);
-
-            display: flex;
-            gap: var(--spacing-small);
-
-            &:nth-child(even) {
-                background-color: rgb(233, 233, 233);
+            // &:nth-child(even) {
+            //     background-color: rgb(233, 233, 233);
+            // }
+            list-style-type: none;
+            &:not(:last-child) {
+                border-bottom: 1px solid var(--color-border);
             }
 
             &:hover {
@@ -31,10 +31,16 @@
                 }
             }
 
+            a {
+                padding: var(--spacing-small);
+
+                display: flex;
+                gap: var(--spacing-small);
+            }
+
             .notificationIconContainer {
                 flex-shrink: 0;
                 width: 48px;
-                height: 48px;
 
                 @include mixins.flex-center;
 

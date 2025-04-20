@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
+import { RestoreObjectCommand } from "@aws-sdk/client-s3";
 
 
 interface Like {
@@ -276,6 +277,27 @@ const postsController = {
                 }
             })
 
+            const post = await prisma.post.findUnique({
+                where: {
+                    id: post_id
+                }
+            })
+
+            if (!post) {
+                res.status(404).json({ message: "Post not found" });
+                return;
+            }
+
+            const notification = await prisma.notification.create({
+                data: {
+                    recipient_id: post.user_id,
+                    sender_id: user_id,
+                    post_id: post.id,
+                    type: 'like',
+                    message: 'New like on post'
+                }
+            })
+
             res.status(200).json({ like: newLike });
         } catch (err) {
             next(err)
@@ -327,11 +349,32 @@ const postsController = {
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
 
+            const post = await prisma.post.findUnique({
+                where: {
+                    id: post_id
+                }
+            })
+
+            if (!post) {
+                res.status(404).json({ message: "Post not found" });
+                return;
+            }
+
             const comment = await prisma.comment.create({
                 data: {
                     content: req.body.commentMessage,
                     post_id: post_id,
                     user_id: user_id,
+                }
+            })
+
+            const notification = await prisma.notification.create({
+                data: {
+                    recipient_id: post.user_id,
+                    sender_id: user_id,
+                    post_id: post.id,
+                    type: 'comment',
+                    message: 'New comment'
                 }
             })
 
@@ -387,6 +430,28 @@ const postsController = {
             const comment_id = parseInt(req.params.comment_id);
             const user_id = parseInt(req.user_id);
 
+            const comment = await prisma.comment.findUnique({
+                where: {
+                    id: comment_id
+                }
+            })
+
+            if (!comment) {
+                res.status(404).json({ message: "Comment not found" })
+                return;
+            }
+
+            const post = await prisma.post.findUnique({
+                where: {
+                    id: comment.post_id
+                }
+            })
+
+            if (!post) {
+                res.status(404).json({ message: "Post not found" })
+                return;
+            }
+
             const like = await prisma.like.findFirst({
                 where: {
                     user_id: user_id,
@@ -405,6 +470,20 @@ const postsController = {
                     comment_id: comment_id
                 }
             })
+
+            if (comment.user_id !== user_id) {
+                await prisma.notification.create({
+                    data: {
+                        recipient_id: comment.user_id,
+                        sender_id: user_id,
+                        post_id: post.id,
+                        type: 'like',
+                        message: "New like on comment"
+                    }
+                })
+
+            }
+
 
             res.status(200).json({ like: newLike });
         } catch (err) {
