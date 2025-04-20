@@ -9,15 +9,18 @@ import Notification from "@/types/Notification";
 import { IoMdHeart, IoMdInformationCircle } from "react-icons/io";
 import { FaCommentAlt } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
-import { AiFillMessage } from "react-icons/ai";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import formatDate from "@/utils/formatDate";
+import Badge from "../Badge/Badge";
+import Spinner from "../Spinner/Spinner";
 
 const fetchNotifications = async () => {
+    await new Promise(res => setTimeout(res, 3000));
+    console.log('requesting');
     const response = await fetch('http://localhost:8000/api/notifications', {
         method: 'GET',
         credentials: 'include'
-    })
+    });
 
     const data = await response.json();
 
@@ -31,16 +34,18 @@ const fetchNotifications = async () => {
 
 export default function Notifications() {
     const [isOpen, setIsOpen] = useState(false);
-    const { data, isLoading, error, refetch, isFetched } = useQuery({
+
+    const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['notifications'],
         queryFn: fetchNotifications,
-        enabled: false
-    })
+        enabled: true,
+        staleTime: 0
+    });
 
     const handleOpenPopover = () => {
         setIsOpen(prev => {
-            if (!prev && !isFetched) {
-                refetch()
+            if (!prev) {
+                refetch();
             }
             return !prev;
         });
@@ -74,118 +79,77 @@ export default function Notifications() {
         }
     }
 
-    // const getNotificationTitle = (type: 'info' | 'friend_request' | 'like' | 'comment' | 'message') => {
-    //     switch (type) {
-    //         case 'info':
-    //             return 'New notification';
-    //         case 'friend_request':
-    //             return 'New friend request';
-    //         case 'like':
-    //             return 'New like';
-    //         case 'comment':
-    //             return 'New comment';
-    //         case 'message':
-    //             return 'New message';
-    //         default:
-    //             return 'New notification';
-    //     }
-    // }
-
-    // const getNotificationIcon = (type: 'info' | 'friend_request' | 'like' | 'comment' | 'message') => {
-    //     switch (type) {
-    //         case 'info':
-    //             return <IoMdInformationCircle />
-    //         case 'friend_request':
-    //             return <FaUserFriends />
-    //         case 'like':
-    //             return <IoMdHeart />
-    //         case 'comment':
-    //             return <FaCommentAlt />
-    //         case 'message':
-    //             return <IoChatbubbleEllipses />
-    //         default:
-    //             return <IoMdInformationCircle />
-    //     }
-    // }
-
-
-    // const getNotificationUrl = (notification: Notification) => {
-    //     switch (notification.type) {
-    //         case 'info':
-    //             return undefined
-    //         case 'friend_request':
-    //             return `/users/${notification.sender_id}`
-    //         case 'like':
-    //         case 'comment':
-    //             return `/posts/${notification.post_id}`
-    //         case 'message':
-    //             return `/chats/${notification.sender_id}`
-    //         default:
-    //             return undefined
-    //     }
-    // }
-
     const handleNotifClick = (id: string) => {
-        /*
-            Make a DELETE request to remove the notification after clicking on it and being redirected.
-            Do not await the fetch request in order to allow the user to instantly get redirected to the notification source without waiting for a response.
-        */
         fetch(`http://localhost:8000/api/notifications/${id}`, {
             method: 'DELETE',
             credentials: 'include'
         });
     }
 
-    if (isLoading) return <p>Loading...</p>
-    if (error) return <p>Error: {error.message}</p>
-
     return (
         <>
             <IoNotifications onClick={handleOpenPopover} />
+            {data && data.length > 0
+                ? (
+                    <Badge>
+                        {data.length}
+                    </Badge>
+                )
+                : (
+                    null
+                )
+            }
 
             {isOpen && (
                 <article className={styles.notificationsContainer}>
-                    <ul className={styles.notifications}>
-                        {data?.length === 0 ? (
-                            <div className={styles.noNotifications}>
-                                <IoMdNotificationsOff />
-                                <p>You have no notifications.</p>
-                            </div>
-                        ) : (
-                            data?.map((notification) => {
-                                const config = notificationMap[notification.type];
+                    {isLoading ? (
+                        <div className={styles.loading}>
+                            <Spinner size='large'/>
+                            <p>Loading notifications...</p>
+                        </div>
+                    ) : (
+                        <ul className={styles.notifications}>
+                            {data?.length === 0 ? (
+                                <div className={styles.noNotifications}>
+                                    <IoMdNotificationsOff />
+                                    <p>You have no notifications.</p>
+                                </div>
+                            ) : (
+                                data?.map((notification) => {
+                                    const config = notificationMap[notification.type];
 
-                                return (
-                                    <li
-                                        key={notification.id}
-                                        className={styles.notification}
-                                        onClick={() => handleNotifClick(notification.id.toString())}
-                                    >
-                                        <a href={config.getUrl(notification)}>
-                                            <div className={styles.notificationIconContainer}>
-                                                {config.icon}
-                                            </div>
-
-                                            <div className={styles.notificationContent}>
-                                                <div className={styles.notificationHeader}>
-                                                    <h3>{config.title}</h3>
-                                                    <time dateTime={notification.created_at}>
-                                                        {formatDate(notification.created_at)}
-                                                    </time>
+                                    return (
+                                        <li
+                                            key={notification.id}
+                                            className={styles.notification}
+                                            onClick={() => handleNotifClick(notification.id.toString())}
+                                        >
+                                            <a href={config.getUrl(notification)}>
+                                                <div className={styles.notificationIconContainer}>
+                                                    {config.icon}
                                                 </div>
 
-                                                <div className={styles.notificationMessage}>
-                                                    {notification.message}
+                                                <div className={styles.notificationContent}>
+                                                    <div className={styles.notificationHeader}>
+                                                        <h3>{config.title}</h3>
+                                                        <time dateTime={notification.created_at}>
+                                                            {formatDate(notification.created_at)}
+                                                        </time>
+                                                    </div>
+
+                                                    <div className={styles.notificationMessage}>
+                                                        {notification.message}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                );
-                            })
-                        )}
-                    </ul>
+                                            </a>
+                                        </li>
+                                    );
+                                })
+                            )}
+                        </ul>
+                    )}
                 </article>
             )}
         </>
-    )
+    );
 }
