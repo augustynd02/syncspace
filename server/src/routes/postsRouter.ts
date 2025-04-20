@@ -10,6 +10,7 @@ const upload = multer({ storage: storage })
 // api/posts
 postsRouter.post('/', upload.single('postImage'), postsController.createPost);
 postsRouter.get('/feed', postsController.getFeed);
+postsRouter.get('/:post_id', postsController.getPost);
 postsRouter.post('/:post_id/likes', postsController.likePost);
 postsRouter.delete('/:post_id/likes', postsController.dislikePost);
 postsRouter.post('/:post_id/comments', postsController.createComment);

@@ -188,6 +188,65 @@ const postsController = {
             next(err)
         }
     },
+    getPost: async (req: Request, res: Response, next: NextFunction) => {
+        const post_id = parseInt(req.params.post_id);
+        const user_id = req.user_id ? parseInt(req.user_id) : null;
+
+        const post = await prisma.post.findUnique({
+            where: {
+                id: post_id
+            },
+            select: {
+                id: true,
+                message: true,
+                image_name: true,
+                created_at: true,
+                user_id: false,
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        middle_name: true,
+                        last_name: true,
+                        avatar_name: true,
+                    }
+                },
+                likes: true,
+                comments: {
+                    include: {
+                        likes: true,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                middle_name: true,
+                                last_name: true,
+                                avatar_name: true,
+                            }
+                        }
+                    }
+                }
+            },
+        }) as Post;
+
+        if (!post) {
+            res.status(404).json({ message: "Post not found" });
+            return
+        }
+        post.user.avatar_url = await getImageUrl(post.user.avatar_name);
+        post.hasLiked = user_id !== null
+            ? post.likes.some(like => like.user_id === user_id)
+            : false;
+
+        for (const comment of post.comments) {
+            comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
+            comment.hasLiked = user_id !== null
+                ? comment.likes.some(like => like.user_id === user_id)
+                : false;
+        }
+
+        res.status(200).json({ post: post });
+    },
     likePost: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.user_id) {
