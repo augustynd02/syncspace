@@ -16,6 +16,24 @@
         flex-direction: column;
         border-radius: 8px;
 
+        .noNotifications {
+            padding: 1rem;
+
+            @include mixins.flex-center;
+            flex-direction: column;
+            gap: var(--spacing-small);
+
+            svg {
+                width: 64px;
+                height: 64px;
+            }
+
+            p {
+
+            }
+        }
+
+
         .notification {
             // &:nth-child(even) {
             //     background-color: rgb(233, 233, 233);

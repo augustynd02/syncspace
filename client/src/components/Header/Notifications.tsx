@@ -1,6 +1,7 @@
 'use client'
 
 import { IoNotifications } from "react-icons/io5";
+import { IoMdNotificationsOff } from "react-icons/io";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import styles from './Notifications.module.scss';
@@ -141,18 +142,30 @@ export default function Notifications() {
     return (
         <>
             <IoNotifications onClick={handleOpenPopover} />
+
             {isOpen && (
                 <article className={styles.notificationsContainer}>
-                    {data && (
-                        <ul className={styles.notifications}>
-                            {data.map((notification) => {
+                    <ul className={styles.notifications}>
+                        {data?.length === 0 ? (
+                            <div className={styles.noNotifications}>
+                                <IoMdNotificationsOff />
+                                <p>You have no notifications.</p>
+                            </div>
+                        ) : (
+                            data?.map((notification) => {
                                 const config = notificationMap[notification.type];
+
                                 return (
-                                    <li key={notification.id} className={styles.notification} onClick={() => handleNotifClick(notification.id.toString())}>
+                                    <li
+                                        key={notification.id}
+                                        className={styles.notification}
+                                        onClick={() => handleNotifClick(notification.id.toString())}
+                                    >
                                         <a href={config.getUrl(notification)}>
                                             <div className={styles.notificationIconContainer}>
                                                 {config.icon}
                                             </div>
+
                                             <div className={styles.notificationContent}>
                                                 <div className={styles.notificationHeader}>
                                                     <h3>{config.title}</h3>
@@ -160,17 +173,17 @@ export default function Notifications() {
                                                         {formatDate(notification.created_at)}
                                                     </time>
                                                 </div>
+
                                                 <div className={styles.notificationMessage}>
                                                     {notification.message}
                                                 </div>
                                             </div>
-
                                         </a>
                                     </li>
-                                )
-                            })}
-                        </ul>
-                    )}
+                                );
+                            })
+                        )}
+                    </ul>
                 </article>
             )}
         </>
