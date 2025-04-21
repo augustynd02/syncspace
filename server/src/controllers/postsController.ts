@@ -248,6 +248,43 @@ const postsController = {
 
         res.status(200).json({ post: post });
     },
+    deletePost: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!req.user_id) {
+                res.status(401).json({ message: "Not authorized"});
+                return;
+            }
+
+            const post_id = parseInt(req.params.post_id);
+            const user_id = parseInt(req.user_id);
+
+            const post = await prisma.post.findUnique({
+                where: {
+                    id: post_id
+                }
+            })
+
+            if (!post) {
+                res.status(404).json({ message: "Post not found"});
+                return;
+            }
+
+            if (post.user_id !== user_id) {
+                res.status(403).json({ message: "Forbidden"});
+                return;
+            }
+
+            const deletedPost = await prisma.post.delete({
+                where: {
+                    id: post_id
+                }
+            })
+
+            return res.status(200).json({ message: "Post successfully deleted" });
+        } catch (err) {
+            next(err)
+        }
+    },
     likePost: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.user_id) {

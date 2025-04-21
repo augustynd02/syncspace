@@ -3,8 +3,14 @@ import styles from './Post.module.scss';
 import formatDate from "@/utils/formatDate";
 import Likes from "../Likes/Likes";
 import Comments from "../Comments/Comments";
+import getUser from "@/utils/getUser";
+import { SlOptionsVertical } from "react-icons/sl";
+import { MdDelete } from "react-icons/md";
+import PostActions from "../PostActions/PostActions";
 
-export default function Post({ post, initialyExpanded = false }: { post: PostType, initialyExpanded?: boolean }) {
+export default async function Post({ post, initialyExpanded = false }: { post: PostType, initialyExpanded?: boolean }) {
+    const user = await getUser();
+
     const date = post.created_at.slice(0, 10);
     return (
         <article className={styles.post}>
@@ -14,6 +20,13 @@ export default function Post({ post, initialyExpanded = false }: { post: PostTyp
                     <h3>{`${post.user.name} ${post.user.middle_name ? post.user.middle_name : ''} ${post.user.last_name}`}</h3>
                     <time dateTime={date}>{formatDate(date)}</time>
                 </div>
+                {user && user.id === post.user.id
+                    ? (
+                        <PostActions id={post.id} />
+                    ) : (
+                        null
+                    )
+                }
             </header>
 
             <section className={styles.postContent}>
