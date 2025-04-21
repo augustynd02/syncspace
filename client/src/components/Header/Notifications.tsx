@@ -18,6 +18,7 @@ import Actions from "../Actions/Actions";
 import { FaUser } from "react-icons/fa";
 import { notFound, useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
+import { useQueryClient } from '@tanstack/react-query';
 
 const fetchNotifications = async () => {
     console.log('requesting');
@@ -39,7 +40,7 @@ const fetchNotifications = async () => {
 export default function Notifications() {
     const [isOpen, setIsOpen] = useState(false);
     const [openActionsId, setOpenActionsId] = useState<number | null>(null);
-
+    const queryClient = useQueryClient();
     const router = useRouter();
 
     const { data, isLoading, error, refetch } = useQuery({
@@ -97,14 +98,33 @@ export default function Notifications() {
         }
     }
 
-    const deleteNotification = (id: string) => {
-        fetch(`http://localhost:8000/api/notifications/${id}`, {
-            method: 'DELETE',
-            credentials: 'include'
-        });
-        setOpenActionsId(null);
-        refetch();
-    }
+    const deleteNotification = async (id: string) => {
+        // Optimistic UI notification deletion - first delete it from client side, then handle deleting from db in the background
+        const previousNotifications = queryClient.getQueryData(['notifications']);
+        queryClient.setQueryData(
+            ['notifications'],
+            (oldNotifications: Notification[] | undefined) =>
+                oldNotifications?.filter(notification => notification.id.toString() !== id)
+        );
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/notifications/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                console.log('Notification deleted successfully');
+                setOpenActionsId(null);
+            } else {
+                console.error('Failed to delete notification');
+                queryClient.setQueryData(['notifications'], previousNotifications);
+            }
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+            queryClient.setQueryData(['notifications'], previousNotifications);
+        }
+    };
 
     return (
         <>
