@@ -16,46 +16,6 @@
 
     }
 
-    .searchContainer {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
-        label {
-            height: 35px;
-            width: 300px;
-
-            display: flex;
-            align-items: center;
-
-            background-color: var(--color-background);
-            border-radius: 16px;
-
-            transition: 0.2s;
-
-            &:focus-within {
-                box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-            }
-
-            svg {
-                margin: 0px 8px;
-            }
-
-            input {
-                flex: 1;
-                height: 100%;
-                background-color: inherit;
-                border: none;
-                border-radius: 16px;
-
-                &:focus {
-                    outline: none;
-                }
-            }
-        }
-    }
-
     .actionsContainer {
         nav {
             height: 100%;

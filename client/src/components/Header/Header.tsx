@@ -7,6 +7,7 @@ import UserContext from "@/contexts/UserContext";
 import { useRouter } from 'next/navigation'
 import { useContext } from "react";
 import Notifications from "./Notifications";
+import Search from "./Search";
 
 export default function Header() {
     const router = useRouter();
@@ -20,12 +21,7 @@ export default function Header() {
                     <h1>syncspace</h1>
                 </a>
             </div>
-            <div className={styles.searchContainer}>
-                <label htmlFor="search">
-                    <IoSearch />
-                    <input type="text" name="search" id="search" placeholder="Search syncspace..." />
-                </label>
-            </div>
+            <Search />
             <div className={styles.actionsContainer}>
                 <nav>
                     <ul>

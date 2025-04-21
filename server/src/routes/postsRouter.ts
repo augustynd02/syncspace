@@ -8,6 +8,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 
 // api/posts
+postsRouter.get('/', postsController.getPosts);
 postsRouter.post('/', upload.single('postImage'), postsController.createPost);
 postsRouter.get('/feed', postsController.getFeed);
 postsRouter.get('/:post_id', postsController.getPost);

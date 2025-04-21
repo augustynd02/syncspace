@@ -4,6 +4,11 @@ import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
 import { RestoreObjectCommand } from "@aws-sdk/client-s3";
 
+interface RequestWithQuery extends Request {
+    query: {
+        q?: string;
+    }
+}
 
 interface Like {
     id: number;
@@ -52,6 +57,103 @@ type Post = {
 const prisma = new PrismaClient();
 
 const postsController = {
+    getPosts: async (req: RequestWithQuery, res: Response, next: NextFunction) => {
+        const query = req.query.q;
+        const user_id = req.user_id ? parseInt(req.user_id) : null;
+        let posts;
+
+        if (query) {
+            posts = await prisma.post.findMany({
+                where: {
+                    message: { contains: query, mode: 'insensitive'}
+                },
+                select: {
+                    id: true,
+                    message: true,
+                    image_name: true,
+                    created_at: true,
+                    user_id: false,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            middle_name: true,
+                            last_name: true,
+                            avatar_name: true,
+                        }
+                    },
+                    likes: true,
+                    comments: {
+                        include: {
+                            likes: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    middle_name: true,
+                                    last_name: true,
+                                    avatar_name: true,
+                                }
+                            }
+                        }
+                    }
+                },
+            }) as Post[]
+
+        } else {
+            posts = await prisma.post.findMany({
+                select: {
+                    id: true,
+                    message: true,
+                    image_name: true,
+                    created_at: true,
+                    user_id: false,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            middle_name: true,
+                            last_name: true,
+                            avatar_name: true,
+                        }
+                    },
+                    likes: true,
+                    comments: {
+                        include: {
+                            likes: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    middle_name: true,
+                                    last_name: true,
+                                    avatar_name: true,
+                                }
+                            }
+                        }
+                    }
+                },
+            }) as Post[]
+        }
+
+        for (const post of posts) {
+            if (post.image_name) {
+                post.imageUrl = await getImageUrl(post.image_name);
+            }
+            post.user.avatar_url = await getImageUrl(post.user.avatar_name);
+            if (user_id) {
+                post.hasLiked = post.likes.some(like => like.user_id === user_id);
+            }
+            for (const comment of post.comments) {
+                comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
+                if (user_id) {
+                    comment.hasLiked = comment.likes.some(like => like.user_id === id);
+                }
+            }
+        }
+
+        return res.status(200).json({ posts: posts });
+    },
     getFeed: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.user_id) {

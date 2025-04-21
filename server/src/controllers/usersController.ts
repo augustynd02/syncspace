@@ -118,11 +118,16 @@ const usersController = {
                         name: true,
                         middle_name: true,
                         last_name: true,
+                        avatar_name: true,
                         bio: true,
                     }
-                })
+                }) as User[]
             } else {
-                users = await prisma.user.findMany();
+                users = await prisma.user.findMany() as User[];
+            }
+
+            for (const user of users) {
+                user.avatar_url = await getImageUrl(user.avatar_name);
             }
 
             res.status(200).json({ users: users });
