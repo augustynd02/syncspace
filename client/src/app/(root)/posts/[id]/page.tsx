@@ -27,7 +27,7 @@ export default async function PostPage({ params }: Params) {
 
     return (
         <main className={styles.postMain}>
-            <Post post={post} />
+            <Post post={post} initialyExpanded={true} />
         </main>
     )
 }

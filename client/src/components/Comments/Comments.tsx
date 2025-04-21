@@ -57,10 +57,10 @@ const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment
     }
 }
 
-export default function Comments({ initialComments, postId }: { initialComments: Comment[], postId: string }) {
+export default function Comments({ initialComments, postId, initialyExpanded }: { initialComments: Comment[], postId: string, initialyExpanded: boolean }) {
     const [comments, setComments] = useState(initialComments);
     const [newComment, setNewComment] = useState('');
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(initialyExpanded);
     const [openModalCommentId, setOpenModalCommentId] = useState<number | null>(null);
 
     const { user } = useContext(UserContext);

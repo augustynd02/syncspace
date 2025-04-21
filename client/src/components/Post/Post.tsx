@@ -4,7 +4,7 @@ import formatDate from "@/utils/formatDate";
 import Likes from "../Likes/Likes";
 import Comments from "../Comments/Comments";
 
-export default function Post({ post }: { post: PostType }) {
+export default function Post({ post, initialyExpanded = false }: { post: PostType, initialyExpanded?: boolean }) {
     const date = post.created_at.slice(0, 10);
     return (
         <article className={styles.post}>
@@ -23,7 +23,7 @@ export default function Post({ post }: { post: PostType }) {
 
             <footer className={styles.postFooter}>
                 <Likes post_id={post.id} content_type="post" initialCount={post.likes.length} hasLiked={post.hasLiked} />
-                <Comments initialComments={post.comments} postId={post.id} />
+                <Comments initialComments={post.comments} postId={post.id} initialyExpanded={initialyExpanded} />
             </footer>
         </article>
     )

@@ -13,9 +13,13 @@ import { IoChatbubbleEllipses } from "react-icons/io5";
 import formatDate from "@/utils/formatDate";
 import Badge from "../Badge/Badge";
 import Spinner from "../Spinner/Spinner";
+import { SlOptionsVertical } from "react-icons/sl";
+import Actions from "../Actions/Actions";
+import { FaUser } from "react-icons/fa";
+import { notFound, useRouter } from "next/navigation";
+import { MdDelete } from "react-icons/md";
 
 const fetchNotifications = async () => {
-    await new Promise(res => setTimeout(res, 3000));
     console.log('requesting');
     const response = await fetch('http://localhost:8000/api/notifications', {
         method: 'GET',
@@ -34,6 +38,9 @@ const fetchNotifications = async () => {
 
 export default function Notifications() {
     const [isOpen, setIsOpen] = useState(false);
+    const [openActionsId, setOpenActionsId] = useState<number | null>(null);
+
+    const router = useRouter();
 
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['notifications'],
@@ -79,11 +86,24 @@ export default function Notifications() {
         }
     }
 
-    const handleNotifClick = (id: string) => {
+    const handleNotifClick = (id: string, url: string | undefined) => {
         fetch(`http://localhost:8000/api/notifications/${id}`, {
             method: 'DELETE',
             credentials: 'include'
         });
+        if (url) {
+            setIsOpen(false);
+            router.push(url)
+        }
+    }
+
+    const deleteNotification = (id: string) => {
+        fetch(`http://localhost:8000/api/notifications/${id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        setOpenActionsId(null);
+        refetch();
     }
 
     return (
@@ -104,7 +124,7 @@ export default function Notifications() {
                 <article className={styles.notificationsContainer}>
                     {isLoading ? (
                         <div className={styles.loading}>
-                            <Spinner size='large'/>
+                            <Spinner size='large' />
                             <p>Loading notifications...</p>
                         </div>
                     ) : (
@@ -122,26 +142,46 @@ export default function Notifications() {
                                         <li
                                             key={notification.id}
                                             className={styles.notification}
-                                            onClick={() => handleNotifClick(notification.id.toString())}
+                                            onClick={() => handleNotifClick(notification.id.toString(), config.getUrl(notification))}
                                         >
-                                            <a href={config.getUrl(notification)}>
-                                                <div className={styles.notificationIconContainer}>
-                                                    {config.icon}
+                                            <div className={styles.notificationIconContainer}>
+                                                {config.icon}
+                                            </div>
+
+                                            <div className={styles.notificationContent}>
+                                                <div className={styles.notificationHeader}>
+                                                    <h3>{config.title}</h3>
+                                                    <time dateTime={notification.created_at}>
+                                                        {formatDate(notification.created_at)}
+                                                    </time>
                                                 </div>
 
-                                                <div className={styles.notificationContent}>
-                                                    <div className={styles.notificationHeader}>
-                                                        <h3>{config.title}</h3>
-                                                        <time dateTime={notification.created_at}>
-                                                            {formatDate(notification.created_at)}
-                                                        </time>
-                                                    </div>
-
-                                                    <div className={styles.notificationMessage}>
-                                                        {notification.message}
-                                                    </div>
+                                                <div className={styles.notificationMessage}>
+                                                    {notification.message}
                                                 </div>
-                                            </a>
+                                            </div>
+
+                                            <div className={styles.optionsContainer}>
+                                                <SlOptionsVertical onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (openActionsId === notification.id) {
+                                                        setOpenActionsId(null)
+                                                    } else {
+                                                        setOpenActionsId(notification.id);
+                                                    }
+                                                }} />
+                                                <Actions
+                                                    position="bottom-left"
+                                                    isOpen={openActionsId === notification.id}
+                                                    actions={[
+                                                        {
+                                                            icon: <MdDelete />,
+                                                            name: 'Delete notification',
+                                                            cb: () => deleteNotification(notification.id.toString()),
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
                                         </li>
                                     );
                                 })
