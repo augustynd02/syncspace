@@ -1,0 +1,23 @@
+.dataNotFound {
+    position: sticky;
+    top: calc(45px + var(--spacing-medium));
+    height: 200px;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-medium);
+
+    background-color: white;
+    color: var(--color-text-dark-secondary);
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
+    svg {
+        width: 64px;
+        height: 64px;
+        color: var(--color-text-dark-secondary);
+    }
+}
