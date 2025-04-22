@@ -2,6 +2,10 @@ import Feed from "@/components/Feed/Feed";
 import Post from "@/types/Post";
 import User from "@/types/User";
 import Link from "next/link";
+import styles from './SearchPage.module.scss'
+import { FaUser } from "react-icons/fa";
+import { MdArticle } from "react-icons/md";
+import UserMiniature from "@/components/UserMiniature/UserMiniature";
 
 const getPostsByQuery = async (query: string) => {
     const response = await fetch(`http://localhost:8000/api/posts?q=${query}`, {
@@ -42,27 +46,29 @@ export default async function SearchPage({
     const data = category === 'posts' ? await getPostsByQuery(query) : await getUsersByQuery(query);
 
     return (
-        <main>
-            <div className="categoryButtons">
-                <Link href={`/search?q=${query}&category=users`}>Users</Link>
-                <Link href={`/search?q=${query}&category=posts`}>Posts</Link>
+        <main className={styles.searchMain}>
+            <div className={styles.categoryButtons}>
+                <Link href={`/search?q=${query}&category=users`} className={category === 'users' ? styles.active : ''}><FaUser /></Link>
+                <Link href={`/search?q=${query}&category=posts`} className={category === 'posts' ? styles.active : ''}><MdArticle /></Link>
             </div>
 
             {!data ? (
                 <p>No data found.</p>
             ) : (
-                <>
+                <section className={styles.searchResults}>
                     <h2>Showing {data.length} result{data.length !== 1 ? 's' : ''} for "{query}":</h2>
                     {category === 'posts' ? (
                         <Feed posts={data as Post[]} />
                     ) : (
-                        <ul>
+                        <ul className={styles.usersList}>
                             {(data as User[]).map((user) => (
-                                <li key={user.id}>{user.name}</li>
+                                <li key={user.id}>
+                                    <UserMiniature user={user} />
+                                </li>
                             ))}
                         </ul>
                     )}
-                </>
+                </section>
             )}
         </main>
     )
