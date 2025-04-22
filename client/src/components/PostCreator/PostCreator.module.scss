@@ -1,15 +1,20 @@
 .postCreator {
-    padding: var(--spacing-small);
+    position: sticky;
+    top: calc(45px + var(--spacing-medium));
+    padding: 1rem;
     height: max-content;
 
     display: flex;
     gap: var(--spacing-small);
 
     background-color: white;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 8px;
 
-    svg {
+    img {
         width: 32px;
         height: 32px;
+        border-radius: 100%;
     }
 
     form {
@@ -39,9 +44,15 @@
 
             label {
                 height: 100%;
+
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                width: max-content;
                 svg {
                     height: 100%;
                     aspect-ratio: 1/1;
+                    margin-right: var(--spacing-small);
 
                     color: var(--color-text-dark-secondary);
                     cursor: pointer;
@@ -55,6 +66,7 @@
 
         button[type="submit"] {
             padding: 0.5rem;
+            margin-top: 1rem;
 
             border: none;
             border-radius: 8px;

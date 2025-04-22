@@ -3,9 +3,11 @@
 import styles from './PostCreator.module.scss';
 import { FaUserCircle } from "react-icons/fa";
 import { FaImage } from "react-icons/fa6";
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import Button from '../Button/Button';
+import UserContext from '@/contexts/UserContext';
 
 const createPost = async (postFormData: FormData) => {
     try {
@@ -36,6 +38,8 @@ export default function PostCreator() {
         postMessage: '',
         postImage: null
     })
+    const { user } = useContext(UserContext)
+    if (!user) return null;
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const mutation = useMutation({
@@ -97,7 +101,7 @@ export default function PostCreator() {
 
     return (
         <section className={styles.postCreator}>
-            <FaUserCircle />
+            <img src={user.avatar_url} alt="" />
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <textarea
                     ref={textareaRef}
@@ -110,10 +114,16 @@ export default function PostCreator() {
                 <div className={styles.actions}>
                     <label htmlFor="postImage" title="Add image">
                         <FaImage />
+                        {formData.postImage ? 'Image attached!' : 'Attach image' }
                         <input type="file" name="postImage" id="postImage" onChange={handleFileChange} />
                     </label>
                 </div>
-                <button type="submit">Sync up</button>
+                <Button
+                    type="submit"
+                    size="medium"
+                >
+                    Sync up
+                </Button>
             </form>
         </section>
     );
