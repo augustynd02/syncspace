@@ -5,15 +5,16 @@ import Link from 'next/link';
 
 interface UserMiniatureProps {
   user: User;
+  className?: string;
 }
 
-const UserMiniature: React.FC<UserMiniatureProps> = ({ user }) => {
+const UserMiniature: React.FC<UserMiniatureProps> = ({ user, className }) => {
   const fullName = user.middle_name
     ? `${user.name} ${user.middle_name} ${user.last_name}`
     : `${user.name} ${user.last_name}`;
 
   return (
-    <Link href={`/users/${user.id}`} className={styles.miniature}>
+    <Link href={`/users/${user.id}`} className={`${styles.miniature} ${className}`}>
       <div className={styles.avatarContainer}>
         {user.avatar_url ? (
           <img

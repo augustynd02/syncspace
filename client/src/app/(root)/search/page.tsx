@@ -63,7 +63,7 @@ export default async function SearchPage({
                         <ul className={styles.usersList}>
                             {(data as User[]).map((user) => (
                                 <li key={user.id}>
-                                    <UserMiniature user={user} />
+                                    <UserMiniature user={user} className={styles.userMiniature} />
                                 </li>
                             ))}
                         </ul>

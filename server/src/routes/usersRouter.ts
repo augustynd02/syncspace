@@ -10,6 +10,7 @@ const upload = multer({ storage: storage })
 usersRouter.post('/', usersController.createUser);
 usersRouter.get('/', usersController.getUsers);
 usersRouter.get('/me', usersController.getCurrentUser);
+usersRouter.get('/random', usersController.getRandomUsers);
 usersRouter.get('/:id', usersController.getUserById);
 usersRouter.put('/:id', upload.fields([ {name: 'background_file'}, {name: 'avatar_file'}]), usersController.editUser);
 usersRouter.get('/:id/friends', usersController.getFriends);

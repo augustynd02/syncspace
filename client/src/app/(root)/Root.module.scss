@@ -5,4 +5,13 @@
     display: flex;
     justify-content: center;
     gap: var(--spacing-large);
+
+    .sidebar {
+        height: max-content;
+        position: sticky;
+        top: calc(45px + 2rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-large);
+    }
 }

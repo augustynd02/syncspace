@@ -38,9 +38,11 @@ export default async function Home() {
 	}
 	return (
 		<main className={styles.mainContainer}>
-			<PostCreator />
+			<aside className={styles.sidebar}>
+				<PostCreator />
+				<FriendSuggestions />
+			</aside>
 			<Feed posts={feed} />
-			<FriendSuggestions />
 		</main>
 	);
 }

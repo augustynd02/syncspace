@@ -417,6 +417,70 @@ const usersController = {
         } catch (err) {
             next(err);
         }
+    },
+    getRandomUsers: async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!req.user_id) {
+                next(new CustomError(401, 'Not authenticated'));
+                return;
+            }
+
+            const userId = parseInt(req.user_id);
+
+            const friendships = await prisma.friendship.findMany({
+                where: {
+                    OR: [
+                        { requester_id: userId },
+                        { receiver_id: userId }
+                    ],
+                    AND: [
+                        { status: 'accepted' }
+                    ]
+                },
+                select: {
+                    requester: { select: { id: true } },
+                    receiver: { select: { id: true } }
+                }
+            });
+
+            const friendIds = friendships.map(friendship =>
+                friendship.requester.id === userId ? friendship.receiver.id : friendship.requester.id
+            );
+
+            friendIds.push(userId);
+
+            const randomUsers = await prisma.user.findMany({
+                where: {
+                    id: {
+                        notIn: friendIds
+                    }
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                    avatar_name: true,
+                    bio: true,
+                },
+                take: 5,
+                orderBy: {
+                    id: 'asc'
+                }
+            }) as User[];
+
+            const shuffledUsers = randomUsers
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 5);
+
+            for (const user of shuffledUsers) {
+                user.avatar_url = await getImageUrl(user.avatar_name);
+            }
+
+            res.status(200).json({ users: shuffledUsers });
+        } catch (err) {
+            next(err);
+        }
     }
 }
 
