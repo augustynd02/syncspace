@@ -16,9 +16,6 @@ type FormData = {
 }
 
 const handleLogin = async (credentials: FormData) => {
-    // TODO: remove artificial delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
             method: 'POST',
@@ -31,7 +28,6 @@ const handleLogin = async (credentials: FormData) => {
         console.log("Cookies after login:", document.cookie);
 
         const data = await response.json();
-
 
         if (!response.ok) {
             throw new Error(data.message || "Login failed");
@@ -52,9 +48,7 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
         onSuccess: (user) => {
             setUser(user);
             toast.success('Successfully logged in!');
-            setTimeout(() => {
-                router.push('/');
-            }, 500);
+            // router.push('/');
         },
         onError: (err) => {
             toast.error(err.message || 'Could not log you in.');
