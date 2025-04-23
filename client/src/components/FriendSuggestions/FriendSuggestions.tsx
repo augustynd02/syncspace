@@ -11,7 +11,7 @@ const getRandomUsers = async () => {
 		return null;
 	}
 
-	const response = await fetch('http://localhost:8000/api/users/random', {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/random`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {

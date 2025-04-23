@@ -10,7 +10,7 @@ import { MdArticle } from "react-icons/md";
 import UserMiniature from "@/components/UserMiniature/UserMiniature";
 
 const getPostsByQuery = async (query: string) => {
-    const response = await fetch(`http://localhost:8000/api/posts?q=${query}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts?q=${query}`, {
         method: 'GET'
     })
 
@@ -24,7 +24,7 @@ const getPostsByQuery = async (query: string) => {
 }
 
 const getUsersByQuery = async (query: string) => {
-    const response = await fetch(`http://localhost:8000/api/users?q=${query}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?q=${query}`, {
         method: 'GET'
     })
 

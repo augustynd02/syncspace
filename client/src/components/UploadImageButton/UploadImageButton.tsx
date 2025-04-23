@@ -33,7 +33,7 @@ export default function UploadImageButton({ children, type }: UploadImageButtonP
         formData.append(type, file);
 
         try {
-            const response = await fetch(`http://localhost:8000/api/users/${user.id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
                 method: 'PUT',
                 credentials: 'include',
                 body: formData

@@ -13,7 +13,7 @@ export default function FriendshipButton({ friendship, currentUserId, userId }: 
             ? { id1: friendship.requester_id, id2: friendship.receiver_id }
             : { id1: currentUserId, id2: userId };
 
-        const response = await fetch(`http://localhost:8000/api/friendships?user1=${id1}&user2=${id2}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/friendships?user1=${id1}&user2=${id2}`, {
             method: 'PUT',
             credentials: 'include'
         })

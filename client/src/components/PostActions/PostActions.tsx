@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 const deletePost = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/api/posts/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
         method: 'DELETE',
         credentials: 'include',
     });

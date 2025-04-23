@@ -21,7 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 const fetchNotifications = async () => {
     console.log('requesting');
-    const response = await fetch('http://localhost:8000/api/notifications', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
         method: 'GET',
         credentials: 'include'
     });
@@ -87,7 +87,7 @@ export default function Notifications() {
     }
 
     const handleNotifClick = (id: string, url: string | undefined) => {
-        fetch(`http://localhost:8000/api/notifications/${id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/${id}`, {
             method: 'DELETE',
             credentials: 'include'
         });
@@ -107,7 +107,7 @@ export default function Notifications() {
         );
 
         try {
-            const response = await fetch(`http://localhost:8000/api/notifications/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

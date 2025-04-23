@@ -16,7 +16,7 @@ async function getFeed() {
 		return null;
 	}
 
-	const response = await fetch('http://localhost:8000/api/posts/feed', {
+	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/feed`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {

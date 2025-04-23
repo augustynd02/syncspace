@@ -2,7 +2,7 @@ import Post from "@/components/Post/Post";
 import styles from './PostPage.module.scss';
 
 const getPost = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/api/posts/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
         method: 'GET',
     })
 

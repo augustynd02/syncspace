@@ -15,7 +15,7 @@ import Image from "next/image";
 
 const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
     try {
-        const response = await fetch(`http://localhost:8000/api/posts/${contentId}/comments`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${contentId}/comments`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -42,7 +42,7 @@ const createComment = async ({ commentMessage, contentType, contentId }: { comme
 
 const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment_id: string;}) => {
     try {
-        const response = await fetch(`http://localhost:8000/api/posts/${post_id}/comments/${comment_id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${post_id}/comments/${comment_id}`, {
             method: 'DELETE',
             credentials: 'include'
         })

@@ -22,7 +22,7 @@ const handleLike = async ({ content_type, post_id, comment_id, hasUserLiked }: {
             url = `posts/${post_id}/comments/${comment_id}/likes`;
         }
 
-        const response = await fetch(`http://localhost:8000/api/${url}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${url}`, {
             method: hasUserLiked === true ? 'DELETE' : 'POST',
             credentials: 'include'
         })

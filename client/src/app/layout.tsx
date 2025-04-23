@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
 	const user = await getUser();
+	console.log('env:', process.env.NEXT_PUBLIC_API_URL);
 	return (
 		<html lang="en" className={`${raleway.variable} ${montserrat.variable}`}>
 			<body>

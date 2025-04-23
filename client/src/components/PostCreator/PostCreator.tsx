@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 const createPost = async (postFormData: FormData) => {
     try {
-        const response = await fetch('http://localhost:8000/api/posts/', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/`, {
             method: 'POST',
             credentials: 'include',
             body: postFormData

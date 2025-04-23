@@ -39,7 +39,7 @@ const handleEdit = async ({
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const response = await fetch(`http://localhost:8000/api/users/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
             method: 'PUT',
             credentials: 'include',
             headers: { 'Content-type': 'application/json' },
