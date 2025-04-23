@@ -39,27 +39,30 @@ const getUserPosts = async (id: string): Promise<Post[] | null> => {
 }
 
 const getUserInfo = async (id: string) => {
-    const cookieStore = await cookies();
-    const token = await cookieStore.get('token')?.value;
-    if (!token) {
-        return null;
-    }
+    try {
+        const cookieStore = await cookies();
+        const token = await cookieStore.get('token')?.value;
 
-    const response = await fetch(`http://localhost:8000/api/users/${id}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            Cookie: `token=${token}`
+        const response = await fetch(`http://localhost:8000/api/users/${id}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Cookie: `token=${token}`
+            }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Error fetching user: ', data);
+            return null;
         }
-    })
-    const data = await response.json();
 
-    if (!response.ok) {
-        console.error('Error fetching user: ', data);
+        return data.user;
+    } catch (err) {
+        console.log(err);
         return null;
     }
-
-    return data.user;
 }
 
 const getFriends = async (id: string) => {
@@ -123,6 +126,7 @@ export default async function UserPage({ params }: Params) {
     const currentUser = await getUser();
     let friendship: Friendship | undefined;
 
+    console.log(user, currentUser);
     const isOwner = user.id === currentUser?.id;
 
     if (!isOwner && currentUser) {
@@ -171,17 +175,25 @@ export default async function UserPage({ params }: Params) {
                 )}
             </section>
             <section className={styles.profileContent}>
-                {isOwner || (friendship && friendship.status === 'accepted')
-                    ? (
-                        <FriendList users={friends} />
-                    ) : (
-                        <DataNotFound>
-                            <FaLock />
-                            <p>You must be friends with this user to see their friends list.</p>
-                        </DataNotFound>
-                    )
-                }
-                {posts && <Feed posts={posts} />}
+                {!currentUser ? (
+                    <DataNotFound fullWidth={true} >
+                        <FaLock />
+                        <p>You must log in to view {user.name}'s content and information.</p>
+                    </DataNotFound>
+                ) : (
+                    <>
+                        {isOwner || (friendship && friendship.status === 'accepted') ? (
+                            <FriendList users={friends} />
+                        ) : (
+                            <DataNotFound>
+                                <FaLock />
+                                <p>You must be friends with this user to see their friends list.</p>
+                            </DataNotFound>
+                        )}
+
+                        {posts && <Feed posts={posts} />}
+                    </>
+                )}
             </section>
         </main>
     )
