@@ -17,6 +17,7 @@
     }
 
     .sidebar {
+        width: min-content;
         height: max-content;
         max-width: 630px;
         position: sticky;
