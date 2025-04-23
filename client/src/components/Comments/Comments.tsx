@@ -11,6 +11,7 @@ import UserContext from "@/contexts/UserContext";
 import Likes from "../Likes/Likes";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
+import Image from "next/image";
 
 const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
     try {
@@ -148,7 +149,14 @@ export default function Comments({ initialComments, postId, initialyExpanded }: 
                             <article className={styles.commentContainer} key={comment.id}>
                                 <section className={styles.comment}>
                                     <header className={styles.commentHeader}>
-                                        <img src={comment.user.avatar_url} alt="" />
+                                        <div className={styles.avatarContainer}>
+                                            <Image
+                                                src={comment.user.avatar_url || 'placeholder.jpg'}
+                                                alt={`${comment.user.name}'s avatar`}
+                                                fill
+                                                sizes="32px"
+                                            />
+                                        </div>
                                         <div className={styles.authorInfo}>
                                             <h3>{`${comment.user.name} ${comment.user.middle_name ? comment.user.middle_name : ''} ${comment.user.last_name}`}</h3>
                                             <time dateTime={comment.created_at.slice(0, 10)}>{formatDate(comment.created_at.slice(0, 10))}</time>
@@ -207,7 +215,12 @@ export default function Comments({ initialComments, postId, initialyExpanded }: 
                     })}
                     <div className={styles.commentCreator}>
                         <div className={styles.avatarContainer}>
-                            <img src={user?.avatar_url} />
+                            <Image
+                                src={user?.avatar_url || 'placeholder.jpg'}
+                                alt={`${user?.name}'s avatar`}
+                                fill
+                                sizes="32px"
+                            />
                         </div>
                         <div className={styles.inputContainer}>
                             <input

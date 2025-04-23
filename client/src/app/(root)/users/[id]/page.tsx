@@ -12,6 +12,7 @@ import User from "@/types/User";
 import Friendship from "@/types/Friendship";
 import { FaLock } from "react-icons/fa";
 import DataNotFound from '@/components/DataNotFound/DataNotFound';
+import Image from 'next/image';
 
 
 const getUserPosts = async (id: string): Promise<Post[] | null> => {
@@ -138,8 +139,10 @@ export default async function UserPage({ params }: Params) {
             <section className={styles.profileContainer}>
                 <section className={styles.profileImages}>
                     <div className={styles.backgroundContainer}>
-                        <img
-                            src={user.background_url}
+                        <Image
+                            src={user.background_url!}
+                            alt={`${user.name}'s background image`}
+                            fill
                             className={styles.backgroundImage}
                         />
                         {isOwner && (
@@ -149,8 +152,11 @@ export default async function UserPage({ params }: Params) {
                         )}
                     </div>
                     <div className={styles.avatarContainer}>
-                        <img
-                            src={user.avatar_url}
+                        <Image
+                            src={user.avatar_url!}
+                            alt={`${user.name}'s avatar`}
+                            fill
+                            sizes="192px"
                             className={styles.avatar}
                         />
                         {isOwner && (

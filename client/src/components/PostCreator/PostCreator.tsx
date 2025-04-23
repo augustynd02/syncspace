@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Button from '../Button/Button';
 import UserContext from '@/contexts/UserContext';
+import Image from 'next/image';
 
 const createPost = async (postFormData: FormData) => {
     try {
@@ -101,7 +102,12 @@ export default function PostCreator() {
 
     return (
         <section className={styles.postCreator}>
-            <img src={user.avatar_url} alt="" />
+            <Image
+                src={user.avatar_url!}
+                alt={`${user.name}'s avatar`}
+                width={32}
+                height={32}
+            />
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <textarea
                     ref={textareaRef}

@@ -63,12 +63,17 @@
         width: 64px;
     }
 
-    img {
+    .avatarContainer {
+        position: relative;
         width: 100%;
         aspect-ratio: 1/1;
         border-radius: 8px;
 
+        img {
+            border-radius: 8px;
+        }
     }
+
     span {
         text-align: center;
         white-space: nowrap;

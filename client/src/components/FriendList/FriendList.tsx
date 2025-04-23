@@ -1,6 +1,7 @@
 import User from "@/types/User";
 import styles from './FriendList.module.scss';
 import { PiSmileySadLight } from "react-icons/pi";
+import Image from "next/image";
 
 export default function FriendList({ users }: { users: User[] }) {
     return (
@@ -27,7 +28,14 @@ export default function FriendList({ users }: { users: User[] }) {
 function UserMiniature({ user }: { user: User }) {
     return (
         <a href={`/users/${user.id}`} className={styles.userMiniature}>
-            <img src={user.avatar_url} alt="" />
+            <div className={styles.avatarContainer}>
+                <Image
+                    src={user.avatar_url!}
+                    alt={`${user.name}s avatar`}
+                    fill
+                    sizes="(max-width: 480px) 64px, 96px"
+                />
+            </div>
             <span>{user.name} {user.middle_name} {user.last_name}</span>
         </a>
     )

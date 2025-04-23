@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useContext } from "react";
 import Notifications from "./Notifications";
 import Search from "./Search";
+import Image from "next/image";
 
 export default function Header() {
     const router = useRouter();
@@ -34,10 +35,12 @@ export default function Header() {
                                 <Notifications />
                             </li>
                             <li onClick={() => { router.push(`/users/${user?.id}`)}}>
-                                {user && user.avatar_url ?
-                                    <img src={user.avatar_url} alt="User profile" /> :
-                                    <FaUser />
-                                }
+                                <Image
+                                    src={user!.avatar_url!}
+                                    alt={`${user!.name}'s avatar`}
+                                    fill
+                                    sizes="36px"
+                                />
                             </li>
                         </ul>
                     </nav>
