@@ -48,7 +48,9 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
         onSuccess: (user) => {
             setUser(user);
             toast.success('Successfully logged in!');
-            router.push('/');
+            setTimeout(() => {
+                router.push('/');
+            }, 500);
         },
         onError: (err) => {
             toast.error(err.message || 'Could not log you in.');
