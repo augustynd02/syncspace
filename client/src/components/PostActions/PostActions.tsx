@@ -38,8 +38,7 @@ export default function PostActions({ id }: { id: string}) {
 
     return (
         <div className={styles.optionsContainer}>
-            <SlOptionsVertical onClick={(e) => {
-                console.log('clicking')
+            <SlOptionsVertical onClick={() => {
                 setIsOpen(!isOpen)
             }} />
             <Actions

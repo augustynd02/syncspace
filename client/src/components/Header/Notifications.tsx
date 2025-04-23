@@ -8,7 +8,6 @@ import styles from './Notifications.module.scss';
 import Notification from "@/types/Notification";
 import { IoMdHeart, IoMdInformationCircle } from "react-icons/io";
 import { MdModeComment } from "react-icons/md";
-import { FaCommentAlt } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import formatDate from "@/utils/formatDate";
@@ -16,8 +15,7 @@ import Badge from "../Badge/Badge";
 import Spinner from "../Spinner/Spinner";
 import { SlOptionsVertical } from "react-icons/sl";
 import Actions from "../Actions/Actions";
-import { FaUser } from "react-icons/fa";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -44,7 +42,7 @@ export default function Notifications() {
     const queryClient = useQueryClient();
     const router = useRouter();
 
-    const { data, isLoading, error, refetch } = useQuery({
+    const { data, isLoading, refetch } = useQuery({
         queryKey: ['notifications'],
         queryFn: fetchNotifications,
         enabled: true,
@@ -64,7 +62,7 @@ export default function Notifications() {
         info: {
             title: "New notification",
             icon: <IoMdInformationCircle />,
-            getUrl: (notification: Notification) => undefined
+            getUrl: () => undefined
         },
         friend_request: {
             title: "New friend request",

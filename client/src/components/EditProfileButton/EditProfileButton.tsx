@@ -78,7 +78,7 @@ export default function EditProfileButton({
             setIsModalOpen(false);
             router.refresh();
         },
-        onError: (err: any) => {
+        onError: (err) => {
             toast.error(err.message || 'Something went wrong while editing profile.');
         },
     });

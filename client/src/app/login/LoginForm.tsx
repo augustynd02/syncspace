@@ -5,7 +5,7 @@ import UserContext from '@/contexts/UserContext';
 import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
-import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
+import { FaLock, FaUser, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button/Button';
 import { toast } from 'react-toastify';
@@ -85,7 +85,7 @@ export default function LoginForm({ handleFormToggle }: { handleFormToggle: () =
                     Login
                 </Button>
             </form>
-            <p>Don't have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Register <FaChevronRight /> </span></p>
+            <p>Don&#39;t have an account? <span className={styles.formSwitch} onClick={handleFormToggle}>Register <FaChevronRight /> </span></p>
         </section>
     )
 }

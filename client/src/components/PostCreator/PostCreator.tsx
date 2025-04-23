@@ -1,7 +1,6 @@
 'use client'
 
 import styles from './PostCreator.module.scss';
-import { FaUserCircle } from "react-icons/fa";
 import { FaImage } from "react-icons/fa6";
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import { useMutation } from '@tanstack/react-query';
@@ -35,12 +34,14 @@ interface FormDataType {
 }
 
 export default function PostCreator() {
+
     const [formData, setFormData] = useState<FormDataType>({
         postMessage: '',
         postImage: null
     })
-    const { user } = useContext(UserContext)
-    if (!user) return null;
+
+    const { user } = useContext(UserContext);
+
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     const mutation = useMutation({
@@ -52,7 +53,6 @@ export default function PostCreator() {
             toast.error(err.message || 'Could not create post.');
         }
     })
-
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -99,6 +99,8 @@ export default function PostCreator() {
             };
         }
     }, []);
+
+    if (!user) return null;
 
     return (
         <section className={styles.postCreator}>

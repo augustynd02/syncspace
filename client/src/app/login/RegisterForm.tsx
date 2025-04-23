@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 import UserContext from '@/contexts/UserContext';
 
-import { FaLock, FaUser, FaSpinner, FaChevronRight } from "react-icons/fa";
+import { FaLock, FaUser, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button/Button';
 import { toast }from 'react-toastify';
@@ -91,7 +91,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
             setUser(user)
             router.push('/')
         },
-        onError: (err) => {
+        onError: () => {
             toast.error('Could not register.');
         }
     })

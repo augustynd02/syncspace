@@ -184,7 +184,7 @@ export default async function UserPage({ params }: Params) {
                 {!currentUser ? (
                     <DataNotFound fullWidth={true} >
                         <FaLock />
-                        <p>You must log in to view {user.name}'s content and information.</p>
+                        <p>You must log in to view {user.name}&#39;s content and information.</p>
                     </DataNotFound>
                 ) : (
                     <>

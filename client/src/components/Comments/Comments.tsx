@@ -1,7 +1,7 @@
 'use client'
 
 import Comment from "@/types/Comment";
-import { useState, useEffect, useRef, useContext } from "react"
+import { useState, useContext } from "react"
 import styles from './Comments.module.scss'
 import formatDate from "@/utils/formatDate";
 import { MdSend } from "react-icons/md";

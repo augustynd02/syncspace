@@ -1,8 +1,7 @@
 
 'use client'
 
-import { IoChatbubbleEllipses, IoNotifications, IoSearch } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
+import { IoChatbubbleEllipses } from "react-icons/io5";
 import styles from './Header.module.scss'
 import UserContext from "@/contexts/UserContext";
 import { useRouter } from 'next/navigation'
@@ -10,6 +9,7 @@ import { useContext } from "react";
 import Notifications from "./Notifications";
 import Search from "./Search";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
     const router = useRouter();
@@ -20,9 +20,9 @@ export default function Header() {
         <header className={styles.headerWrapper}>
             <div className={styles.mainHeader}>
                 <div className={styles.logoContainer}>
-                    <a href="/">
+                    <Link href="/">
                         <h1>syncspace</h1>
-                    </a>
+                    </Link>
                 </div>
                 <div className={styles.searchDesktop}>
                     <Search />

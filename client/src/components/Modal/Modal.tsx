@@ -1,6 +1,5 @@
 import styles from './Modal.module.scss'
 import { IoMdClose } from "react-icons/io";
-import Button from "../Button/Button";
 
 interface ModalProps {
     children: React.ReactNode

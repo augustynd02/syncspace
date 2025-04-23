@@ -46,9 +46,10 @@ export default function UploadImageButton({ children, type }: UploadImageButtonP
                 return;
             }
 
-            toast.success('Image uploaded!');
+            toast.success(data.message);
             router.refresh();
-        } catch(err) {
+        } catch (err) {
+            console.log(err);
             toast.error('Could not upload image.');
         }
     }
