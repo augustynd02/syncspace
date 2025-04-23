@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import styles from './Form.module.scss';
 
 import { FaLock, FaUser, FaChevronRight } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import Button from '@/components/Button/Button';
 import { toast } from 'react-toastify';
 
@@ -41,7 +41,7 @@ const handleLogin = async (credentials: FormData) => {
 export default function LoginForm({ handleFormToggle }: { handleFormToggle: () => void }) {
     const [formData, setFormData] = useState<FormData>({ username: '', password: '' });
     const { setUser } = useContext(UserContext);
-    const router = useRouter();
+    // const router = useRouter();
 
     const mutation = useMutation({
         mutationFn: handleLogin,
