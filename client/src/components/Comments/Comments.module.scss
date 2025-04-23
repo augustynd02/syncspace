@@ -85,7 +85,7 @@
 
     .commentCreator {
         display: flex;
-        align-items: end;
+        align-items: flex-end;
         gap: var(--spacing-small);
 
         .avatarContainer {
