@@ -12,6 +12,8 @@ async function getFeed() {
 	const cookieStore = await cookies();
 	const token = await cookieStore.get('token')?.value;
 
+	console.log("Token in getFeed:", token ? "Found token" : "No token found");
+
 	if (!token) {
 		return null;
 	}
