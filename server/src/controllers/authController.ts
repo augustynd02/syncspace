@@ -73,7 +73,7 @@ const authController = {
                 httpOnly: true,
                 maxAge: 86400000,
                 sameSite: 'lax',
-                secure: false,
+                secure: process.env.NODE_ENV === 'production',
                 path: '/'
             });
             res.status(200).json({ message: 'Login successful', user: userWithoutPassword})
