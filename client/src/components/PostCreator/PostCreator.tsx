@@ -105,7 +105,7 @@ export default function PostCreator() {
     return (
         <section className={styles.postCreator}>
             <Image
-                src={user.avatar_url!}
+                src={user.avatar_url || 'placeholder.jpg'}
                 alt={`${user.name}'s avatar`}
                 width={32}
                 height={32}

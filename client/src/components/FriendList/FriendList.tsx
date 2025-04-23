@@ -30,7 +30,7 @@ function UserMiniature({ user }: { user: User }) {
         <a href={`/users/${user.id}`} className={styles.userMiniature}>
             <div className={styles.avatarContainer}>
                 <Image
-                    src={user.avatar_url!}
+                    src={user.avatar_url  || 'placeholder.jpg'}
                     alt={`${user.name}s avatar`}
                     fill
                     sizes="(max-width: 480px) 64px, 96px"

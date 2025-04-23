@@ -15,7 +15,7 @@ export default async function Post({ post, initialyExpanded = false }: { post: P
         <article className={styles.post}>
             <header className={styles.postHeader}>
                 <Image
-                    src={post.user.avatar_url!}
+                    src={post.user.avatar_url || 'placeholder.jpg'}
                     alt={`${post.user.name}'s avatar`}
                     width={40}
                     height={40}

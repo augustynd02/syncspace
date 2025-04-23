@@ -28,22 +28,28 @@ export default function Header() {
                     <Search />
                 </div>
                 <div className={styles.actionsContainer}>
-                    <nav>
-                        <ul>
-                            <li><IoChatbubbleEllipses /></li>
-                            <li>
-                                <Notifications />
-                            </li>
-                            <li onClick={() => { router.push(`/users/${user?.id}`)}}>
-                                <Image
-                                    src={user!.avatar_url!}
-                                    alt={`${user!.name}'s avatar`}
-                                    fill
-                                    sizes="36px"
-                                />
-                            </li>
-                        </ul>
-                    </nav>
+                    {user
+                        ? (
+                            <nav>
+                                <ul>
+                                    <li><IoChatbubbleEllipses /></li>
+                                    <li>
+                                        <Notifications />
+                                    </li>
+                                    <li onClick={() => { router.push(`/users/${user?.id}`) }}>
+                                        <Image
+                                            src={user.avatar_url || 'placeholder.jpg'}
+                                            alt={`${user!.name}'s avatar`}
+                                            fill
+                                            sizes="36px"
+                                        />
+                                    </li>
+                                </ul>
+                            </nav>
+                        ) : (
+                            <Link href="/login">Login to access more</Link>
+                        )
+                    }
                 </div>
             </div>
             <div className={styles.searchMobile}>

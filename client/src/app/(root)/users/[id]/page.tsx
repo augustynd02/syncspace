@@ -153,7 +153,7 @@ export default async function UserPage({ params }: Params) {
                     </div>
                     <div className={styles.avatarContainer}>
                         <Image
-                            src={user.avatar_url!}
+                            src={user.avatar_url || 'placeholder.jpg'}
                             alt={`${user.name}'s avatar`}
                             fill
                             sizes="192px"
