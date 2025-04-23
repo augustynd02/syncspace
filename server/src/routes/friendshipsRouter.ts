@@ -3,7 +3,7 @@ import friendshipsController from "../controllers/friendshipsController.js"
 
 const friendshipsRouter: Router = Router();
 
-// api/status
+// api/friendships
 friendshipsRouter.put('/', friendshipsController.updateFriendship);
 friendshipsRouter.get('/status', friendshipsController.getFriendshipStatus);
 

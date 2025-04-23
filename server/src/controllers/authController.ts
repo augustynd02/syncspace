@@ -25,9 +25,11 @@ const authController = {
     getAuthStatus: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (req.user_id) {
-                return res.status(200).json({ user_id: req.user_id });
+                res.status(200).json({ user_id: req.user_id });
+                return;
             }
-            return res.status(401).json({ message: "Not authenticated" });
+            res.status(401).json({ message: "Not authenticated" });
+            return;
         } catch (error) {
             next(error);
         }

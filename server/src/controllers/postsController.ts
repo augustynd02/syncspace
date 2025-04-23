@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
-import { RestoreObjectCommand } from "@aws-sdk/client-s3";
 
 interface RequestWithQuery extends Request {
     query: {
@@ -147,12 +146,13 @@ const postsController = {
             for (const comment of post.comments) {
                 comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
                 if (user_id) {
-                    comment.hasLiked = comment.likes.some(like => like.user_id === id);
+                    comment.hasLiked = comment.likes.some(like => like.user_id === user_id);
                 }
             }
         }
 
-        return res.status(200).json({ posts: posts });
+         res.status(200).json({ posts: posts });
+        return;
     },
     getFeed: async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -382,7 +382,8 @@ const postsController = {
                 }
             })
 
-            return res.status(200).json({ message: "Post successfully deleted" });
+            res.status(200).json({ message: "Post successfully deleted" });
+            return;
         } catch (err) {
             next(err)
         }
