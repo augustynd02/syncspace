@@ -129,7 +129,7 @@ export default function Notifications() {
 
     return (
         <>
-            <IoNotifications onClick={handleOpenPopover}>
+            <IoNotifications onClick={handleOpenPopover} />
                 {data && data.length > 0
                     ? (
                         <Badge>
@@ -140,7 +140,6 @@ export default function Notifications() {
                         null
                     )
                 }
-            </IoNotifications>
 
             {isOpen && (
                 <article className={styles.notificationsContainer}>
