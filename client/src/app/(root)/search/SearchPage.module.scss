@@ -11,6 +11,10 @@
         box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1);
         border-radius: 0 0 32px 32px;
 
+        @media (max-width: 600px) {
+            top: 95px;
+        }
+
         a {
             width: 75px;
             height: 50px;
@@ -48,7 +52,7 @@
     }
 
     .searchResults {
-        margin: var(--spacing-medium) 0;
+        margin: var(--spacing-medium);
 
         display: flex;
         flex-direction: column;
@@ -56,6 +60,7 @@
 
         h2 {
             margin-bottom: var(--spacing-medium);
+            text-align: center;
         }
 
         .usersList {
@@ -65,7 +70,6 @@
             flex-wrap: wrap;
             gap: 16px;
             padding: 0;
-            margin: 0;
             list-style-type: none;
 
             li {
@@ -74,13 +78,14 @@
                 justify-content: center;
                 align-items: center;
             }
+
             &::after {
                 content: "";
                 flex: 0 0 calc(50% - 8px);
                 max-width: calc(50% - 8px);
             }
 
-            @media (max-width: 768px) {
+            @media (max-width: 500px) {
                 li {
                     width: 100%;
                 }
@@ -98,6 +103,10 @@
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
     transition: transform 0.2s;
+
+    h3 {
+        white-space: wrap;
+    }
 
     &:hover {
         transform: translateY(-2px);

@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import styles from './Notifications.module.scss';
 import Notification from "@/types/Notification";
 import { IoMdHeart, IoMdInformationCircle } from "react-icons/io";
+import { MdModeComment } from "react-icons/md";
 import { FaCommentAlt } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { IoChatbubbleEllipses } from "react-icons/io5";
@@ -77,7 +78,7 @@ export default function Notifications() {
         },
         comment: {
             title: "New comment",
-            icon: <FaCommentAlt />,
+            icon: <MdModeComment />,
             getUrl: (notification: Notification) => `/posts/${notification.post_id}`
         },
         message: {
@@ -128,17 +129,18 @@ export default function Notifications() {
 
     return (
         <>
-            <IoNotifications onClick={handleOpenPopover} />
-            {data && data.length > 0
-                ? (
-                    <Badge>
-                        {data.length}
-                    </Badge>
-                )
-                : (
-                    null
-                )
-            }
+            <IoNotifications onClick={handleOpenPopover}>
+                {data && data.length > 0
+                    ? (
+                        <Badge>
+                            {data.length}
+                        </Badge>
+                    )
+                    : (
+                        null
+                    )
+                }
+            </IoNotifications>
 
             {isOpen && (
                 <article className={styles.notificationsContainer}>
