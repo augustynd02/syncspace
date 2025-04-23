@@ -114,9 +114,9 @@ const getFriendshipStatus = async (id1: string, id2: string) => {
 }
 
 interface Params {
-    params: {
+    params: Promise<{
         id: string;
-    }
+    }>;
 }
 
 export default async function UserPage({ params }: Params) {

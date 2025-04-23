@@ -16,13 +16,13 @@ const getPost = async (id: string) => {
 }
 
 interface Params {
-    params: {
+    params: Promise<{
         id: string;
-    }
+    }>;
 }
 
 export default async function PostPage({ params }: Params) {
-    const { id } = await params;
+    const { id } =  await params;
     const post = await getPost(id);
 
     return (

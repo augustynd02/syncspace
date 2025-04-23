@@ -38,10 +38,11 @@ const getUsersByQuery = async (query: string) => {
 export default async function SearchPage({
     searchParams
 }: {
-    searchParams: { q?: string; category?: string }
+    searchParams: Promise<{ q?: string; category?: string }>;
 }) {
-    const query = searchParams.q || '';
-    const category = searchParams.category || '';
+    const params = await searchParams;
+    const query = params.q || '';
+    const category = params.category || '';
 
     const data = category === 'posts' ? await getPostsByQuery(query) : await getUsersByQuery(query);
 
