@@ -34,6 +34,8 @@ async function getFeed() {
 }
 
 export default async function Home() {
+	const cookieStore = await cookies();
+	console.log("Available cookies:", cookieStore.getAll().map(c => c.name));
 	const user = await getUser();
 	const feed = await getFeed();
 
