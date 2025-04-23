@@ -74,7 +74,8 @@ const authController = {
                 maxAge: 86400000,
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 secure: process.env.NODE_ENV === 'production',
-                path: '/'
+                path: '/',
+                domain: process.env.NODE_ENV === 'production' ? 'syncspace-cyan.vercel.app' : 'localhost'
             });
             res.status(200).json({ message: 'Login successful', user: userWithoutPassword})
         } catch (err) {
