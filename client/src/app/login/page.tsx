@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { AuthWrapper } from "./AuthWrapper";
 import styles from "./page.module.scss";
 

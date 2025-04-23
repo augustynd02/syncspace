@@ -1,12 +1,5 @@
 import { cookies } from 'next/headers';
-
-interface User {
-    id: string;
-    name: string;
-    middle_name?: string;
-    last_name: string;
-    bio?: string;
-}
+import User from '@/types/User';
 
 export default async function getUser(): Promise<User | null> {
   try {

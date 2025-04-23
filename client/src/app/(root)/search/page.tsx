@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import Feed from "@/components/Feed/Feed";
 import Post from "@/types/Post";
 import User from "@/types/User";
