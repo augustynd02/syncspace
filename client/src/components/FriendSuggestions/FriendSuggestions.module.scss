@@ -12,6 +12,7 @@
 
 .userMiniature {
     transition: transform 0.2s;
+
     &:hover {
         transform: translateX(4px);
     }

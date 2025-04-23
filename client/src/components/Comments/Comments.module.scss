@@ -32,6 +32,10 @@
 
     border-top: 1px solid var(--color-border);
 
+    @media (max-width: 350px) {
+        padding: 0.5rem 0;
+    }
+
     .comment {
         width: max-content;
         max-width: 100%;
@@ -72,6 +76,8 @@
         .commentContent {
             p {
                 white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
                 font-size: 14px;
             }
         }
@@ -119,6 +125,10 @@
                 border: none;
                 border-radius: 16px 0 0 16px;
                 background-color: inherit;
+
+                @media (max-width: 350px) {
+                    padding: 0.5rem;
+                }
 
                 &:focus {
                     outline: none;

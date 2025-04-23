@@ -74,11 +74,18 @@
 
     .profileContent {
         margin: var(--spacing-medium) 0;
+        max-width: 1260px;
+        width: 100%;
+        padding: 0 1rem;
+
         display: flex;
         justify-content: center;
         gap: var(--spacing-medium);
-        max-width: 1260px;
-        width: 100%;
+
+        @media (max-width: 900px) {
+            flex-direction: column;
+            align-items: center;
+        }
     }
 
 }

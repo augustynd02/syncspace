@@ -1,3 +1,4 @@
+
 'use client'
 
 import { IoChatbubbleEllipses, IoNotifications, IoSearch } from "react-icons/io5";
@@ -15,25 +16,35 @@ export default function Header() {
     const { user } = useContext(UserContext);
 
     return (
-        <header className={styles.mainHeader}>
-            <div className={styles.logoContainer}>
-                <a href="/">
-                    <h1>syncspace</h1>
-                </a>
+        <header className={styles.headerWrapper}>
+            <div className={styles.mainHeader}>
+                <div className={styles.logoContainer}>
+                    <a href="/">
+                        <h1>syncspace</h1>
+                    </a>
+                </div>
+                <div className={styles.searchDesktop}>
+                    <Search />
+                </div>
+                <div className={styles.actionsContainer}>
+                    <nav>
+                        <ul>
+                            <li><IoChatbubbleEllipses /></li>
+                            <li>
+                                <Notifications />
+                            </li>
+                            <li onClick={() => { router.push(`/users/${user?.id}`)}}>
+                                {user && user.avatar_url ?
+                                    <img src={user.avatar_url} alt="User profile" /> :
+                                    <FaUser />
+                                }
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
-            <Search />
-            <div className={styles.actionsContainer}>
-                <nav>
-                    <ul>
-                        <li><IoChatbubbleEllipses /></li>
-                        <li>
-                            <Notifications />
-                        </li>
-                        <li onClick={() => { router.push(`/users/${user?.id}`)}}>
-                            <img src={user ? user.avatar_url : <FaUser /> } />
-                        </li>
-                    </ul>
-                </nav>
+            <div className={styles.searchMobile}>
+                <Search />
             </div>
         </header>
     )

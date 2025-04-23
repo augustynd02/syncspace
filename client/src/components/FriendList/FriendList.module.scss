@@ -4,6 +4,7 @@
     position: sticky;
     top: calc(45px + var(--spacing-medium));
     height: max-content;
+    max-width: 630px;
     padding: var(--spacing-medium);
     background-color: white;
     border-radius: 8px;
@@ -13,10 +14,40 @@
         margin-bottom: var(--spacing-medium);
     }
 
+    @media (max-width: 900px) {
+        position: relative;
+        top: 0;
+        width: 100%;
+    }
+
     .friendList {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: var(--spacing-small);
+
+        & > a {
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        @media (max-width: 600px) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 480px) {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        @media (max-width: 440px) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 380px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
 }
 
@@ -28,10 +59,15 @@
 
     width: 96px;
 
+    @media (max-width: 480px) {
+        width: 64px;
+    }
+
     img {
-        width: 96px;
-        height: 96px;
+        width: 100%;
+        aspect-ratio: 1/1;
         border-radius: 8px;
+
     }
     span {
         text-align: center;

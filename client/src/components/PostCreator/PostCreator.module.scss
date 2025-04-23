@@ -1,6 +1,4 @@
 .postCreator {
-    position: sticky;
-    top: calc(45px + var(--spacing-medium));
     padding: 1rem;
     height: max-content;
 
@@ -10,6 +8,10 @@
     background-color: white;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border-radius: 8px;
+
+    @media (max-width: 900px) {
+        width: 100%;
+    }
 
     img {
         width: 32px;
@@ -22,6 +24,10 @@
         flex-direction: column;
         gap: var(--spacing-small);
 
+        @media (max-width: 900px) {
+            width: 100%;
+        }
+
         textarea {
             width: 300px;
             overflow: hidden;
@@ -32,6 +38,14 @@
             resize: none;
             font-size: 16px;
             background-color: var(--color-background);
+
+            @media (max-width: 900px) {
+                width: 100%;
+            }
+
+            @media (max-width: 600px) {
+                font-size: 14px;
+            }
 
             &:focus {
                 outline: none;

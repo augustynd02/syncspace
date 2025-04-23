@@ -1,20 +1,22 @@
 .searchContainer {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
 
     label {
         height: 35px;
         width: 300px;
-
         display: flex;
         align-items: center;
-
         background-color: var(--color-background);
         border-radius: 16px;
-
         transition: 0.2s;
+
+        @media (max-width: 800px) {
+            width: 250px;
+        }
+
+        @media (max-width: 600px) {
+            width: 100%;
+        }
 
         &:focus-within {
             box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -35,5 +37,28 @@
                 outline: none;
             }
         }
+    }
+}
+
+:global(.searchDesktop) .searchContainer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+:global(.searchMobile) .searchContainer {
+    width: 100%;
+
+    label {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 600px) {
+    :global(.searchMobile) .searchContainer label {
+        width: 100%;
     }
 }

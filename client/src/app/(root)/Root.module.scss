@@ -1,17 +1,33 @@
 .mainContainer {
     flex: 1;
-    margin: var(--spacing-large) 0;
+    margin: var(--spacing-large);
+
+    @media (max-width: 600px) {
+        margin: var(--spacing-medium);
+    }
 
     display: flex;
     justify-content: center;
     gap: var(--spacing-large);
 
+    @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: center;
+    }
+
     .sidebar {
         height: max-content;
+        max-width: 630px;
         position: sticky;
         top: calc(45px + 2rem);
         display: flex;
         flex-direction: column;
         gap: var(--spacing-large);
+
+        @media (max-width: 900px) {
+            width: 100%;
+            position: relative;
+            top: 0;
+        }
     }
 }

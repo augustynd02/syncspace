@@ -1,19 +1,29 @@
 @use '@/styles/mixins';
 
-.mainHeader {
-    height: 45px;
-    background-color: white;
+.headerWrapper {
     position: sticky;
     top: 0;
     z-index: 10000;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    background-color: white;
+}
+
+.mainHeader {
+    height: 45px;
+    background-color: white;
     display: flex;
     justify-content: space-between;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-
     padding: 0 1rem;
 
-    .logoContainer {
+    h1 {
+        @media (max-width: 400px) {
+            font-size: 24px;
+        }
+    }
 
+    .logoContainer {
+        display: flex;
+        align-items: center;
     }
 
     .actionsContainer {
@@ -63,11 +73,31 @@
                         height: 100%;
                         object-fit: cover;
                         border-radius: inherit;
-
                         transition: 0.2s;
                     }
                 }
             }
         }
+    }
+}
+
+.searchDesktop {
+    display: flex;
+    align-items: center;
+}
+
+.searchMobile {
+    display: none;
+    padding: 0.5rem 1rem;
+    background-color: white;
+}
+
+@media (max-width: 600px) {
+    .searchDesktop {
+        display: none;
+    }
+
+    .searchMobile {
+        display: block;
     }
 }

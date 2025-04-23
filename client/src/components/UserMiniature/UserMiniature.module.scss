@@ -1,58 +1,71 @@
 .miniature {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    background-color: white;
-    width: 100%;
-  }
+	display: flex;
+	align-items: center;
+	padding: var(--spacing-small);
+	background-color: white;
+	width: 100%;
+}
 
-  .avatarContainer {
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
+.avatarContainer {
+	margin-right: var(--spacing-small);
+	flex-shrink: 0;
+}
 
-  .avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+.avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
 
-  .avatarPlaceholder {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #666;
-    font-size: 16px;
-  }
+	@media (max-width: 900px) {
+		width: 32px;
+		height: 32px;
+	}
+}
 
-  .userInfo {
-    flex: 1;
-    min-width: 0;
-  }
+.avatarPlaceholder {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background-color: #e0e0e0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	color: #666;
+	font-size: 16px;
+}
 
-  .fullName {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.userInfo {
+	flex: 1;
+	min-width: 0;
+}
 
-  .bio {
-    margin: 4px 0 0;
-    font-size: 14px;
-    color: #666;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+.fullName {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #333;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	@media (max-width: 900px) {
+		font-size: 14px;
+	}
+}
+
+.bio {
+	margin: 4px 0 0;
+	font-size: 14px;
+	color: #666;
+	line-height: 1.3;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+
+	@media (max-width: 900px) {
+		font-size: 12px;
+	}
+}
