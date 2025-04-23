@@ -56,7 +56,7 @@ export default async function SearchPage({
                 <p>No data found.</p>
             ) : (
                 <section className={styles.searchResults}>
-                    <h2>Showing {data.length} result{data.length !== 1 ? 's' : ''} for "{query}":</h2>
+                    <h2>Showing {data.length} result{data.length !== 1 ? 's' : ''} for &#34;{query}&#34;:</h2>
                     {category === 'posts' ? (
                         <Feed posts={data as Post[]} />
                     ) : (
