@@ -13,7 +13,7 @@ import Friendship from "@/types/Friendship";
 import { FaLock } from "react-icons/fa";
 import DataNotFound from '@/components/DataNotFound/DataNotFound';
 import Image from 'next/image';
-
+import { getApiUrl } from '@/utils/api';
 
 const getUserPosts = async (id: string): Promise<Post[] | null> => {
     const cookieStore = await cookies();
@@ -22,7 +22,7 @@ const getUserPosts = async (id: string): Promise<Post[] | null> => {
         return null;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}/posts`, {
+    const response = await fetch(getApiUrl(`/api/users/${id}/posts`), {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -44,7 +44,7 @@ const getUserInfo = async (id: string) => {
         const cookieStore = await cookies();
         const token = await cookieStore.get('token')?.value;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
+        const response = await fetch(getApiUrl(`/api/users/${id}`), {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -73,7 +73,7 @@ const getFriends = async (id: string) => {
         return null;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}/friends`, {
+    const response = await fetch(getApiUrl(`/api/users/${id}/friends`), {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -97,7 +97,7 @@ const getFriendshipStatus = async (id1: string, id2: string) => {
         return null;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/friendships/status?user1=${id1}&user2=${id2}`, {
+    const response = await fetch(getApiUrl(`/api/friendships/status?user1=${id1}&user2=${id2}`), {
         method: 'GET',
         credentials: 'include',
         headers: {

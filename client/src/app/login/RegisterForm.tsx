@@ -9,6 +9,7 @@ import { FaLock, FaUser, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button/Button';
 import { toast }from 'react-toastify';
+import { getApiUrl } from "@/utils/api";
 
 type FormData = {
     username: string;
@@ -39,7 +40,7 @@ const handleRegister = async (credentials: FormData) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+        const response = await fetch(getApiUrl(`/api/users`), {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include',
@@ -59,7 +60,7 @@ const handleRegister = async (credentials: FormData) => {
 
 const handleLogin = async (credentials: { username: string; password: string; }) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        const response = await fetch(getApiUrl(`/api/auth/login`), {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include',

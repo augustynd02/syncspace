@@ -8,9 +8,10 @@ import styles from './SearchPage.module.scss'
 import { FaUser } from "react-icons/fa";
 import { MdArticle } from "react-icons/md";
 import UserMiniature from "@/components/UserMiniature/UserMiniature";
+import { getApiUrl } from "@/utils/api";
 
 const getPostsByQuery = async (query: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts?q=${query}`, {
+    const response = await fetch(getApiUrl(`/api/posts?q=${query}`), {
         method: 'GET'
     })
 
@@ -24,7 +25,7 @@ const getPostsByQuery = async (query: string) => {
 }
 
 const getUsersByQuery = async (query: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?q=${query}`, {
+    const response = await fetch(getApiUrl(`/api/users?q=${query}`), {
         method: 'GET'
     })
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import styles from './Likes.module.scss'
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import { getApiUrl } from "@/utils/api";
 
 interface LikesProps {
     post_id: string;
@@ -22,7 +23,7 @@ const handleLike = async ({ content_type, post_id, comment_id, hasUserLiked }: {
             url = `posts/${post_id}/comments/${comment_id}/likes`;
         }
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${url}`, {
+        const response = await fetch(getApiUrl(`/api/${url}`), {
             method: hasUserLiked === true ? 'DELETE' : 'POST',
             credentials: 'include'
         })

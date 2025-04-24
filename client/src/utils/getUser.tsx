@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import User from '@/types/User';
+import { getApiUrl } from './api';
 
 export default async function getUser(): Promise<User | null> {
   try {
@@ -10,7 +11,7 @@ export default async function getUser(): Promise<User | null> {
       return null;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+    const response = await fetch(getApiUrl('/api/users/me'), {
         method: 'GET',
         credentials: 'include',
         headers: {

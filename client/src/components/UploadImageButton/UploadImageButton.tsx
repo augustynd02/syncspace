@@ -6,6 +6,7 @@ import Button from "../Button/Button";
 import styles from './UploadImageButton.module.scss';
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { getApiUrl } from "@/utils/api";
 
 interface UploadImageButtonProps {
     children: ReactNode;
@@ -33,7 +34,7 @@ export default function UploadImageButton({ children, type }: UploadImageButtonP
         formData.append(type, file);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
+            const response = await fetch(getApiUrl(`/api/users/${user.id}`), {
                 method: 'PUT',
                 credentials: 'include',
                 body: formData

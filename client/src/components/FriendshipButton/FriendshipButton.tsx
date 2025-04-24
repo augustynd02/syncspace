@@ -4,6 +4,7 @@ import { useState } from "react";
 import Button from "../Button/Button";
 import Friendship from "@/types/Friendship";
 import styles from './FriendshipButton.module.scss'
+import { getApiUrl } from "@/utils/api";
 
 export default function FriendshipButton({ friendship, currentUserId, userId }: { friendship: Friendship | undefined, currentUserId: string; userId: string; }) {
     const [currentFriendship, setCurrentFriendship] = useState(friendship);
@@ -13,7 +14,7 @@ export default function FriendshipButton({ friendship, currentUserId, userId }: 
             ? { id1: friendship.requester_id, id2: friendship.receiver_id }
             : { id1: currentUserId, id2: userId };
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/friendships?user1=${id1}&user2=${id2}`, {
+        const response = await fetch(getApiUrl(`/api/friendships?user1=${id1}&user2=${id2}`), {
             method: 'PUT',
             credentials: 'include'
         })

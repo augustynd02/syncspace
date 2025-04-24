@@ -2,6 +2,7 @@ import UserMiniature from '../UserMiniature/UserMiniature';
 import styles from './FriendSuggestions.module.scss'
 import { cookies } from 'next/headers';
 import User from '@/types/User';
+import { getApiUrl } from '@/utils/api';
 
 const getRandomUsers = async () => {
     const cookieStore = await cookies();
@@ -11,7 +12,7 @@ const getRandomUsers = async () => {
 		return null;
 	}
 
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/random`, {
+	const response = await fetch(getApiUrl(`/api/users/random`), {
 		method: 'GET',
 		credentials: 'include',
 		headers: {

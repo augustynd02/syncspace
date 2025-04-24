@@ -8,10 +8,11 @@ import { toast } from 'react-toastify';
 import Button from '../Button/Button';
 import UserContext from '@/contexts/UserContext';
 import Image from 'next/image';
+import { getApiUrl } from "@/utils/api";
 
 const createPost = async (postFormData: FormData) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/`, {
+        const response = await fetch(getApiUrl(`/api/posts/`), {
             method: 'POST',
             credentials: 'include',
             body: postFormData

@@ -9,6 +9,7 @@ import { FaLock, FaUser, FaChevronRight } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button/Button';
 import { toast } from 'react-toastify';
+import { getApiUrl } from "@/utils/api";
 
 type FormData = {
     username: string;
@@ -17,7 +18,7 @@ type FormData = {
 
 const handleLogin = async (credentials: FormData) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        const response = await fetch(getApiUrl(`/api/auth/login`), {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             credentials: 'include',

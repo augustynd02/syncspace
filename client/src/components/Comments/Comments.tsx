@@ -12,10 +12,11 @@ import Likes from "../Likes/Likes";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 import Image from "next/image";
+import { getApiUrl } from "@/utils/api";
 
 const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${contentId}/comments`, {
+        const response = await fetch(getApiUrl(`/api/posts/${contentId}/comments`), {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -42,7 +43,7 @@ const createComment = async ({ commentMessage, contentType, contentId }: { comme
 
 const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment_id: string;}) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${post_id}/comments/${comment_id}`, {
+        const response = await fetch(getApiUrl(`/api/posts/${post_id}/comments/${comment_id}`), {
             method: 'DELETE',
             credentials: 'include'
         })

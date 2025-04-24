@@ -1,8 +1,9 @@
 import Post from "@/components/Post/Post";
 import styles from './PostPage.module.scss';
+import { getApiUrl } from "@/utils/api";
 
 const getPost = async (id: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
+    const response = await fetch(getApiUrl(`/api/posts/${id}`), {
         method: 'GET',
     })
 

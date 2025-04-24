@@ -15,6 +15,7 @@ import Button from '@/components/Button/Button';
 import Modal from '@/components/Modal/Modal';
 import User from '@/types/User';
 import styles from './EditProfileButton.module.scss';
+import { getApiUrl } from "@/utils/api";
 
 interface EditProfileButtonProps {
     children: ReactNode;
@@ -39,7 +40,7 @@ const handleEdit = async ({
     try {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`, {
+        const response = await fetch(getApiUrl(`/api/users/${id}`), {
             method: 'PUT',
             credentials: 'include',
             headers: { 'Content-type': 'application/json' },

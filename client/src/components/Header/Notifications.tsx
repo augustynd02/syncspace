@@ -18,10 +18,11 @@ import Actions from "../Actions/Actions";
 import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import { useQueryClient } from '@tanstack/react-query';
+import { getApiUrl } from "@/utils/api";
 
 const fetchNotifications = async () => {
     console.log('requesting');
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
+    const response = await fetch(getApiUrl(`/api/notifications`), {
         method: 'GET',
         credentials: 'include'
     });
@@ -87,7 +88,7 @@ export default function Notifications() {
     }
 
     const handleNotifClick = (id: string, url: string | undefined) => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/${id}`, {
+        fetch(getApiUrl(`/api/notifications/${id}`), {
             method: 'DELETE',
             credentials: 'include'
         });
@@ -107,7 +108,7 @@ export default function Notifications() {
         );
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notifications/${id}`, {
+            const response = await fetch(getApiUrl(`/api/notifications/${id}`), {
                 method: 'DELETE',
                 credentials: 'include'
             });

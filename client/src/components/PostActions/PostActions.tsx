@@ -8,9 +8,10 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { getApiUrl } from "@/utils/api";
 
 const deletePost = async (id: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
+    const response = await fetch(getApiUrl(`/api/posts/${id}`), {
         method: 'DELETE',
         credentials: 'include',
     });

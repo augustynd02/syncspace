@@ -7,6 +7,7 @@ import Feed from "@/components/Feed/Feed";
 import PostCreator from "@/components/PostCreator/PostCreator";
 import FriendSuggestions from "@/components/FriendSuggestions/FriendSuggestions";
 import styles from "./Root.module.scss"
+import { getApiUrl } from "@/utils/api";
 
 async function getFeed() {
 	const cookieStore = await cookies();
@@ -18,7 +19,7 @@ async function getFeed() {
 		return null;
 	}
 
-	const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/feed`, {
+	const response = await fetch(getApiUrl(`/api/posts/feed`), {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
