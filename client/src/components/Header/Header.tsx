@@ -69,8 +69,8 @@ export default function Header() {
                                                             });
                                                             toast.success("Succesfully logged out!")
                                                             router.push('/login');
-                                                        } catch (error) {
-                                                            toast.error("There was an error during logout...")
+                                                        } catch (err) {
+                                                            toast.error((err instanceof Error ? err.message : "There was an error during logout..."));
                                                         }
                                                     },
                                                 }
