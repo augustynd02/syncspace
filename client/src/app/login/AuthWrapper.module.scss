@@ -3,6 +3,11 @@
     display: flex;
 
     transition: 0.5s ease;
+
+    @media screen and (max-width: 1000px) {
+        align-items: center;
+        height: 50vh;
+    }
 }
 
 .registerShown {

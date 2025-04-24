@@ -5,12 +5,23 @@
     justify-content: center;
     align-items: center;
 
+    @media screen and (max-width: 1000px) {
+        width: 100vw;
+        flex-shrink: 0;
+    }
+
    form {
         padding: var(--spacing-large);
         min-width: 500px;
         display: flex;
         flex-direction: column;
         gap: 1.3rem;
+
+        @media screen and (max-width: 1000px) {
+            width: 100%;
+            min-width: 0;
+            max-width: 500px;
+        }
 
         .inputRow {
             display: flex;
@@ -69,6 +80,10 @@
             }
 
         }
+    }
+
+    p {
+        text-align: center;
     }
 }
 
