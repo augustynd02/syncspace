@@ -13,7 +13,9 @@
 
     @media screen and (max-width: 1000px) {
         flex-direction: column;
-        height: 100dvh;
+        height: 100vh;
+        height: 100svh;
+        min-height: -webkit-fill-available;
     }
 
     .welcomeContainer {
