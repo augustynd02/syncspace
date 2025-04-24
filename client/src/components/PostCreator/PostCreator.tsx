@@ -74,12 +74,20 @@ export default function PostCreator() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            setFormData({
-                ...formData,
-                postImage: e.target.files[0]
-            })
+            const selectedFile = e.target.files[0];
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+            if (validImageTypes.includes(selectedFile.type)) {
+                setFormData({
+                    ...formData,
+                    postImage: selectedFile
+                });
+            } else {
+                toast.error('Please upload a valid image file (JPEG, PNG, GIF, WebP).');
+                e.target.value = '';
+            }
         }
-    }
+    };
 
     const adjustHeight = (): void => {
         const textarea = textareaRef.current;
@@ -124,7 +132,7 @@ export default function PostCreator() {
                     <label htmlFor="postImage" title="Add image">
                         <FaImage />
                         {formData.postImage ? 'Image attached!' : 'Attach image' }
-                        <input type="file" name="postImage" id="postImage" onChange={handleFileChange} />
+                        <input type="file" name="postImage" id="postImage" onChange={handleFileChange} accept="image/*"/>
                     </label>
                 </div>
                 <Button
