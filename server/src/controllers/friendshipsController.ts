@@ -58,6 +58,21 @@ const friendshipsController = {
 			const requesterId = parseInt(req.user_id);
 			const receiverId = user1Id === parseInt(req.user_id) ? user2Id : user1Id;
 
+			const requesterUser = await prisma.user.findUnique({
+				where: { id: requesterId },
+				select: {
+					id: true,
+					name: true,
+					middle_name: true,
+					last_name: true,
+				}
+			});
+
+			if (!requesterUser) {
+				res.status(404).json({ message: "Requester user not found" });
+				return;
+			}
+
 			const friendship = await prisma.friendship.findFirst({
 				where: {
 					OR: [
@@ -84,7 +99,7 @@ const friendshipsController = {
 
 				const notification = await prisma.notification.create({
 					data: {
-						message: "New friend request",
+						message: `${requesterUser.name} ${requesterUser.middle_name ? requesterUser.middle_name : ''} ${requesterUser.last_name} has sent you a friend request.`,
 						type: "friend_request",
 						sender_id: requesterId,
 						recipient_id: receiverId
@@ -175,7 +190,7 @@ const friendshipsController = {
 
 				const notification = await prisma.notification.create({
 					data: {
-						message: `"Friend request accepted"`,
+						message: `${requesterUser.name} ${requesterUser.middle_name ? requesterUser.middle_name : ''} ${requesterUser.last_name} has accepted your friend request.`,
 						type: "friend_request",
 						sender_id: requesterId,
 						recipient_id: receiverId

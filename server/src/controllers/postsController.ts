@@ -398,6 +398,23 @@ const postsController = {
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
 
+            const sender = await prisma.user.findUnique({
+                where: {
+                    id: user_id
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                }
+            })
+
+            if (!sender) {
+                res.status(404).json({ message: "Sender not found" });
+                return;
+            }
+
             const like = await prisma.like.findFirst({
                 where: {
                     user_id: user_id,
@@ -434,7 +451,7 @@ const postsController = {
                     sender_id: user_id,
                     post_id: post.id,
                     type: 'like',
-                    message: 'New like on post'
+                    message: `${sender.name} ${sender.middle_name ? sender.middle_name : ''} ${sender.last_name} has liked your post.`
                 }
             })
 
@@ -489,6 +506,23 @@ const postsController = {
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
 
+            const sender = await prisma.user.findUnique({
+                where: {
+                    id: user_id
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                }
+            })
+
+            if (!sender) {
+                res.status(404).json({ message: "Sender not found" });
+                return;
+            }
+
             const post = await prisma.post.findUnique({
                 where: {
                     id: post_id
@@ -514,7 +548,7 @@ const postsController = {
                     sender_id: user_id,
                     post_id: post.id,
                     type: 'comment',
-                    message: 'New comment'
+                    message: `${sender.name} ${sender.middle_name ? sender.middle_name : ''} ${sender.last_name} has commented on your post.`
                 }
             })
 
@@ -570,6 +604,23 @@ const postsController = {
             const comment_id = parseInt(req.params.comment_id);
             const user_id = parseInt(req.user_id);
 
+            const sender = await prisma.user.findUnique({
+                where: {
+                    id: user_id
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    middle_name: true,
+                    last_name: true,
+                }
+            })
+
+            if (!sender) {
+                res.status(404).json({ message: "Sender not found" });
+                return;
+            }
+
             const comment = await prisma.comment.findUnique({
                 where: {
                     id: comment_id
@@ -618,7 +669,7 @@ const postsController = {
                         sender_id: user_id,
                         post_id: post.id,
                         type: 'like',
-                        message: "New like on comment"
+                        message: `${sender.name} ${sender.middle_name ? sender.middle_name : ''} ${sender.last_name} has liked your comment.`
                     }
                 })
 
