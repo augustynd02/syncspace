@@ -42,6 +42,7 @@
             padding: var(--spacing-small);
 
             display: flex;
+            align-items: center;
             gap: var(--spacing-small);
             list-style-type: none;
 
@@ -54,6 +55,14 @@
                 .notificationIconContainer svg {
                     color: var(--color-primary-400);
                 }
+            }
+
+            &:has(.notificationContent:hover) .notificationIconContainer svg{
+                color: var(--color-primary-400);
+            }
+
+            &:has(.optionsContainer:hover) .notificationIconContainer svg{
+                color: var(--color-primary-400);
             }
 
             .notificationIconContainer {
@@ -76,6 +85,7 @@
             .notificationContent {
                 display: flex;
                 flex-direction: column;
+                gap: 0.25rem;
 
                 .notificationHeader {
                     display: flex;
@@ -100,6 +110,7 @@
                 }
 
                 .notificationMessage {
+                    font-size: 15px;
                     @media (max-width: 600px) {
                         font-size: 14px;
                     }
@@ -109,6 +120,7 @@
 
             .optionsContainer {
                 position: relative;
+                height: max-content;
                 margin-left: auto;
 
                 display: flex;
