@@ -199,7 +199,7 @@ export default function RegisterForm({ handleFormToggle }: { handleFormToggle: (
                         {formErrors.name && <p className={styles.formError}>{formErrors.name}</p>}
                     </div>
                     <div className={styles.inputGroup}>
-                        <label htmlFor="register-name">Last name</label>
+                        <label htmlFor="register-last-name">Last name</label>
                         <input type="text" name="last_name" id="register-last-name" onChange={handleInputChange} onBlur={handleBlur} placeholder=" " />
                         {formErrors.last_name && <p className={styles.formError}>{formErrors.last_name}</p>}
                     </div>
