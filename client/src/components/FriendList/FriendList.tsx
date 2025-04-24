@@ -2,15 +2,16 @@ import User from "@/types/User";
 import styles from './FriendList.module.scss';
 import { PiSmileySadLight } from "react-icons/pi";
 import Image from "next/image";
+import DataNotFound from "../DataNotFound/DataNotFound";
 
 export default function FriendList({ users }: { users: User[] }) {
     return (
         <>
             {users.length === 0 ? (
-                <div className={styles.noFriends}>
+                <DataNotFound fullWidth>
                     <PiSmileySadLight />
                     <p>No friends... yet!</p>
-                </div>
+                </DataNotFound>
             ) : (
                 <div className={styles.friendListContainer}>
                 <h3>Friends ({users.length})</h3>
