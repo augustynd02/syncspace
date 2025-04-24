@@ -88,6 +88,83 @@ const usersController = {
                 }
             })
 
+            const createdUser = await prisma.user.findUnique({
+                where: {
+                    username: req.body.username
+                }
+            })
+
+            if (!createdUser) {
+                res.status(404).json({ message: "Could not get the created user from the database" });
+                return;
+            }
+
+            await prisma.notification.create({
+                data: {
+                    sender_id: createdUser.id,
+                    recipient_id: createdUser.id,
+                    type: 'info',
+                    message: "Welcome to syncspace - a space to synchronize with others. A few default accounts were added to your friend list to get you started. Make sure to explore and interact with others!"
+                }
+            })
+
+            const startingAccount1 = await prisma.user.findUnique({
+                where: {
+                    username: 'yurishe'
+                }
+            })
+
+            const startingAccount2 = await prisma.user.findUnique({
+                where: {
+                    username: 'yurishe2'
+                }
+            })
+
+            const startingAccount3 = await prisma.user.findUnique({
+                where: {
+                    username: 'yurishe3'
+                }
+            })
+
+            if (startingAccount1) {
+                await prisma.friendship.create({
+                    data: {
+                        requester_id: startingAccount1.id,
+                        receiver_id: createdUser.id,
+                        status: 'accepted'
+                    }
+                })
+            }
+
+            if (startingAccount2) {
+                await prisma.friendship.create({
+                    data: {
+                        requester_id: startingAccount2.id,
+                        receiver_id: createdUser.id,
+                        status: 'accepted'
+                    }
+                })
+            }
+
+            if (startingAccount3) {
+                await prisma.friendship.create({
+                    data: {
+                        requester_id: startingAccount3.id,
+                        receiver_id: createdUser.id,
+                        status: 'pending'
+                    }
+                })
+
+                await prisma.notification.create({
+                    data: {
+                        sender_id: startingAccount3.id,
+                        recipient_id: createdUser.id,
+                        type: 'friend_request',
+                        message: `${startingAccount3.name} ${startingAccount3.last_name} has sent you a friend request.`
+                    }
+                })
+            }
+
             res.status(201).json({
                 message: "User registered successfully"
             })
