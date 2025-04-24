@@ -75,6 +75,7 @@ const authController = {
                 sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 secure: process.env.NODE_ENV === 'production',
                 path: '/',
+                partitioned: true
             });
             res.status(200).json({ message: 'Login successful', user: userWithoutPassword})
         } catch (err) {
