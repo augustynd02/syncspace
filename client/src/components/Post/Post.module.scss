@@ -10,6 +10,10 @@
     gap: var(--spacing-small);
     border-radius: 8px;
 
+    .headerLink {
+        width: max-content;
+    }
+
     .postHeader {
         display: flex;
         align-items: center;

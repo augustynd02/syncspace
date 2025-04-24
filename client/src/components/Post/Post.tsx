@@ -6,6 +6,7 @@ import Comments from "../Comments/Comments";
 import getUser from "@/utils/getUser";
 import PostActions from "../PostActions/PostActions";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Post({ post, initialyExpanded = false }: { post: PostType, initialyExpanded?: boolean }) {
     const user = await getUser();
@@ -13,26 +14,28 @@ export default async function Post({ post, initialyExpanded = false }: { post: P
     const date = post.created_at.slice(0, 10);
     return (
         <article className={styles.post}>
-            <header className={styles.postHeader}>
-                <Image
-                    src={post.user.avatar_url || 'placeholder.jpg'}
-                    alt={`${post.user.name}'s avatar`}
-                    width={40}
-                    height={40}
-                />
+            <Link href={`/users/${post.user.id}`} className={styles.headerLink}>
+                <header className={styles.postHeader}>
+                    <Image
+                        src={post.user.avatar_url || 'placeholder.jpg'}
+                        alt={`${post.user.name}'s avatar`}
+                        width={40}
+                        height={40}
+                    />
 
-                <div className={styles.authorInfo}>
-                    <h3>{`${post.user.name} ${post.user.middle_name ? post.user.middle_name : ''} ${post.user.last_name}`}</h3>
-                    <time dateTime={date}>{formatDate(date)}</time>
-                </div>
-                {user && user.id === post.user.id
-                    ? (
-                        <PostActions id={post.id} />
-                    ) : (
-                        null
-                    )
-                }
-            </header>
+                    <div className={styles.authorInfo}>
+                        <h3>{`${post.user.name} ${post.user.middle_name ? post.user.middle_name : ''} ${post.user.last_name}`}</h3>
+                        <time dateTime={date}>{formatDate(date)}</time>
+                    </div>
+                    {user && user.id === post.user.id
+                        ? (
+                            <PostActions id={post.id} />
+                        ) : (
+                            null
+                        )
+                    }
+                </header>
+            </Link>
 
             <section className={styles.postContent}>
                 <p>{post.message}</p>

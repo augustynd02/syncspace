@@ -13,6 +13,7 @@ import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 import Image from "next/image";
 import { getApiUrl } from "@/utils/api";
+import Link from "next/link";
 
 const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
     try {
@@ -41,7 +42,7 @@ const createComment = async ({ commentMessage, contentType, contentId }: { comme
     }
 }
 
-const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment_id: string;}) => {
+const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment_id: string; }) => {
     try {
         const response = await fetch(getApiUrl(`/api/posts/${post_id}/comments/${comment_id}`), {
             method: 'DELETE',
@@ -126,7 +127,7 @@ export default function Comments({ initialComments, postId, initialyExpanded }: 
                 setComments(prev =>
                     prev.map(comment =>
                         comment.id === temporaryId
-                            ? {...comment, id: data.id}
+                            ? { ...comment, id: data.id }
                             : comment
                     )
                 )
@@ -149,20 +150,22 @@ export default function Comments({ initialComments, postId, initialyExpanded }: 
                         return (
                             <article className={styles.commentContainer} key={comment.id}>
                                 <section className={styles.comment}>
-                                    <header className={styles.commentHeader}>
-                                        <div className={styles.avatarContainer}>
-                                            <Image
-                                                src={comment.user.avatar_url || 'placeholder.jpg'}
-                                                alt={`${comment.user.name}'s avatar`}
-                                                fill
-                                                sizes="32px"
-                                            />
-                                        </div>
-                                        <div className={styles.authorInfo}>
-                                            <h3>{`${comment.user.name} ${comment.user.middle_name ? comment.user.middle_name : ''} ${comment.user.last_name}`}</h3>
-                                            <time dateTime={comment.created_at.slice(0, 10)}>{formatDate(comment.created_at.slice(0, 10))}</time>
-                                        </div>
-                                    </header>
+                                    <Link href={`/users/${comment.user_id}`}>
+                                        <header className={styles.commentHeader}>
+                                            <div className={styles.avatarContainer}>
+                                                <Image
+                                                    src={comment.user.avatar_url || 'placeholder.jpg'}
+                                                    alt={`${comment.user.name}'s avatar`}
+                                                    fill
+                                                    sizes="32px"
+                                                />
+                                            </div>
+                                            <div className={styles.authorInfo}>
+                                                <h3>{`${comment.user.name} ${comment.user.middle_name ? comment.user.middle_name : ''} ${comment.user.last_name}`}</h3>
+                                                <time dateTime={comment.created_at.slice(0, 10)}>{formatDate(comment.created_at.slice(0, 10))}</time>
+                                            </div>
+                                        </header>
+                                    </Link>
                                     <section className={styles.commentContent}>
                                         <p>{comment.content}</p>
                                     </section>
