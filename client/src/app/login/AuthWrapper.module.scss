@@ -1,12 +1,14 @@
 .authWrapper {
+    flex: 1;
     height: 100%;
     display: flex;
 
     transition: 0.5s ease;
 
     @media screen and (max-width: 1000px) {
+        flex: 1;
         align-items: center;
-        height: 50vh;
+        height: 100%;
     }
 }
 

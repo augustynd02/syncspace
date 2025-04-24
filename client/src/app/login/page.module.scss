@@ -42,12 +42,13 @@
             font-size: clamp(2.5rem, 5vw, 5rem);
         }
         p {
-            font-size: clamp(1rem, 5vw, 1.2rem);
+            font-size: clamp(0.8rem, 4vw, 1.2rem);
             width: 75%;
         }
     }
 
     .loginContainer {
+        flex: 1;
         max-width: 500px;
         background-color: var(--color-background);
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
