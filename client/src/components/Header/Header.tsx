@@ -5,13 +5,19 @@ import { IoChatbubbleEllipses } from "react-icons/io5";
 import styles from './Header.module.scss'
 import UserContext from "@/contexts/UserContext";
 import { useRouter } from 'next/navigation'
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Notifications from "./Notifications";
 import Search from "./Search";
 import Image from "next/image";
 import Link from "next/link";
+import Actions from "../Actions/Actions";
+import { FaUser } from "react-icons/fa";
+import { MdLogout } from "react-icons/md";
+import { toast } from "react-toastify";
+import { getApiUrl } from "@/utils/api";
 
 export default function Header() {
+    const [userActionsOpen, setUserActionsOpen] = useState(false);
     const router = useRouter();
 
     const { user } = useContext(UserContext);
@@ -36,12 +42,39 @@ export default function Header() {
                                     <li>
                                         <Notifications />
                                     </li>
-                                    <li onClick={() => { router.push(`/users/${user?.id}`) }}>
+                                    <li onClick={() => setUserActionsOpen(!userActionsOpen)}>
                                         <Image
                                             src={user.avatar_url || 'placeholder.jpg'}
                                             alt={`${user!.name}'s avatar`}
                                             fill
                                             sizes="36px"
+                                        />
+                                        <Actions
+                                            position="bottom-left"
+                                            isOpen={userActionsOpen}
+                                            actions={[
+                                                {
+                                                    icon: <FaUser />,
+                                                    name: 'View profile',
+                                                    cb: () => router.push(`/users/${user?.id}`)
+                                                },
+                                                {
+                                                    icon: <MdLogout />,
+                                                    name: "Logout",
+                                                    cb: async () => {
+                                                        try {
+                                                            await fetch(getApiUrl(`/api/auth/logout`), {
+                                                                method: 'POST',
+                                                                credentials: 'include',
+                                                            });
+                                                            toast.success("Succesfully logged out!")
+                                                            router.push('/login');
+                                                        } catch (error) {
+                                                            toast.error("There was an error during logout...")
+                                                        }
+                                                    },
+                                                }
+                                            ]}
                                         />
                                     </li>
                                 </ul>
