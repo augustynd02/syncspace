@@ -24,7 +24,7 @@ const handleLogin = async (credentials: FormData) => {
             body: JSON.stringify(credentials),
         })
 
-        console.log("Login response received", response.status);
+        console.log("Login respons received", response.status);
         console.log("Cookies after login:", document.cookie);
 
         const data = await response.json();
