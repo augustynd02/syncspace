@@ -11,8 +11,9 @@ import Search from "./Search";
 import Image from "next/image";
 import Link from "next/link";
 import Actions from "../Actions/Actions";
+import Badge from "../Badge/Badge";
 import { FaUser } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
+import { MdExpandMore, MdLogout } from "react-icons/md";
 import { toast } from "react-toastify";
 import { getApiUrl } from "@/utils/api";
 
@@ -76,6 +77,9 @@ export default function Header() {
                                                 }
                                             ]}
                                         />
+                                        <Badge className={styles.profileBadge}>
+                                            <MdExpandMore />
+                                        </Badge>
                                     </li>
                                 </ul>
                             </nav>
