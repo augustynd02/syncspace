@@ -1,15 +1,22 @@
 import { Router } from "express";
 import postsController from "../controllers/postsController.js";
 import multer from 'multer';
+import rateLimit from 'express-rate-limit';
 
 const postsRouter: Router = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 
+const uploadLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 10,
+    message: { message: 'Too many uploads, please try again later.' }
+})
+
 // api/posts
 postsRouter.get('/', postsController.getPosts);
-postsRouter.post('/', upload.single('postImage'), postsController.createPost);
+postsRouter.post('/', uploadLimiter, upload.single('postImage'), postsController.createPost);
 postsRouter.get('/feed', postsController.getFeed);
 postsRouter.get('/:post_id', postsController.getPost);
 postsRouter.delete('/:post_id', postsController.deletePost);

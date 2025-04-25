@@ -19,22 +19,25 @@ import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 import { useQueryClient } from '@tanstack/react-query';
 import { getApiUrl } from "@/utils/api";
+import { toast } from "react-toastify";
 
 const fetchNotifications = async () => {
-    console.log('requesting');
-    const response = await fetch(getApiUrl(`/api/notifications`), {
-        method: 'GET',
-        credentials: 'include'
-    });
+    try {
+        const response = await fetch(getApiUrl(`/api/notifications`), {
+            method: 'GET',
+            credentials: 'include'
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch notifications');
+        if (!response.ok) {
+            throw new Error('Failed to fetch notifications');
+        }
+
+        return data.notifications as Notification[];
+    } catch (err) {
+        toast(err instanceof Error ? err.message : "Failed to fetch notifications");
     }
-
-    console.log(data.notifications);
-    return data.notifications as Notification[];
 }
 
 export default function Notifications() {

@@ -16,27 +16,32 @@ import Image from 'next/image';
 import { getApiUrl } from '@/utils/api';
 
 const getUserPosts = async (id: string): Promise<Post[] | null> => {
-    const cookieStore = await cookies();
-    const token = await cookieStore.get('token')?.value;
-    if (!token) {
-        return null;
-    }
-
-    const response = await fetch(getApiUrl(`/api/users/${id}/posts`), {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            Cookie: `token=${token}`
+    try {
+        const cookieStore = await cookies();
+        const token = await cookieStore.get('token')?.value;
+        if (!token) {
+            return null;
         }
-    });
-    const data = await response.json();
 
-    if (!response.ok) {
-        console.error('Errpr fetching posts: ', data);
+        const response = await fetch(getApiUrl(`/api/users/${id}/posts`), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Cookie: `token=${token}`
+            }
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Error fetching posts: ', data);
+            return null;
+        }
+
+        return data.posts;
+    } catch (err) {
+        console.log(err instanceof Error ? err.message : 'An error occured when fetching posts');
         return null;
     }
-
-    return data.posts;
 }
 
 const getUserInfo = async (id: string) => {
@@ -61,56 +66,66 @@ const getUserInfo = async (id: string) => {
 
         return data.user;
     } catch (err) {
-        console.log(err);
+        console.log(err instanceof Error ? err.message : 'An error occured when fetching user');
         return null;
     }
 }
 
 const getFriends = async (id: string) => {
-    const cookieStore = await cookies();
-    const token = await cookieStore.get('token')?.value;
-    if (!token) {
-        return null;
-    }
-
-    const response = await fetch(getApiUrl(`/api/users/${id}/friends`), {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            Cookie: `token=${token}`
+    try {
+        const cookieStore = await cookies();
+        const token = await cookieStore.get('token')?.value;
+        if (!token) {
+            return null;
         }
-    })
-    const data = await response.json();
 
-    if (!response.ok) {
-        console.error('Error fetching user: ', data);
+        const response = await fetch(getApiUrl(`/api/users/${id}/friends`), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Cookie: `token=${token}`
+            }
+        })
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Error fetching friends: ', data);
+            return null;
+        }
+
+        return data.friends;
+    } catch (err) {
+        console.log(err instanceof Error ? err.message : 'An error occured when fetching friends');
         return null;
     }
-
-    return data.friends;
 }
 
 const getFriendshipStatus = async (id1: string, id2: string) => {
-    const cookieStore = await cookies();
-    const token = await cookieStore.get('token')?.value;
-    if (!token) {
-        return null;
-    }
-
-    const response = await fetch(getApiUrl(`/api/friendships/status?user1=${id1}&user2=${id2}`), {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            Cookie: `token=${token}`
+    try {
+        const cookieStore = await cookies();
+        const token = await cookieStore.get('token')?.value;
+        if (!token) {
+            return null;
         }
-    })
-    const data = await response.json();
-    if (!response.ok) {
-        console.error('Error fetching user: ', data);
+
+        const response = await fetch(getApiUrl(`/api/friendships/status?user1=${id1}&user2=${id2}`), {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                Cookie: `token=${token}`
+            }
+        })
+        const data = await response.json();
+        if (!response.ok) {
+            console.error('Error fetching user: ', data);
+            return null;
+        }
+
+        return data.friendship
+    } catch (err) {
+        console.log(err instanceof Error ? err.message : 'An error occured when fetching friendship status');
         return null;
     }
-
-    return data.friendship
 }
 
 interface Params {

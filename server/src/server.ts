@@ -3,11 +3,11 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { S3Client } from '@aws-sdk/client-s3';
-
-import authRouter from "./routes/authRouter.js";
+import rateLimit from 'express-rate-limit';
 
 import errorMiddleware from './middleware/errorMiddleware.js';
 import authenticateToken from './middleware/authenticateToken.js';
+import authRouter from "./routes/authRouter.js";
 import usersRouter from './routes/usersRouter.js';
 import postsRouter from './routes/postsRouter.js';
 import friendshipsRouter from './routes/friendshipsRouter.js';
@@ -33,6 +33,16 @@ const app = express();
 const PORT: number = parseInt(process.env.PORT || "3000", 10);
 
 app.use(cookieParser());
+
+const limiter = rateLimit({
+	windowMs: 3 * 60 * 1000,
+	max: 200,
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: { message: 'Too many requests from this IP, please try again later.' }
+});
+
+app.use(limiter)
 
 app.use(cors({
 	origin: process.env.FRONTEND_URL,
