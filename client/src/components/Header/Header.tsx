@@ -39,7 +39,9 @@ export default function Header() {
                         ? (
                             <nav>
                                 <ul>
-                                    <li><IoChatbubbleEllipses /></li>
+                                    <li onClick={() => router.push('/chat')}>
+                                        <IoChatbubbleEllipses />
+                                    </li>
                                     <li>
                                         <Notifications />
                                     </li>
