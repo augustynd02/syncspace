@@ -1,0 +1,49 @@
+.notFoundMain {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+
+    background: linear-gradient(135deg, var(--color-primary-100), var(--color-primary-700));
+    color: #fff;
+    text-align: center;
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--color-text-white-primary);
+        text-transform: lowercase;
+        letter-spacing: 2px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--color-text-white-secondary);
+    }
+
+    p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        max-width: 400px;
+        color: var(--color-text-white-secondary);
+    }
+
+    a {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--color-primary-400);
+        color: var(--color-text-white-secondary);
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: background 0.2s;
+
+        &:hover {
+            background-color: var(--color-primary-300);
+        }
+    }
+}
