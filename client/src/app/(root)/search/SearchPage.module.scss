@@ -53,6 +53,8 @@
 
     .searchResults {
         margin: var(--spacing-medium);
+        width: 100%;
+        max-width: 630px;
 
         display: flex;
         flex-direction: column;

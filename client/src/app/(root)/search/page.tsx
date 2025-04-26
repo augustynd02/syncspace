@@ -58,7 +58,7 @@ export default async function SearchPage({
             </div>
 
             {!data ? (
-                <DataNotFound>
+                <DataNotFound fullWidth>
                     No data found.
                 </DataNotFound>
             ) : (
@@ -67,7 +67,7 @@ export default async function SearchPage({
                         ? (
                             <h2>Showing {data.length} result{data.length !== 1 ? 's' : ''} for &#34;{query}&#34;:</h2>
                         ) : (
-                            <DataNotFound>
+                            <DataNotFound fullWidth>
                                 No results found.
                             </DataNotFound>
                         )
