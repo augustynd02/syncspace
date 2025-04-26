@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from './ChatInterface.module.scss'
 import User from "@/types/User"
 import Image from 'next/image'
@@ -13,9 +13,34 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
     const [currentChatUser, setCurrentChatUser] = useState<User | null>(null)
     const [newMessage, setNewMessage] = useState('');
     const [messages, setMessages] = useState<Message[] | null>(null);
+    const messagesEnd = useRef<HTMLDivElement>(null);
 
     const handleSendMessage = async () => {
-        console.log('sending message');
+        try {
+            if (newMessage === '') return;
+            setNewMessage('');
+            if (!currentChatUser) return;
+            const response = await fetch(getApiUrl(`/api/messages/${currentChatUser.id}`), {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: newMessage })
+            })
+
+            if (!response.ok) {
+                toast.error("Failed to send message")
+                return;
+            }
+
+            const data = await response.json();
+
+            setMessages([...(messages || []), data.message]);
+            return data.message;
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Failed to send message");
+        }
     }
 
     useEffect(() => {
@@ -37,6 +62,7 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                 const data = await response.json();
                 console.log(data);
 
+                console.log(data.messages);
                 setMessages(data.messages);
             } catch (err) {
                 toast.error(err instanceof Error ? err.message : "Failed to fetch messages")
@@ -44,6 +70,12 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
         }
         fetchMessages();
     }, [currentChatUser])
+
+    useEffect(() => {
+        if (messagesEnd.current) {
+            messagesEnd.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
 
     return (
         <section className={styles.chatContainer}>
@@ -88,17 +120,37 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                                 </div>
                             </header>
                             <section className={styles.messages}>
-                                { messages && messages.length > 0
+                                {messages && messages.length > 0
                                     ? (
-                                        messages.map(message => (
-                                            <div className={`${styles.message} ${message.sender_id === parseInt(currentChatUser.id) ? styles.left : styles.right}`}>
-                                                {message.content}
-                                            </div>
-                                        ))
+                                        messages.map((message, i) => {
+                                            const prevMessage = messages[i - 1];
+                                            const nextMessage = messages[i + 1];
+
+                                            const isFirst = !prevMessage || prevMessage.sender_id !== message.sender_id;
+                                            const isLast = !nextMessage || nextMessage.sender_id !== message.sender_id;
+
+                                            return (
+                                                <div
+                                                    key={message.id}
+                                                    className={
+                                                        `${styles.message}
+                                                         ${message.sender_id === parseInt(currentChatUser.id) ? styles.left : styles.right}
+                                                         ${isFirst ? styles.first : ''}
+                                                         ${isLast ? styles.last : ''}
+                                                        `
+                                                    }
+
+                                                >
+                                                    {message.content}
+                                                </div>
+
+                                            )
+                                        })
                                     ) : (
                                         <p>No messages found</p>
                                     )
                                 }
+                                <div ref={messagesEnd}></div>
                             </section>
                             <div className="inputContainer">
                                 <div className={styles.inputContainer}>

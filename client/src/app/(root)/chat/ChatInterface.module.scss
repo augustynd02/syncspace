@@ -15,6 +15,7 @@
     border-radius: 8px;
 
     .friendsList {
+        min-width: 300px;
         width: 30%;
         height: 100%;
         overflow-y: auto;
@@ -49,6 +50,7 @@
 
                 .avatarContainer {
                     @include mixins.flex-center;
+
                     img {
                         border-radius: 100%;
                     }
@@ -83,26 +85,56 @@
         .messages {
             padding: 0.25rem 0;
             flex: 1;
+            overflow-y: auto;
 
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-small);
+            gap: 0.1rem;
 
             .message {
+                width: fit-content;
                 max-width: 40%;
                 background-color: var(--color-background);
                 padding: 0.5rem;
+                word-break: break-word;
+                overflow-wrap: break-word;
 
-                &.left {
-                    border-radius: 0 16px 16px 0;
-                }
 
                 &.right {
                     margin-left: auto;
 
                     background-color: var(--color-primary-400);
-                    border-radius: 16px 0 0 16px;
                     color: var(--color-text-white-primary);
+
+                    border-radius: 16px 2px 2px 16px;
+                }
+
+                &.right.first {
+                    border-radius: 16px 16px 2px 16px;
+                }
+
+                &.right.last {
+                    border-radius: 16px 2px 16px 16px;
+                }
+
+                &.right.first.last {
+                    border-radius: 16px;
+                }
+
+                &.left {
+                    border-radius: 2px 16px 16px 2px;
+                }
+
+                &.left.first {
+                    border-radius: 16px 16px 16px 2px;
+                }
+
+                &.left.last {
+                    border-radius: 2px 16px 16px 16px;
+                }
+
+                &.left.first.last {
+                    border-radius: 16px;
                 }
             }
         }
