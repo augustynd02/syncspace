@@ -28,6 +28,7 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
             setNewMessage('');
 
             if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+                console.log('WS connection is open');
                 ws.current.send(JSON.stringify({
                     type: 'message',
                     toUserId: currentChatUser.id,
@@ -47,6 +48,7 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                     newMessage,
                 ]);
             } else {
+                console.log('WS connection is closed');
                 const response = await fetch(getApiUrl(`/api/messages/${currentChatUser.id}`), {
                     method: 'POST',
                     credentials: 'include',
@@ -86,6 +88,7 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
 
         ws.current.onmessage = (event) => {
             try {
+                console.log('Receiving message...');
                 const data = JSON.parse(event.data);
                 if (data.type === 'new_message') {
                     const message: Message = data.message;

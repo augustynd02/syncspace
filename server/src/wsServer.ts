@@ -38,6 +38,7 @@ export function initWebSocketServer(httpServer: http.Server) {
             ws.close()
             return
         }
+        console.log(`Conntected user with id: ${user_id}`)
         ws.user_id = user_id
         userSockets.set(user_id, ws)
 
