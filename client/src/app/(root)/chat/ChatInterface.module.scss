@@ -1,3 +1,5 @@
+@use '@/styles/mixins';
+
 .chatContainer {
     flex: 1;
     height: 80vh;
@@ -46,6 +48,7 @@
                 }
 
                 .avatarContainer {
+                    @include mixins.flex-center;
                     img {
                         border-radius: 100%;
                     }
@@ -62,6 +65,107 @@
 
     .chat {
         flex: 1;
+
+        display: flex;
+        flex-direction: column;
+
         background-color: white;
+
+        header {
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-small);
+
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .messages {
+            padding: 0.25rem 0;
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-small);
+
+            .message {
+                max-width: 40%;
+                background-color: var(--color-background);
+                padding: 0.5rem;
+
+                &.left {
+                    border-radius: 0 16px 16px 0;
+                }
+
+                &.right {
+                    margin-left: auto;
+
+                    background-color: var(--color-primary-400);
+                    border-radius: 16px 0 0 16px;
+                    color: var(--color-text-white-primary);
+                }
+            }
+        }
+
+        .inputContainer {
+            margin: 0.5rem;
+            max-width: 100%;
+
+            display: flex;
+
+            background-color: rgb(241, 241, 241);
+            border-radius: 16px;
+
+            transition: 0.2s;
+
+            &:focus-within {
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+            }
+
+            &:focus-within button svg {
+                color: var(--color-primary-400);
+            }
+
+            input {
+                flex: 1;
+                padding: 0.5rem 1rem;
+
+                border: none;
+                border-radius: 16px 0 0 16px;
+                background-color: inherit;
+
+                @media (max-width: 350px) {
+                    padding: 0.5rem;
+                }
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            button {
+                width: 32px;
+                height: 32px;
+
+                @include mixins.flex-center;
+
+                border-radius: 0 16px 16px 0;
+                border: none;
+                background-color: inherit;
+                cursor: pointer;
+
+                &:hover svg {
+                    color: var(--color-primary-400);
+                }
+
+                svg {
+                    width: 50%;
+                    height: 50%;
+
+                    color: var(--color-text-dark-secondary);
+                    transition: 0.2s;
+                }
+            }
+        }
     }
 }

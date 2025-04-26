@@ -12,6 +12,7 @@ import usersRouter from './routes/usersRouter.js';
 import postsRouter from './routes/postsRouter.js';
 import friendshipsRouter from './routes/friendshipsRouter.js';
 import notificationsRouter from './routes/notificationsRouter.js';
+import messagesRouter from './routes/messagesRouter.js';
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/friendships', friendshipsRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api/messages', messagesRouter);
 
 app.use(errorMiddleware);
 

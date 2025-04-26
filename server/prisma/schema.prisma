@@ -21,10 +21,12 @@ model User {
   posts                    Post[]
   liked_posts              Like[]
   comments                 Comment[]
-  sent_friend_requests     Friendship[] @relation("sent_friend_requests")
-  received_friend_requests Friendship[] @relation("received_friend_requests")
-  sentNotifications Notification[]  @relation("NotificationSender")
-  receivedNotifications Notification[]  @relation("NotificationRecipient")
+  sent_friend_requests     Friendship[]   @relation("sent_friend_requests")
+  received_friend_requests Friendship[]   @relation("received_friend_requests")
+  sentNotifications        Notification[] @relation("NotificationSender")
+  receivedNotifications    Notification[] @relation("NotificationRecipient")
+  sentMessages             Message[]      @relation("SentMessages")
+  receivedMessages         Message[]      @relation("ReceivedMessages")
 }
 
 model Friendship {
@@ -56,8 +58,8 @@ model Post {
   likes    Like[]
   comments Comment[]
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  notifications  Notification[]
+  user          User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  notifications Notification[]
 }
 
 model Like {
@@ -83,27 +85,27 @@ model Comment {
 
   likes Like[]
 
-  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  notifications  Notification[]
+  post          Post           @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  notifications Notification[]
 }
 
 model Notification {
-  id             Int      @id @default(autoincrement())
-  message        String
-  type           NotificationType
-  is_read         Boolean  @default(false)
-  created_at      DateTime @default(now())
+  id         Int              @id @default(autoincrement())
+  message    String
+  type       NotificationType
+  is_read    Boolean          @default(false)
+  created_at DateTime         @default(now())
 
-  post_id         Int?
-  post           Post?    @relation(fields: [post_id],   references: [id])
-  comment_id      Int?
-  comment        Comment? @relation(fields: [comment_id],references: [id])
+  post_id    Int?
+  post       Post?    @relation(fields: [post_id], references: [id])
+  comment_id Int?
+  comment    Comment? @relation(fields: [comment_id], references: [id])
 
-  sender_id        Int
-  sender          User     @relation("NotificationSender", fields: [sender_id], references: [id])
-  recipient_id    Int
-  recipient      User     @relation("NotificationRecipient", fields: [recipient_id], references: [id])
+  sender_id    Int
+  sender       User @relation("NotificationSender", fields: [sender_id], references: [id])
+  recipient_id Int
+  recipient    User @relation("NotificationRecipient", fields: [recipient_id], references: [id])
 }
 
 enum NotificationType {
@@ -112,4 +114,16 @@ enum NotificationType {
   like
   comment
   message
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  content    String
+  created_at DateTime @default(now())
+
+  sender_id   Int
+  receiver_id Int
+
+  sender   User @relation("SentMessages", fields: [sender_id], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiver_id], references: [id], onDelete: Cascade)
 }
