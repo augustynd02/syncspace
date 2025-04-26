@@ -10,7 +10,6 @@ import { getApiUrl } from '@/utils/api'
 import Message from '@/types/Message'
 import UserContext from '@/contexts/UserContext'
 import { getWsUrl } from '@/utils/api';
-import DataNotFound from '@/components/DataNotFound/DataNotFound'
 
 export default function ChatInterface({ friends }: { friends: User[] }) {
     const [currentChatUser, setCurrentChatUser] = useState<User | null>(null)
