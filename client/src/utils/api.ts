@@ -19,6 +19,6 @@ export function getWsUrl() {
   const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
   const apiUrlClean = apiUrl.replace(/^https?/, wsProtocol).replace(/\/api\/?$/, '');
 
-  return `${apiUrlClean}/socket`;
+  return `${apiUrlClean}/ws`;
 }
 

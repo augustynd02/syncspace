@@ -11,7 +11,7 @@ export function initWebSocketServer(httpServer: http.Server) {
     const prisma = new PrismaClient()
     const userSockets = new Map<number, ExtendedWebSocket>()
 
-    const wss = new WebSocketServer({ server: httpServer, path: '/socket' })
+    const wss = new WebSocketServer({ server: httpServer, path: '/ws' })
 
     wss.on('connection', (ws: ExtendedWebSocket, req) => {
         console.log('Someone is connecting.');
