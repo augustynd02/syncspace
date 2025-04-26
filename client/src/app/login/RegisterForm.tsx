@@ -36,9 +36,6 @@ const defaultFormData: FormData = {
 }
 
 const handleRegister = async (credentials: FormData) => {
-    // TODO: remove artificial delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     try {
         const response = await fetch(getApiUrl(`/api/users`), {
             method: 'POST',
