@@ -152,7 +152,10 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                     {friends.map((friend) => (
                         <li
                             key={friend.id}
-                            onClick={() => setCurrentChatUser(friend)}
+                            onClick={() =>{
+                                setMessages(null);
+                                setCurrentChatUser(friend)
+                            }}
                             className={currentChatUser?.id === friend.id ? styles.activeChat : undefined}
                         >
                             <div className={styles.avatarContainer}>
