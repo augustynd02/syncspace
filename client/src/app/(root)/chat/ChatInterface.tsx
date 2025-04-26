@@ -10,6 +10,7 @@ import { getApiUrl } from '@/utils/api'
 import Message from '@/types/Message'
 import UserContext from '@/contexts/UserContext'
 import { getWsUrl } from '@/utils/api';
+import DataNotFound from '@/components/DataNotFound/DataNotFound'
 
 export default function ChatInterface({ friends }: { friends: User[] }) {
     const [currentChatUser, setCurrentChatUser] = useState<User | null>(null)
@@ -211,7 +212,9 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                                     )
                                 })
                             ) : (
-                                <p>No messages found</p>
+                                <div className={styles.info}>
+                                    <p>No messages found. Send a message first!</p>
+                                </div>
                             )}
                             <div ref={messagesEnd}></div>
                         </section>
@@ -234,7 +237,9 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                         </div>
                     </>
                 ) : (
-                    <p>Pick a user to view the chat!</p>
+                    <div className={styles.info}>
+                        <p>Select a conversation to view messages.</p>
+                    </div>
                 )}
             </section>
         </section>

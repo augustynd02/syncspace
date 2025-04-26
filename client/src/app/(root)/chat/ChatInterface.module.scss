@@ -5,7 +5,7 @@
     height: 80vh;
     width: 100%;
     max-width: 1260px;
-    margin: var(--spacing-large) auto;
+    margin: var(--spacing-large) var(--spacing-medium);
     overflow: hidden;
 
     display: flex;
@@ -14,15 +14,41 @@
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border-radius: 8px;
 
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+    }
+
     .friendsList {
         min-width: 300px;
         width: 30%;
         height: 100%;
         overflow-y: auto;
-        border-right: 2px solid var(--color-border);
+        border-right: 1px solid var(--color-border);
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        background-color: rgb(248, 248, 248);
+        user-select: none;
+        z-index: 10;
+
+        @media screen and (max-width: 800px) {
+            min-width: 200px;
+        }
+
+        @media screen and (max-width: 600px) {
+            width: 100%;
+            height: fit-content;
+            overflow-y: visible;
+            border-right: none;
+            font-size: 14px;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        }
 
         ul {
             list-style-type: none;
+
+            @media screen and (max-width: 600px) {
+                display: flex;
+                overflow-x: scroll;
+            }
 
             li {
                 padding: 0.5rem;
@@ -67,6 +93,7 @@
 
     .chat {
         flex: 1;
+        overflow: hidden;
 
         display: flex;
         flex-direction: column;
@@ -80,10 +107,20 @@
             gap: var(--spacing-small);
 
             border-bottom: 1px solid var(--color-border);
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            z-index: 5;
+
+            .avatarContainer {
+                width: 32px;
+                height: 32px;
+                img {
+                    border-radius: 4px;
+                }
+            }
         }
 
         .messages {
-            padding: 0.25rem 0;
+            padding: var(--spacing-small);
             flex: 1;
             overflow-y: auto;
 
@@ -99,6 +136,10 @@
                 word-break: break-word;
                 overflow-wrap: break-word;
 
+                @media screen and (max-width: 600px) {
+                    max-width: 60%;
+                    font-size: 14px;
+                }
 
                 &.right {
                     margin-left: auto;
@@ -200,4 +241,14 @@
             }
         }
     }
+}
+
+.info {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
