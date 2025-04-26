@@ -86,7 +86,7 @@ export default function Notifications() {
         message: {
             title: "New message",
             icon: <IoChatbubbleEllipses />,
-            getUrl: (notification: Notification) => `/chats/${notification.sender_id}`
+            getUrl: () => `/chat`
         }
     }
 
