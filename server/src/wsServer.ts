@@ -14,7 +14,6 @@ export function initWebSocketServer(httpServer: http.Server) {
     const wss = new WebSocketServer({ server: httpServer, path: '/ws' })
 
     wss.on('connection', (ws: ExtendedWebSocket, req) => {
-        console.log('Someone is connecting.');
         const url = new URL(req.url || '', 'http://localhost');
         const token = url.searchParams.get('token');
 
@@ -42,7 +41,6 @@ export function initWebSocketServer(httpServer: http.Server) {
             return;
         }
 
-        console.log(`Conntected user with id: ${user_id}`)
         ws.user_id = user_id
         userSockets.set(user_id, ws)
 

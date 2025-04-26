@@ -29,7 +29,6 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
             setNewMessage('');
 
             if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-                console.log('WS connection is open');
                 ws.current.send(JSON.stringify({
                     type: 'message',
                     toUserId: currentChatUser.id,
@@ -49,7 +48,6 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                     newMessage,
                 ]);
             } else {
-                console.log('WS connection is closed');
                 const response = await fetch(getApiUrl(`/api/messages/${currentChatUser.id}`), {
                     method: 'POST',
                     credentials: 'include',
@@ -86,13 +84,10 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
             const wsUrl = getWsUrl(token);
             if (!wsUrl) return;
 
-            console.log(`Connecting to: ${wsUrl}`)
-
             ws.current = new WebSocket(wsUrl);
 
             ws.current.onmessage = (event) => {
                 try {
-                    console.log('Receiving message...');
                     const data = JSON.parse(event.data);
                     if (data.type === 'new_message') {
                         const message: Message = data.message;
@@ -109,7 +104,7 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
 
             ws.current.onerror = (err) => {
                 console.error('WebSocket error', err);
-                toast.error(err instanceof Error ? err.message : 'Could not connect in real-time.');
+                toast.error(err instanceof Error ? err.message : 'Could not connect in real-time. Please refresh the page!');
             };
         }
 
