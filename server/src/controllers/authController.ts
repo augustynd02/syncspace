@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import CustomError from "../utils/CustomError.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import { getImageUrl } from "../lib/s3.js";
+import jwt from "jsonwebtoken";
 
 type User = {
     id: number;
@@ -95,6 +96,16 @@ const authController = {
         } catch (err) {
             next(err);
         }
+    },
+
+    getWsToken: async (req: Request, res: Response, next: NextFunction) => {
+        const wsToken = jwt.sign(
+            { id: req.user_id, purpose: 'websocket' },
+            process.env.TOKEN_SECRET!,
+            { expiresIn: '1h' }
+          );
+
+          res.json({ token: wsToken });
     }
 }
 

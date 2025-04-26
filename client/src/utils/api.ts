@@ -10,7 +10,7 @@ export function getApiUrl(path: string) {
   }
 }
 
-export function getWsUrl() {
+export function getWsUrl(token?: string) {
   if (typeof window === 'undefined') return undefined;
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -19,6 +19,5 @@ export function getWsUrl() {
   const wsProtocol = apiUrl.startsWith('https') ? 'wss' : 'ws';
   const apiUrlClean = apiUrl.replace(/^https?/, wsProtocol).replace(/\/api\/?$/, '');
 
-  return `${apiUrlClean}/ws`;
+  return token ? `${apiUrlClean}/ws?token=${token}` : `${apiUrlClean}/ws`;
 }
-

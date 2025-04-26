@@ -73,34 +73,47 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
     }
 
     useEffect(() => {
-        const wsUrl = getWsUrl();
-        if (!wsUrl) return;
+        const connectToWebSocket = async () => {
+            const response = await fetch(getApiUrl('/api/auth/ws-token'), {
+                credentials: 'include'
+            });
 
-        console.log(`Connecting to: ${wsUrl}`)
-
-        ws.current = new WebSocket(wsUrl);
-
-        ws.current.onmessage = (event) => {
-            try {
-                console.log('Receiving message...');
-                const data = JSON.parse(event.data);
-                if (data.type === 'new_message') {
-                    const message: Message = data.message;
-
-                    if (currentChatUser &&
-                        (message.sender_id === parseInt(currentChatUser.id))) {
-                        setMessages(prev => [...(prev || []), message]);
-                    }
-                }
-            } catch (err) {
-                console.error('Failed to parse WS message', err);
+            if (!response.ok) {
+                throw new Error('Failed to get WebSocket token');
             }
-        };
 
-        ws.current.onerror = (err) => {
-            console.error('WebSocket error', err);
-            toast.error(err instanceof Error ? err.message : 'Could not connect in real-time.');
-        };
+            const { token } = await response.json();
+            const wsUrl = getWsUrl(token);
+            if (!wsUrl) return;
+
+            console.log(`Connecting to: ${wsUrl}`)
+
+            ws.current = new WebSocket(wsUrl);
+
+            ws.current.onmessage = (event) => {
+                try {
+                    console.log('Receiving message...');
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'new_message') {
+                        const message: Message = data.message;
+
+                        if (currentChatUser &&
+                            (message.sender_id === parseInt(currentChatUser.id))) {
+                            setMessages(prev => [...(prev || []), message]);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Failed to parse WS message', err);
+                }
+            };
+
+            ws.current.onerror = (err) => {
+                console.error('WebSocket error', err);
+                toast.error(err instanceof Error ? err.message : 'Could not connect in real-time.');
+            };
+        }
+
+        connectToWebSocket();
 
         return () => {
             ws.current?.close();

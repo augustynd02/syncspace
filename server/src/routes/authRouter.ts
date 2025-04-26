@@ -7,5 +7,6 @@ const authRouter: Router = Router();
 authRouter.get('/', authController.getAuthStatus);
 authRouter.post('/login', authController.loginUser);
 authRouter.post('/logout', authController.logoutUser);
+authRouter.get('/ws-token', authController.getWsToken);
 
 export default authRouter;

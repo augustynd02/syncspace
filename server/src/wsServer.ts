@@ -15,31 +15,33 @@ export function initWebSocketServer(httpServer: http.Server) {
 
     wss.on('connection', (ws: ExtendedWebSocket, req) => {
         console.log('Someone is connecting.');
-        const cookieHeader = req.headers.cookie
-        const token = cookieHeader
-            ?.split('; ')
-            .find(part => part.startsWith('token='))
-            ?.split('=')[1]
+        const url = new URL(req.url || '', 'http://localhost');
+        const token = url.searchParams.get('token');
 
         if (!token) {
-            console.error('No token found, so terminating,');
-            ws.close()
-            return
+            console.error('No token found, so terminating.');
+            ws.close();
+            return;
         }
-
-        let decoded: any
+        let decoded: any;
         try {
-            decoded = jwt.verify(token, process.env.TOKEN_SECRET!)
-        } catch {
-            ws.close()
-            return
+            decoded = jwt.verify(token, process.env.TOKEN_SECRET!);
+
+            if (decoded.purpose !== 'websocket') {
+                throw new Error('Invalid token purpose');
+            }
+        } catch (err) {
+            console.error('Invalid token:', err);
+            ws.close();
+            return;
         }
 
-        const user_id = Number((decoded as { id: string }).id)
+        const user_id = Number(decoded.id);
         if (Number.isNaN(user_id)) {
-            ws.close()
-            return
+            ws.close();
+            return;
         }
+
         console.log(`Conntected user with id: ${user_id}`)
         ws.user_id = user_id
         userSockets.set(user_id, ws)
@@ -57,11 +59,11 @@ export function initWebSocketServer(httpServer: http.Server) {
 
                 const newMessage = await prisma.message.create({
                     data:
-                        {
-                            sender_id: user_id,
-                            receiver_id: toUserId,
-                            content: content
-                        }
+                    {
+                        sender_id: user_id,
+                        receiver_id: toUserId,
+                        content: content
+                    }
                 })
 
                 const payload = JSON.stringify({ type: 'new_message', message: newMessage })
