@@ -22,6 +22,7 @@ export function initWebSocketServer(httpServer: http.Server) {
             ?.split('=')[1]
 
         if (!token) {
+            console.error('No token found, so terminating,');
             ws.close()
             return
         }
