@@ -35,7 +35,6 @@ interface FormDataType {
 }
 
 export default function PostCreator() {
-
     const [formData, setFormData] = useState<FormDataType>({
         postMessage: '',
         postImage: null
@@ -57,6 +56,10 @@ export default function PostCreator() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setFormData({
+            postMessage: '',
+            postImage: null
+        })
         const postFormData = new FormData();
         postFormData.append('postMessage', formData.postMessage);
         if (formData.postImage) {
@@ -123,6 +126,7 @@ export default function PostCreator() {
                 <textarea
                     ref={textareaRef}
                     onChange={handleMessageChange}
+                    value={formData.postMessage}
                     name="postMessage"
                     id="postMessage"
                     rows={1}
