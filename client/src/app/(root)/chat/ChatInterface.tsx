@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { getApiUrl } from '@/utils/api'
 import Message from '@/types/Message'
 import UserContext from '@/contexts/UserContext'
+import { getWsUrl } from '@/utils/api';
 
 export default function ChatInterface({ friends }: { friends: User[] }) {
     const [currentChatUser, setCurrentChatUser] = useState<User | null>(null)
@@ -72,17 +73,9 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
     }
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        const wsUrl = getWsUrl();
+        if (!wsUrl) return;
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL!;
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        /*
-            REGEX EXPLANATION:
-            1) 'http(s):// gets replaced with either 'wss://' or 'ws://' depending on the protocol
-            2) '/api' is removed because ws listens on 'server/ws' not 'server/api/ws'
-            3) '/ws' is added to finally match: 'ws(s)://server_url/ws
-        */
-        const wsUrl = apiUrl.replace(/^https?:\/\//, wsProtocol + '//').replace('/api', '') + '/ws';
         console.log(`Connecting to: ${wsUrl}`)
 
         ws.current = new WebSocket(wsUrl);
