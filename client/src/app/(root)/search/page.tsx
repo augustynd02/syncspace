@@ -9,6 +9,7 @@ import { FaUser } from "react-icons/fa";
 import { MdArticle } from "react-icons/md";
 import UserMiniature from "@/components/UserMiniature/UserMiniature";
 import { getApiUrl } from "@/utils/api";
+import DataNotFound from "@/components/DataNotFound/DataNotFound";
 
 const getPostsByQuery = async (query: string) => {
     const response = await fetch(getApiUrl(`/api/posts?q=${query}`), {
@@ -57,10 +58,20 @@ export default async function SearchPage({
             </div>
 
             {!data ? (
-                <p>No data found.</p>
+                <DataNotFound>
+                    No data found.
+                </DataNotFound>
             ) : (
                 <section className={styles.searchResults}>
-                    <h2>Showing {data.length} result{data.length !== 1 ? 's' : ''} for &#34;{query}&#34;:</h2>
+                    { data.length > 0
+                        ? (
+                            <h2>Showing {data.length} result{data.length !== 1 ? 's' : ''} for &#34;{query}&#34;:</h2>
+                        ) : (
+                            <DataNotFound>
+                                No results found.
+                            </DataNotFound>
+                        )
+                    }
                     {category === 'posts' ? (
                         <Feed posts={data as Post[]} />
                     ) : (
