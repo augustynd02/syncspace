@@ -14,6 +14,7 @@ export function initWebSocketServer(httpServer: http.Server) {
     const wss = new WebSocketServer({ server: httpServer, path: '/ws' })
 
     wss.on('connection', (ws: ExtendedWebSocket, req) => {
+        console.log('Someone is connecting.');
         const cookieHeader = req.headers.cookie
         const token = cookieHeader
             ?.split('; ')
