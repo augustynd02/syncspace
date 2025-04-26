@@ -83,6 +83,7 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
             3) '/ws' is added to finally match: 'ws(s)://server_url/ws
         */
         const wsUrl = apiUrl.replace(/^https?:\/\//, wsProtocol + '//').replace('/api', '') + '/ws';
+        console.log(`Connecting to: ${wsUrl}`)
 
         ws.current = new WebSocket(wsUrl);
 
