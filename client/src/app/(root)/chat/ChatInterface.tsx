@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import styles from './ChatInterface.module.scss'
 import User from "@/types/User"
 import Image from 'next/image'
@@ -8,45 +8,111 @@ import { MdSend } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import { getApiUrl } from '@/utils/api'
 import Message from '@/types/Message'
+import UserContext from '@/contexts/UserContext'
 
 export default function ChatInterface({ friends }: { friends: User[] }) {
     const [currentChatUser, setCurrentChatUser] = useState<User | null>(null)
-    const [newMessage, setNewMessage] = useState('');
-    const [messages, setMessages] = useState<Message[] | null>(null);
-    const messagesEnd = useRef<HTMLDivElement>(null);
+    const [newMessage, setNewMessage] = useState('')
+    const [messages, setMessages] = useState<Message[] | null>(null)
+    const messagesEnd = useRef<HTMLDivElement>(null)
+    const ws = useRef<WebSocket | null>(null)
+    const { user } = useContext(UserContext);
 
     const handleSendMessage = async () => {
         try {
+            if (!user) return;
             if (newMessage === '') return;
-            setNewMessage('');
             if (!currentChatUser) return;
-            const response = await fetch(getApiUrl(`/api/messages/${currentChatUser.id}`), {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message: newMessage })
-            })
 
-            if (!response.ok) {
-                toast.error("Failed to send message")
-                return;
+            const messageToSend = newMessage
+            setNewMessage('');
+
+            if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+                ws.current.send(JSON.stringify({
+                    type: 'message',
+                    toUserId: currentChatUser.id,
+                    content: messageToSend
+                }));
+
+                const newMessage: Message = {
+                    id: Date.now(),
+                    sender_id: parseInt(user.id),
+                    receiver_id: parseInt(currentChatUser.id),
+                    content: messageToSend,
+                    created_at: new Date().toISOString(),
+                };
+
+                setMessages((prevMessages) => [
+                    ...(prevMessages || []),
+                    newMessage,
+                ]);
+            } else {
+                const response = await fetch(getApiUrl(`/api/messages/${currentChatUser.id}`), {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: messageToSend })
+                })
+
+                if (!response.ok) {
+                    toast.error("Failed to send message")
+                    return;
+                }
+
+                const data = await response.json();
+                setMessages([...(messages || []), data.message]);
             }
-
-            const data = await response.json();
-
-            setMessages([...(messages || []), data.message]);
-            return data.message;
         } catch (err) {
             toast.error(err instanceof Error ? err.message : "Failed to send message");
         }
     }
 
     useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL!;
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        /*
+            REGEX EXPLANATION:
+            1) 'http(s):// gets replaced with either 'wss://' or 'ws://' depending on the protocol
+            2) '/api' is removed because ws listens on 'server/ws' not 'server/api/ws'
+            3) '/ws' is added to finally match: 'ws(s)://server_url/ws
+        */
+        const wsUrl = apiUrl.replace(/^https?:\/\//, wsProtocol + '//').replace('/api', '') + '/ws';
+
+        ws.current = new WebSocket(wsUrl);
+
+        ws.current.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === 'new_message') {
+                    const message: Message = data.message;
+
+                    if (currentChatUser &&
+                        (message.sender_id === parseInt(currentChatUser.id))) {
+                        setMessages(prev => [...(prev || []), message]);
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to parse WS message', err);
+            }
+        };
+
+        ws.current.onerror = (err) => {
+            console.error('WebSocket error', err);
+            toast.error(err instanceof Error ? err.message : 'Could not connect in real-time.');
+        };
+
+        return () => {
+            ws.current?.close();
+        }
+    }, [currentChatUser]);
+
+    useEffect(() => {
         const fetchMessages = async () => {
             try {
-                console.log('requesting')
                 if (!currentChatUser) return;
 
                 const response = await fetch(getApiUrl(`/api/messages/${currentChatUser.id}`), {
@@ -60,9 +126,6 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                 }
 
                 const data = await response.json();
-                console.log(data);
-
-                console.log(data.messages);
                 setMessages(data.messages);
             } catch (err) {
                 toast.error(err instanceof Error ? err.message : "Failed to fetch messages")
@@ -103,77 +166,71 @@ export default function ChatInterface({ friends }: { friends: User[] }) {
                 </ul>
             </aside>
             <section className={styles.chat}>
-                {currentChatUser
-                    ? (
-                        <>
-                            <header>
-                                <div className={styles.avatarContainer}>
-                                    <Image
-                                        src={currentChatUser.avatar_url || 'placeholder.jpg'}
-                                        alt={`${currentChatUser.name}'s avatar`}
-                                        width={32}
-                                        height={32}
-                                    />
-                                </div>
-                                <div className={styles.nameContainer}>
-                                    {`${currentChatUser.name} ${currentChatUser.middle_name || ''} ${currentChatUser.last_name}`}
-                                </div>
-                            </header>
-                            <section className={styles.messages}>
-                                {messages && messages.length > 0
-                                    ? (
-                                        messages.map((message, i) => {
-                                            const prevMessage = messages[i - 1];
-                                            const nextMessage = messages[i + 1];
-
-                                            const isFirst = !prevMessage || prevMessage.sender_id !== message.sender_id;
-                                            const isLast = !nextMessage || nextMessage.sender_id !== message.sender_id;
-
-                                            return (
-                                                <div
-                                                    key={message.id}
-                                                    className={
-                                                        `${styles.message}
-                                                         ${message.sender_id === parseInt(currentChatUser.id) ? styles.left : styles.right}
-                                                         ${isFirst ? styles.first : ''}
-                                                         ${isLast ? styles.last : ''}
-                                                        `
-                                                    }
-
-                                                >
-                                                    {message.content}
-                                                </div>
-
-                                            )
-                                        })
-                                    ) : (
-                                        <p>No messages found</p>
-                                    )
-                                }
-                                <div ref={messagesEnd}></div>
-                            </section>
-                            <div className="inputContainer">
-                                <div className={styles.inputContainer}>
-                                    <input
-                                        type="text"
-                                        name="message"
-                                        id="message"
-                                        value={newMessage}
-                                        onChange={(e) => setNewMessage(e.target.value)}
-                                        placeholder='Write a new message'
-                                    />
-                                    <button
-                                        onClick={handleSendMessage}
-                                    >
-                                        <MdSend />
-                                    </button>
-                                </div>
+                {currentChatUser ? (
+                    <>
+                        <header>
+                            <div className={styles.avatarContainer}>
+                                <Image
+                                    src={currentChatUser.avatar_url || 'placeholder.jpg'}
+                                    alt={`${currentChatUser.name}'s avatar`}
+                                    width={32}
+                                    height={32}
+                                />
                             </div>
-                        </>
-                    ) : (
-                        <p>Pick a user to view the chat!</p>
-                    )
-                }
+                            <div className={styles.nameContainer}>
+                                {`${currentChatUser.name} ${currentChatUser.middle_name || ''} ${currentChatUser.last_name}`}
+                            </div>
+                        </header>
+                        <section className={styles.messages}>
+                            {messages && messages.length > 0 ? (
+                                messages.map((message, i) => {
+                                    const prevMessage = messages[i - 1];
+                                    const nextMessage = messages[i + 1];
+
+                                    const isFirst = !prevMessage || prevMessage.sender_id !== message.sender_id;
+                                    const isLast = !nextMessage || nextMessage.sender_id !== message.sender_id;
+
+                                    return (
+                                        <div
+                                            key={message.id}
+                                            className={
+                                                `${styles.message}
+                                                 ${message.sender_id === parseInt(currentChatUser.id) ? styles.left : styles.right}
+                                                 ${isFirst ? styles.first : ''}
+                                                 ${isLast ? styles.last : ''}
+                                                `
+                                            }
+                                        >
+                                            {message.content}
+                                        </div>
+                                    )
+                                })
+                            ) : (
+                                <p>No messages found</p>
+                            )}
+                            <div ref={messagesEnd}></div>
+                        </section>
+                        <div className="inputContainer">
+                            <div className={styles.inputContainer}>
+                                <input
+                                    type="text"
+                                    name="message"
+                                    id="message"
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    placeholder='Write a new message'
+                                />
+                                <button
+                                    onClick={handleSendMessage}
+                                >
+                                    <MdSend />
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <p>Pick a user to view the chat!</p>
+                )}
             </section>
         </section>
     )

@@ -18,6 +18,7 @@
     "@aws-sdk/s3-request-presigner": "^3.782.0",
     "@prisma/client": "^6.5.0",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/ws": "^8.18.1",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -29,7 +30,8 @@
     "multer": "^1.4.5-lts.2",
     "nodemon": "^3.1.9",
     "pg": "^8.14.1",
-    "prisma": "^6.5.0"
+    "prisma": "^6.5.0",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
