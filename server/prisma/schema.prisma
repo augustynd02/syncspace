@@ -69,9 +69,9 @@ model Like {
   comment_id Int?
   liked_at   DateTime @default(now())
 
-  user    User     @relation(fields: [user_id], references: [id])
-  post    Post?    @relation(fields: [post_id], references: [id])
-  comment Comment? @relation(fields: [comment_id], references: [id])
+  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post    Post?    @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  comment Comment? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   @@map("like")
 }
@@ -98,14 +98,14 @@ model Notification {
   created_at DateTime         @default(now())
 
   post_id    Int?
-  post       Post?    @relation(fields: [post_id], references: [id])
+  post       Post?    @relation(fields: [post_id], references: [id], onDelete: Cascade)
   comment_id Int?
-  comment    Comment? @relation(fields: [comment_id], references: [id])
+  comment    Comment? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   sender_id    Int
-  sender       User @relation("NotificationSender", fields: [sender_id], references: [id])
+  sender       User @relation("NotificationSender", fields: [sender_id], references: [id], onDelete: Cascade)
   recipient_id Int
-  recipient    User @relation("NotificationRecipient", fields: [recipient_id], references: [id])
+  recipient    User @relation("NotificationRecipient", fields: [recipient_id], references: [id], onDelete: Cascade)
 }
 
 enum NotificationType {
