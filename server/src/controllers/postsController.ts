@@ -445,15 +445,18 @@ const postsController = {
                 return;
             }
 
-            const notification = await prisma.notification.create({
-                data: {
-                    recipient_id: post.user_id,
-                    sender_id: user_id,
-                    post_id: post.id,
-                    type: 'like',
-                    message: `${sender.name} ${sender.middle_name ? sender.middle_name : ''} ${sender.last_name} has liked your post.`
-                }
-            })
+            if(post.user_id !== user_id) {
+                await prisma.notification.create({
+                    data: {
+                        recipient_id: post.user_id,
+                        sender_id: user_id,
+                        post_id: post.id,
+                        type: 'like',
+                        message: `${sender.name} ${sender.middle_name ? sender.middle_name : ''} ${sender.last_name} has liked your post.`
+                    }
+                })
+            }
+
 
             res.status(200).json({ like: newLike });
         } catch (err) {
