@@ -27,6 +27,8 @@ export default async function Post({ post, initialyExpanded = false }: { post: P
                         <h3>{`${post.user.name} ${post.user.middle_name ? post.user.middle_name : ''} ${post.user.last_name}`}</h3>
                         <time dateTime={date}>{formatDate(date)}</time>
                     </div>
+                </header>
+            </Link>
                     {user && user.id === post.user.id
                         ? (
                             <PostActions id={post.id} />
@@ -34,8 +36,6 @@ export default async function Post({ post, initialyExpanded = false }: { post: P
                             null
                         )
                     }
-                </header>
-            </Link>
 
             <section className={styles.postContent}>
                 <p>{post.message}</p>
