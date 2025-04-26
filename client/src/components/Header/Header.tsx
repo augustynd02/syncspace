@@ -55,6 +55,7 @@ export default function Header() {
                                         <Actions
                                             position="bottom-left"
                                             isOpen={userActionsOpen}
+                                            setIsOpen={setUserActionsOpen}
                                             actions={[
                                                 {
                                                     icon: <FaUser />,

@@ -196,6 +196,7 @@ export default function Notifications() {
                                                 <Actions
                                                     position="bottom-left"
                                                     isOpen={openActionsId === notification.id}
+                                                    setIsOpen={() => setOpenActionsId(null)}
                                                     actions={[
                                                         {
                                                             icon: <MdDelete />,

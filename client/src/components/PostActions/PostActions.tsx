@@ -45,6 +45,7 @@ export default function PostActions({ id }: { id: string}) {
             <Actions
                 position="bottom-left"
                 isOpen={isOpen}
+                setIsOpen={setIsOpen}
                 actions={[
                     {
                         icon: <MdDelete />,
