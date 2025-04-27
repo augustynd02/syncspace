@@ -56,6 +56,10 @@ export default function PostCreator() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (formData.postMessage === '' && formData.postImage === null) {
+            toast.error("Can't submit an empty post.");
+            return;
+        }
         setFormData({
             postMessage: '',
             postImage: null

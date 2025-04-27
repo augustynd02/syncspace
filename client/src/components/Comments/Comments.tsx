@@ -103,6 +103,10 @@ export default function Comments({ initialComments, postId, initialyExpanded }: 
 
     const handleSubmitComment = () => {
         if (!user) return;
+        if (newComment === '') {
+            toast.error('Cannot submit an empty comment.');
+            return;
+        }
 
         const temporaryId = Date.now();
 
