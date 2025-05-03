@@ -1,17 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express"
 
+import Friendship from "../../types/Friendship.js";
+
 interface RequestWithQuery extends Request {
 	query: {
 		user1: string;
 		user2: string;
 	}
-}
-
-interface Friendship {
-	requester_id: number;
-	receiver_id: number;
-	status: 'accepted' | 'pending' | 'declined'
 }
 
 const prisma = new PrismaClient();

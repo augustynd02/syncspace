@@ -1,21 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 
+import Notification from '../../types/Notification.js';
+
 const prisma = new PrismaClient();
-
-interface Notification {
-    id: number;
-    message: string;
-    type: 'info' | 'friend_request' | 'like' | 'comment' | 'message'
-    is_read: boolean;
-    created_at: Date;
-
-    post_id: number;
-    comment_id: number;
-
-    sender_id: number;
-    recipient_id: number;
-}
 
 const notificationsController = {
     getNotifications: async (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +19,7 @@ const notificationsController = {
                 where: {
                     recipient_id: user_id
                 },
-            })
+            }) as Notification[]
 
             res.status(200).json({ notifications: notifications });
         } catch (err) {
@@ -52,7 +40,7 @@ const notificationsController = {
                 where: {
                     id: notification_id
                 }
-            })
+            }) as Notification
 
             if (!notification) {
                 res.status(404).json({ message: "Could not find notification" });

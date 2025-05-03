@@ -5,19 +5,7 @@ import generateAccessToken from "../utils/generateAccessToken.js";
 import { getImageUrl } from "../lib/s3.js";
 import jwt from "jsonwebtoken";
 
-type User = {
-    id: number;
-    username: string;
-    password: string;
-    name: string;
-    middle_name?: string;
-    last_name: string;
-    bio?: string;
-    avatar_name: string;
-    background_name: string;
-    avatar_url?: string;
-    background_url?: string;
-}
+import User from "../../types/User.js";
 
 const prisma = new PrismaClient();
 

@@ -3,55 +3,13 @@ import { Request, Response, NextFunction } from "express";
 import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
 
+import Post from "../../types/Post.js";
+
 interface RequestWithQuery extends Request {
     query: {
         q?: string;
     }
 }
-
-interface Like {
-    id: number;
-    user_id: number;
-    post_id: number;
-    liked_at: Date;
-}
-
-interface Comment {
-    id: number;
-    content: string;
-    user_id: number;
-    post_id: number;
-    created_at: Date;
-    likes: Like[]
-    user: {
-        id: number;
-        name: string;
-        middle_name: string | null;
-        last_name: string;
-        avatar_name: string;
-        avatar_url?: string;
-    };
-    hasLiked?: boolean;
-}
-
-type Post = {
-    id: number;
-    message: string;
-    image_name: string | null;
-    created_at: Date;
-    user: {
-      id: number;
-      name: string;
-      middle_name: string | null;
-      last_name: string;
-      avatar_name: string;
-      avatar_url?: string;
-    };
-    imageUrl?: string;
-    hasLiked?: boolean;
-    likes: Like[];
-    comments: Comment[];
-  };
 
 const prisma = new PrismaClient();
 
