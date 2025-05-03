@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
-import CustomError from "../utils/CustomError.js";
 import Express, { Request, Response, NextFunction } from "express";
 import { getImageUrl, postImage } from "../lib/s3.js";
 import crypto from "crypto";
@@ -170,7 +169,8 @@ const usersController = {
             })
         } catch (err) {
             if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-                next(new CustomError(409, 'This username is already taken.'));
+                res.status(409).json({ message: "Username already in use"});
+                return;
             }
             next(err);
         }
@@ -248,12 +248,12 @@ const usersController = {
             const id = req.params.id;
 
             if (!req.user_id) {
-                next(new CustomError(401, "Not authenticated"));
+                res.status(401).json({ message: "Not authenticated"})
                 return;
             }
 
             if (req.user_id !== id) {
-                next(new CustomError(403, "Not authorized to perform this operation"));
+                res.status(403).json({ message: "Not authorized"});
                 return;
             }
 
@@ -298,7 +298,8 @@ const usersController = {
             }
 
             if (Object.keys(updateData).length === 0) {
-                throw new CustomError(401, 'No fields to update');
+                res.status(401).json({ message: "No fields to update"});
+                return;
             }
 
             const updatedUser = await prisma.user.update({
@@ -316,11 +317,13 @@ const usersController = {
     deleteUser: async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id;
         if (!req.user_id) {
-            return next(new CustomError(401, "Not authenticated"))
+            res.status(401).json({ message: "Not authenticated"});
+            return;
         }
 
         if (req.user_id !== id) {
-            return next(new CustomError(403, "Not authorized to perform this operation"))
+            res.status(403).json({ message: "Not authorized"});
+            return;
         }
 
         const user = await prisma.user.delete({
@@ -372,7 +375,7 @@ const usersController = {
         try {
 
             if (!req.user_id) {
-                next(new CustomError(401, 'Not authenticated'));
+                res.status(401).json({ message: "Not authenticated"});
                 return;
             }
             const id = parseInt(req.params.id);
@@ -498,7 +501,7 @@ const usersController = {
     getRandomUsers: async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.user_id) {
-                next(new CustomError(401, 'Not authenticated'));
+                res.status(401).json({ message: "Not authenticated"})
                 return;
             }
 

@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express"
-import CustomError from "../utils/CustomError.js";
 
 interface RequestWithQuery extends Request {
 	query: {
@@ -49,7 +48,8 @@ const friendshipsController = {
 			const { user1, user2 } = req.query;
 
 			if (!req.user_id || req.user_id != user1 && req.user_id != user2) {
-				return next(new CustomError(401, "User not authorized to update this friendship"))
+				res.status(403).json({ message: "Not authorized"});
+				return;
 			}
 
 			const user1Id = parseInt(user1);

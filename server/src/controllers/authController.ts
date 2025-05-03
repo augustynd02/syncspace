@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
-import CustomError from "../utils/CustomError.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import { getImageUrl } from "../lib/s3.js";
 import jwt from "jsonwebtoken";
@@ -54,12 +53,14 @@ const authController = {
             }) as User;
 
             if (!user) {
-                throw new CustomError(401, 'Invalid username');
+                res.status(401).json({ message: 'Invalid username'});
+                return;
             }
 
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if(!isPasswordValid) {
-                throw new CustomError(401, 'Invalid password');
+                res.status(401).json({ message: 'Invalid password'});
+                return;
             }
 
 
