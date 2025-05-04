@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 
-import Notification from '../../types/Notification.js';
+import Notification from '../types/Notification.js';
 
 const prisma = new PrismaClient();
 

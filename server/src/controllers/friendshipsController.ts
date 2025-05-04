@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express"
 
-import Friendship from "../../types/Friendship.js";
+import Friendship from "../types/Friendship.js";
 
 interface RequestWithQuery extends Request {
 	query: {

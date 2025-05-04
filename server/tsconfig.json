@@ -9,5 +9,5 @@
     "strictFunctionTypes": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "types"]
+  "include": ["src", "src/types"]
 }

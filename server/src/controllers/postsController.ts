@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
 
-import Post from "../../types/Post.js";
+import Post from "../types/Post.js";
 
 interface RequestWithQuery extends Request {
     query: {
