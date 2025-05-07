@@ -74,8 +74,6 @@ const authController = {
 
     logoutUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log('logging out');
-            console.log(req.cookies.token);
             if (!req.cookies.token) {
                 res.status(400).json({ message: "No active session found" });
                 return;
