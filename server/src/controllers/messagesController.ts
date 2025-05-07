@@ -1,17 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
+import isAuthenticated from "../utils/isAuthenticated.js";
 
 const prisma = new PrismaClient();
 
 const messagesController = {
     getMessages: async (req: Request, res: Response, next: NextFunction) => {
-        const currentUser_id = req.user_id ? parseInt(req.user_id) : null;
+        if (!isAuthenticated(req, res)) return;
+
+        const currentUser_id = parseInt(req.user_id);
         const otherUser_id = parseInt(req.params.user_id);
 
-        if (!currentUser_id) {
-            res.status(401).json({ message: "Not authenticated" });
-            return;
-        }
 
         const messages = await prisma.message.findMany({
             where: {
@@ -34,13 +33,10 @@ const messagesController = {
         res.status(200).json({ messages: messages });
     },
     sendMessage: async (req: Request, res: Response, next: NextFunction) => {
-        const currentUser_id = req.user_id ? parseInt(req.user_id) : null;
-        const otherUser_id = parseInt(req.params.user_id);
+        if (!isAuthenticated(req, res)) return;
 
-        if (!currentUser_id) {
-            res.status(401).json({ message: "Not authenticated" });
-            return;
-        }
+        const currentUser_id = parseInt(req.user_id);
+        const otherUser_id = parseInt(req.params.user_id);
 
         const senderUser = await prisma.user.findUnique({
             where: {
