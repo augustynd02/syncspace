@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import { Prisma, PrismaClient } from "@prisma/client";
-import Express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { getImageUrl, postImage } from "../lib/s3.js";
 import crypto from "crypto";
+import isAuthenticated from "../utils/isAuthenticated.js";
 
 import Post from "../types/Post.js";
 import User from "../types/User.js";
@@ -190,12 +191,9 @@ const usersController = {
     },
     editUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id = req.params.id;
+            if (!isAuthenticated(req, res)) return;
 
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated"})
-                return;
-            }
+            const id = req.params.id;
 
             if (req.user_id !== id) {
                 res.status(403).json({ message: "Not authorized"});
@@ -243,7 +241,7 @@ const usersController = {
             }
 
             if (Object.keys(updateData).length === 0) {
-                res.status(401).json({ message: "No fields to update"});
+                res.status(400).json({ message: "No fields to update"});
                 return;
             }
 
@@ -260,11 +258,9 @@ const usersController = {
         }
     },
     deleteUser: async (req: Request, res: Response, next: NextFunction) => {
+        if (!isAuthenticated(req, res)) return;
+
         const id = req.params.id;
-        if (!req.user_id) {
-            res.status(401).json({ message: "Not authenticated"});
-            return;
-        }
 
         if (req.user_id !== id) {
             res.status(403).json({ message: "Not authorized"});
@@ -281,12 +277,9 @@ const usersController = {
     },
     getCurrentUser: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id = req.user_id;
+            if (!isAuthenticated(req, res)) return;
 
-            if (!id) {
-                res.status(401).json({ message: "Not authenticated" });
-                return;
-            }
+            const id = req.user_id;
 
             const user = await prisma.user.findUnique({
                 where: {
@@ -318,11 +311,8 @@ const usersController = {
     },
     getUserPosts: async (req: Request, res: Response, next: NextFunction) => {
         try {
+            if (!isAuthenticated(req, res)) return;
 
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated"});
-                return;
-            }
             const id = parseInt(req.params.id);
 
             const posts = await prisma.post.findMany({
@@ -445,10 +435,7 @@ const usersController = {
     },
     getRandomUsers: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated"})
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const userId = parseInt(req.user_id);
 
