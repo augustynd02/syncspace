@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
+import isAuthenticated from '../utils/isAuthenticated.js';
 
 import Notification from '../types/Notification.js';
 
@@ -8,10 +9,7 @@ const prisma = new PrismaClient();
 const notificationsController = {
     getNotifications: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const user_id = parseInt(req.user_id);
 
@@ -28,10 +26,7 @@ const notificationsController = {
     },
     deleteNotification: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const user_id = parseInt(req.user_id);
             const notification_id = parseInt(req.params.notification_id);
