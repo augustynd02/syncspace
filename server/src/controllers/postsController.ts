@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import crypto from 'crypto';
 import { getImageUrl, postImage } from '../lib/s3.js';
+import isAuthenticated from "../utils/isAuthenticated.js";
 
 import Post from "../types/Post.js";
 
@@ -114,10 +115,7 @@ const postsController = {
     },
     getFeed: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const id = parseInt(req.user_id);
 
@@ -216,12 +214,9 @@ const postsController = {
     },
     createPost: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const id = req.user_id;
+            if (!isAuthenticated(req, res)) return;
 
-            if (!id) {
-                res.status(401).json({ message: "Not authenticated" });
-                return;
-            }
+            const id = req.user_id;
 
             const randomImageName = crypto.randomBytes(16).toString('hex');
 
@@ -310,10 +305,7 @@ const postsController = {
     },
     deletePost: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authorized"});
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
@@ -348,10 +340,7 @@ const postsController = {
     },
     likePost: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authorized" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
@@ -423,10 +412,7 @@ const postsController = {
     },
     dislikePost: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authorized" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
@@ -459,10 +445,7 @@ const postsController = {
     },
     createComment: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authorized" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const post_id = parseInt(req.params.post_id);
             const user_id = parseInt(req.user_id);
@@ -520,10 +503,7 @@ const postsController = {
     },
     deleteComment: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authenticated" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const user_id = parseInt(req.user_id);
             const comment_id = parseInt(req.params.comment_id);
@@ -557,10 +537,7 @@ const postsController = {
     },
     likeComment: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authorized" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const comment_id = parseInt(req.params.comment_id);
             const user_id = parseInt(req.user_id);
@@ -644,10 +621,7 @@ const postsController = {
     },
     dislikeComment: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            if (!req.user_id) {
-                res.status(401).json({ message: "Not authorized" });
-                return;
-            }
+            if (!isAuthenticated(req, res)) return;
 
             const user_id = parseInt(req.user_id);
             const comment_id = parseInt(req.params.comment_id);
