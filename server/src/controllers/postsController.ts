@@ -16,102 +16,106 @@ const prisma = new PrismaClient();
 
 const postsController = {
     getPosts: async (req: RequestWithQuery, res: Response, next: NextFunction) => {
-        const query = req.query.q;
-        const user_id = req.user_id ? parseInt(req.user_id) : null;
-        let posts;
+        try {
+            const query = req.query.q;
+            const user_id = req.user_id ? parseInt(req.user_id) : null;
+            let posts;
 
-        if (query) {
-            posts = await prisma.post.findMany({
-                where: {
-                    message: { contains: query, mode: 'insensitive'}
-                },
-                select: {
-                    id: true,
-                    message: true,
-                    image_name: true,
-                    created_at: true,
-                    user_id: false,
-                    user: {
-                        select: {
-                            id: true,
-                            name: true,
-                            middle_name: true,
-                            last_name: true,
-                            avatar_name: true,
-                        }
+            if (query) {
+                posts = await prisma.post.findMany({
+                    where: {
+                        message: { contains: query, mode: 'insensitive' }
                     },
-                    likes: true,
-                    comments: {
-                        include: {
-                            likes: true,
-                            user: {
-                                select: {
-                                    id: true,
-                                    name: true,
-                                    middle_name: true,
-                                    last_name: true,
-                                    avatar_name: true,
+                    select: {
+                        id: true,
+                        message: true,
+                        image_name: true,
+                        created_at: true,
+                        user_id: false,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                middle_name: true,
+                                last_name: true,
+                                avatar_name: true,
+                            }
+                        },
+                        likes: true,
+                        comments: {
+                            include: {
+                                likes: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        middle_name: true,
+                                        last_name: true,
+                                        avatar_name: true,
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-            }) as Post[]
-
-        } else {
-            posts = await prisma.post.findMany({
-                select: {
-                    id: true,
-                    message: true,
-                    image_name: true,
-                    created_at: true,
-                    user_id: false,
-                    user: {
-                        select: {
-                            id: true,
-                            name: true,
-                            middle_name: true,
-                            last_name: true,
-                            avatar_name: true,
-                        }
                     },
-                    likes: true,
-                    comments: {
-                        include: {
-                            likes: true,
-                            user: {
-                                select: {
-                                    id: true,
-                                    name: true,
-                                    middle_name: true,
-                                    last_name: true,
-                                    avatar_name: true,
+                }) as Post[]
+
+            } else {
+                posts = await prisma.post.findMany({
+                    select: {
+                        id: true,
+                        message: true,
+                        image_name: true,
+                        created_at: true,
+                        user_id: false,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                middle_name: true,
+                                last_name: true,
+                                avatar_name: true,
+                            }
+                        },
+                        likes: true,
+                        comments: {
+                            include: {
+                                likes: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        middle_name: true,
+                                        last_name: true,
+                                        avatar_name: true,
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-            }) as Post[]
-        }
+                    },
+                }) as Post[]
+            }
 
-        for (const post of posts) {
-            if (post.image_name) {
-                post.imageUrl = await getImageUrl(post.image_name);
-            }
-            post.user.avatar_url = await getImageUrl(post.user.avatar_name);
-            if (user_id) {
-                post.hasLiked = post.likes.some(like => like.user_id === user_id);
-            }
-            for (const comment of post.comments) {
-                comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
+            for (const post of posts) {
+                if (post.image_name) {
+                    post.imageUrl = await getImageUrl(post.image_name);
+                }
+                post.user.avatar_url = await getImageUrl(post.user.avatar_name);
                 if (user_id) {
-                    comment.hasLiked = comment.likes.some(like => like.user_id === user_id);
+                    post.hasLiked = post.likes.some(like => like.user_id === user_id);
+                }
+                for (const comment of post.comments) {
+                    comment.user.avatar_url = await getImageUrl(comment.user.avatar_name);
+                    if (user_id) {
+                        comment.hasLiked = comment.likes.some(like => like.user_id === user_id);
+                    }
                 }
             }
-        }
 
-         res.status(200).json({ posts: posts });
-        return;
+            res.status(200).json({ posts: posts });
+            return;
+        } catch (err) {
+            next(err)
+        }
     },
     getFeed: async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -223,7 +227,7 @@ const postsController = {
             if (req.file) {
                 try {
                     await postImage(randomImageName, req.file);
-                } catch(err: any) {
+                } catch (err: any) {
                     res.status(500).json({ message: "Error uploading file to S3", error: err.message });
                     return;
                 }
@@ -317,12 +321,12 @@ const postsController = {
             })
 
             if (!post) {
-                res.status(404).json({ message: "Post not found"});
+                res.status(404).json({ message: "Post not found" });
                 return;
             }
 
             if (post.user_id !== user_id) {
-                res.status(403).json({ message: "Forbidden"});
+                res.status(403).json({ message: "Forbidden" });
                 return;
             }
 
@@ -392,7 +396,7 @@ const postsController = {
                 return;
             }
 
-            if(post.user_id !== user_id) {
+            if (post.user_id !== user_id) {
                 await prisma.notification.create({
                     data: {
                         recipient_id: post.user_id,
@@ -432,7 +436,7 @@ const postsController = {
             await prisma.like.deleteMany({
                 where: {
                     AND: [
-                        { user_id: user_id},
+                        { user_id: user_id },
                         { post_id: post_id }
                     ]
                 }
@@ -496,7 +500,7 @@ const postsController = {
                 }
             })
 
-            res.status(200).json({ comment: comment});
+            res.status(200).json({ comment: comment });
         } catch (err) {
             next(err);
         }
@@ -520,7 +524,7 @@ const postsController = {
             }
 
             if (user_id !== comment.user_id) {
-                res.status(403).json({ message: "Not authorized"});
+                res.status(403).json({ message: "Not authorized" });
                 return;
             }
 
@@ -531,7 +535,7 @@ const postsController = {
             })
 
             res.status(200).json({ message: "Comment deleted" });
-        } catch(err) {
+        } catch (err) {
             next(err);
         }
     },
@@ -641,7 +645,7 @@ const postsController = {
             await prisma.like.deleteMany({
                 where: {
                     AND: [
-                        { user_id: user_id},
+                        { user_id: user_id },
                         { comment_id: comment_id },
                     ]
                 }
