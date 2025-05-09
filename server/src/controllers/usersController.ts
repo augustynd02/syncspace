@@ -53,61 +53,32 @@ const usersController = {
                 }
             })
 
-            const startingAccount1 = await prisma.user.findUnique({
-                where: {
-                    username: 'yurishe'
-                }
-            })
+            const starters = ['yurishe', 'yurishe2', 'yurishe3'];
 
-            const startingAccount2 = await prisma.user.findUnique({
-                where: {
-                    username: 'yurishe2'
-                }
-            })
+            for (const username of starters) {
+                const starter = await prisma.user.findUnique({ where: { username: username } });
+                if (!starter) continue;
 
-            const startingAccount3 = await prisma.user.findUnique({
-                where: {
-                    username: 'yurishe3'
-                }
-            })
+                const status = username === 'yurishe3' ? 'pending' : 'accepted';
 
-            if (startingAccount1) {
                 await prisma.friendship.create({
                     data: {
-                        requester_id: startingAccount1.id,
+                        requester_id: starter.id,
                         receiver_id: createdUser.id,
-                        status: 'accepted'
-                    }
-                })
-            }
-
-            if (startingAccount2) {
-                await prisma.friendship.create({
-                    data: {
-                        requester_id: startingAccount2.id,
-                        receiver_id: createdUser.id,
-                        status: 'accepted'
-                    }
-                })
-            }
-
-            if (startingAccount3) {
-                await prisma.friendship.create({
-                    data: {
-                        requester_id: startingAccount3.id,
-                        receiver_id: createdUser.id,
-                        status: 'pending'
+                        status: status
                     }
                 })
 
-                await prisma.notification.create({
-                    data: {
-                        sender_id: startingAccount3.id,
-                        recipient_id: createdUser.id,
-                        type: 'friend_request',
-                        message: `${startingAccount3.name} ${startingAccount3.last_name} has sent you a friend request.`
-                    }
-                })
+                if (status === 'pending') {
+                    await prisma.notification.create({
+                        data: {
+                            sender_id: starter.id,
+                            recipient_id: createdUser.id,
+                            type: 'friend_request',
+                            message: `${starter.name} ${starter.last_name} has sent you a friend request.`
+                        }
+                    })
+                }
             }
 
             res.status(201).json({
@@ -115,7 +86,7 @@ const usersController = {
             })
         } catch (err) {
             if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-                res.status(409).json({ message: "Username already in use"});
+                res.status(409).json({ message: "Username already in use" });
                 return;
             }
             next(err);
@@ -196,7 +167,7 @@ const usersController = {
             const id = req.params.id;
 
             if (req.user_id !== id) {
-                res.status(403).json({ message: "Not authorized"});
+                res.status(403).json({ message: "Not authorized" });
                 return;
             }
 
@@ -241,7 +212,7 @@ const usersController = {
             }
 
             if (Object.keys(updateData).length === 0) {
-                res.status(400).json({ message: "No fields to update"});
+                res.status(400).json({ message: "No fields to update" });
                 return;
             }
 
@@ -263,7 +234,7 @@ const usersController = {
         const id = req.params.id;
 
         if (req.user_id !== id) {
-            res.status(403).json({ message: "Not authorized"});
+            res.status(403).json({ message: "Not authorized" });
             return;
         }
 
