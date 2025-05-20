@@ -7,12 +7,14 @@ interface Action {
     cb: () => void;
 }
 
-export default function Actions({ position = 'bottom-left', actions, isOpen, setIsOpen }: {
+interface ActionProps {
     position?: 'top-left' | 'top-right' | 'bottom-right' | 'bottom-left';
     actions: Action[];
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
-}) {
+}
+
+export default function Actions({ position = 'bottom-left', actions, isOpen, setIsOpen }: ActionProps) {
     const containerRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
