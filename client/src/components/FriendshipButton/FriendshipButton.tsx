@@ -6,7 +6,13 @@ import Friendship from "@/types/Friendship";
 import styles from './FriendshipButton.module.scss'
 import { getApiUrl } from "@/utils/api";
 
-export default function FriendshipButton({ friendship, currentUserId, userId }: { friendship: Friendship | undefined, currentUserId: string; userId: string; }) {
+interface FriendshipButtonProps {
+    friendship: Friendship | undefined,
+    currentUserId: string;
+    userId: string;
+}
+
+export default function FriendshipButton({ friendship, currentUserId, userId }: FriendshipButtonProps) {
     const [currentFriendship, setCurrentFriendship] = useState(friendship);
 
     const handleClick = async () => {
