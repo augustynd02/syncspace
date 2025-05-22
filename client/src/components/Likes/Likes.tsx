@@ -13,7 +13,14 @@ interface LikesProps {
     hasLiked: boolean;
 }
 
-const handleLike = async ({ content_type, post_id, comment_id, hasUserLiked }: { content_type: string, post_id: string, comment_id?: string, hasUserLiked: boolean }) => {
+interface HandleLikeTypes {
+    content_type: string,
+    post_id: string,
+    comment_id?: string,
+    hasUserLiked: boolean
+}
+
+const handleLike = async ({ content_type, post_id, comment_id, hasUserLiked }: HandleLikeTypes) => {
     try {
         let url;
 
