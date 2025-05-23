@@ -22,13 +22,9 @@ interface HandleLikeTypes {
 
 const handleLike = async ({ content_type, post_id, comment_id, hasUserLiked }: HandleLikeTypes) => {
     try {
-        let url;
-
-        if (content_type === 'post') {
-            url = `posts/${post_id}/likes`;
-        } else {
-            url = `posts/${post_id}/comments/${comment_id}/likes`;
-        }
+        const url = content_type === 'post'
+            ? `posts/${post_id}/likes`
+            : `posts/${post_id}/comments/${comment_id}/likes`
 
         const response = await fetch(getApiUrl(`/api/${url}`), {
             method: hasUserLiked === true ? 'DELETE' : 'POST',
