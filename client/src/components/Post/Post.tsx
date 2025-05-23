@@ -8,7 +8,12 @@ import PostActions from "../PostActions/PostActions";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Post({ post, initialyExpanded = false }: { post: PostType, initialyExpanded?: boolean }) {
+interface PostProps {
+    post: PostType,
+    initialyExpanded?: boolean
+}
+
+export default async function Post({ post, initialyExpanded = false }: PostProps) {
     const user = await getUser();
 
     const date = post.created_at.slice(0, 10);
