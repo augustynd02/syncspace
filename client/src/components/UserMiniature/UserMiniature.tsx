@@ -9,7 +9,7 @@ interface UserMiniatureProps {
 	className?: string;
 }
 
-const UserMiniature: React.FC<UserMiniatureProps> = ({ user, className }) => {
+const UserMiniature = ({ user, className } : UserMiniatureProps) => {
 	const fullName = user.middle_name
 		? `${user.name} ${user.middle_name} ${user.last_name}`
 		: `${user.name} ${user.last_name}`;
