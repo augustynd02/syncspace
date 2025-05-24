@@ -10,6 +10,11 @@ import UserContext from '@/contexts/UserContext';
 import Image from 'next/image';
 import { getApiUrl } from "@/utils/api";
 
+interface FormDataType {
+    postMessage: string;
+    postImage: File | null;
+}
+
 const createPost = async (postFormData: FormData) => {
     try {
         const response = await fetch(getApiUrl(`/api/posts/`), {
@@ -27,11 +32,6 @@ const createPost = async (postFormData: FormData) => {
     } catch (err) {
         throw err;
     }
-}
-
-interface FormDataType {
-    postMessage: string;
-    postImage: File | null;
 }
 
 export default function PostCreator() {
