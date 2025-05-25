@@ -15,7 +15,24 @@ import Image from "next/image";
 import { getApiUrl } from "@/utils/api";
 import Link from "next/link";
 
-const createComment = async ({ commentMessage, contentType, contentId }: { commentMessage: string, contentType: 'post' | 'comment', contentId: string }) => {
+interface CommentProps {
+    initialComments: Comment[],
+    postId: string,
+    initialyExpanded: boolean
+}
+
+interface CreateCommentParams {
+    commentMessage: string,
+    contentType: 'post' | 'comment',
+    contentId: string
+}
+
+interface DeleteCommentParams {
+    post_id: string,
+    comment_id: string
+}
+
+const createComment = async ({ commentMessage, contentType, contentId }: CreateCommentParams) => {
     try {
         const response = await fetch(getApiUrl(`/api/posts/${contentId}/comments`), {
             method: 'POST',
@@ -42,7 +59,7 @@ const createComment = async ({ commentMessage, contentType, contentId }: { comme
     }
 }
 
-const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment_id: string; }) => {
+const deleteComment = async ({ post_id, comment_id }: DeleteCommentParams) => {
     try {
         const response = await fetch(getApiUrl(`/api/posts/${post_id}/comments/${comment_id}`), {
             method: 'DELETE',
@@ -60,7 +77,7 @@ const deleteComment = async ({ post_id, comment_id }: { post_id: string; comment
     }
 }
 
-export default function Comments({ initialComments, postId, initialyExpanded }: { initialComments: Comment[], postId: string, initialyExpanded: boolean }) {
+export default function Comments({ initialComments, postId, initialyExpanded }: CommentProps) {
     const [comments, setComments] = useState(initialComments);
     const [newComment, setNewComment] = useState('');
     const [expanded, setExpanded] = useState(initialyExpanded);
