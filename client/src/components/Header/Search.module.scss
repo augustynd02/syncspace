@@ -4,9 +4,11 @@
     label {
         height: 35px;
         width: 300px;
+
         display: flex;
         align-items: center;
         background-color: var(--color-background);
+
         border-radius: 16px;
         transition: 0.2s;
 
@@ -29,6 +31,7 @@
         input {
             flex: 1;
             height: 100%;
+
             background-color: inherit;
             border: none;
             border-radius: 16px;
