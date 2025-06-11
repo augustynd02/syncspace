@@ -46,7 +46,7 @@ export default function Header() {
                                     </li>
                                     <li onClick={() => setUserActionsOpen(!userActionsOpen)}>
                                         <Image
-                                            src={user.avatar_url || 'placeholder.jpg'}
+                                            src={user?.avatar_url || 'placeholder.jpg'}
                                             alt={`${user!.name}'s avatar`}
                                             fill
                                             sizes="36px"
